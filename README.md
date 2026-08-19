@@ -6,9 +6,9 @@
 
 ## 项目索引
 
-| 项目 | 原项目 | 研究仓库 | 在线演示 | 状态 | 研究重点 |
+| 项目 | 原项目 | 研究仓库 | 演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- | --- |
-| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) | 本仓库记录 | — | 研究中 | 导演型 Skill、提示词编排、换装视频状态机 |
+| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) | 本仓库记录 | [交互能力实验室](demos/outfit-director/README.md) | 研究中 | 导演型 Skill、提示词编排、换装视频状态机 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -40,6 +40,7 @@
 
 - [x] 登记第一个研究项目：Outfit Director
 - [x] 建立对应的研究记录
+- [x] 建立第一个本地交互能力演示
 - [ ] 关联第一个独立研究仓库
 - [ ] 关联第一个可访问的在线演示
 

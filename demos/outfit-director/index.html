@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Outfit Director 能力实验室：交互演示主体路由、五/七造型首帧、换装状态机、时间轴与提示词输出。"
+    />
+    <meta name="color-scheme" content="dark light" />
+    <title>Outfit Director｜能力实验室</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">跳到导演工作台</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Outfit Director 能力实验室首页">
+        <span class="brand__mark" aria-hidden="true">OD</span>
+        <span>
+          <strong>OUTFIT DIRECTOR</strong>
+          <small>CAPABILITY LAB · 01</small>
+        </span>
+      </a>
+
+      <div class="topbar__actions">
+        <span class="status-pill"><i aria-hidden="true"></i>规则模拟器</span>
+        <a class="text-link" href="../../studies/outfit-director/README.md">研究档案</a>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题">
+          <span aria-hidden="true" id="theme-icon">☼</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__copy">
+          <p class="eyebrow"><span>SKILL / PROMPT ORCHESTRATION</span><span>VERSION 1.0.0</span></p>
+          <h1 id="page-title">把一句换装需求，<br /><em>编成可执行的镜头。</em></h1>
+          <p class="hero__lead">
+            选择主体、节奏与转场，观察 Outfit Director 如何锁定身份、组织多造型首帧，并把侧边造型依次“消费”为连续换装时间轴。
+          </p>
+        </div>
+
+        <dl class="hero__metrics" aria-label="项目核心能力数据">
+          <div><dt>02</dt><dd>视频模式</dd></div>
+          <div><dt>05 / 07</dt><dd>造型布局</dd></div>
+          <div><dt>0.1s</dt><dd>时间精度</dd></div>
+          <div><dt>M1–M13</dt><dd>转场机制</dd></div>
+        </dl>
+
+        <div class="truth-note" role="note">
+          <strong>演示边界</strong>
+          <span>本页面在浏览器中模拟 Skill 的编排规则，不调用真实图像或视频生成模型。</span>
+        </div>
+      </section>
+
+      <section class="workspace" id="workspace" aria-label="Outfit Director 导演工作台">
+        <aside class="panel control-panel" aria-labelledby="controls-title">
+          <header class="panel__header">
+            <div><span class="step">01</span><h2 id="controls-title">锁定参数</h2></div>
+            <span class="panel__meta">INPUT</span>
+          </header>
+
+          <form id="director-form">
+            <fieldset>
+              <legend>主体路线</legend>
+              <div class="segmented segmented--three">
+                <label><input type="radio" name="subject" value="woman" checked /><span>女性</span></label>
+                <label><input type="radio" name="subject" value="man" /><span>男性</span></label>
+                <label><input type="radio" name="subject" value="pet" /><span>宠物</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>视频模式</legend>
+              <div class="mode-options">
+                <label class="mode-card">
+                  <input type="radio" name="mode" value="K" checked />
+                  <span class="mode-card__key">K</span>
+                  <span><strong>卡点换装</strong><small>9 秒 · 5 套</small></span>
+                </label>
+                <label class="mode-card">
+                  <input type="radio" name="mode" value="D" />
+                  <span class="mode-card__key">D</span>
+                  <span><strong>换装舞蹈</strong><small>15 秒 · 7 套</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label for="style-select">造型方向</label>
+              <div class="select-wrap">
+                <select id="style-select" name="style">
+                  <option value="urban">都市元气</option>
+                  <option value="oriental">东方叙事</option>
+                  <option value="lookbook">拼贴 Lookbook</option>
+                  <option value="stage">舞台高光</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mechanism-select">换装机制</label>
+              <div class="select-wrap">
+                <select id="mechanism-select" name="mechanism"></select>
+              </div>
+              <p class="field__hint" id="mechanism-hint"></p>
+            </div>
+
+            <div class="field">
+              <label for="creative-note">创意补充 <span>可选</span></label>
+              <textarea id="creative-note" name="note" rows="3" maxlength="120">固定正面机位，背景保持简洁，强调身份一致性。</textarea>
+              <div class="field__counter"><span>仅补充低风险信息</span><output id="note-count">26 / 120</output></div>
+            </div>
+
+            <button class="primary-button" type="submit">
+              <span>生成导演方案</span><span aria-hidden="true">↗</span>
+            </button>
+          </form>
+        </aside>
+
+        <section class="panel stage-panel" aria-labelledby="stage-title">
+          <header class="panel__header stage-header">
+            <div><span class="step">02</span><h2 id="stage-title">首帧状态母图</h2></div>
+            <div class="stage-header__meta">
+              <span id="mode-badge">MODE K</span>
+              <strong id="duration-badge">09.0 SEC</strong>
+            </div>
+          </header>
+
+          <div class="stage-shell">
+            <div class="stage-grid" id="look-stage" aria-label="五造型拼贴首帧预览"></div>
+            <div class="stage-status" aria-live="polite" aria-atomic="true">
+              <span class="stage-status__dot" aria-hidden="true"></span>
+              <span id="stage-announcement">初始状态：全部造型待激活</span>
+            </div>
+          </div>
+
+          <div class="stage-controls">
+            <button class="play-button" id="play-button" type="button">
+              <span class="play-button__icon" aria-hidden="true">▶</span>
+              <span id="play-label">播放 9 秒编排</span>
+            </button>
+            <button class="secondary-button" id="reset-button" type="button">重置</button>
+            <span class="simulation-note">加速预览 · 时间点按真实脚本标注</span>
+          </div>
+
+          <div class="timeline" aria-labelledby="timeline-title">
+            <div class="timeline__header">
+              <span id="timeline-title">换装完成点</span>
+              <output id="timeline-readout">00.0 / 09.0s</output>
+            </div>
+            <div class="timeline__track" id="timeline-track">
+              <div class="timeline__progress" id="timeline-progress"></div>
+              <div id="timeline-markers"></div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel output-panel" aria-labelledby="output-title">
+          <header class="panel__header">
+            <div><span class="step">03</span><h2 id="output-title">检查输出</h2></div>
+            <span class="panel__meta">OUTPUT</span>
+          </header>
+
+          <div class="tabs" role="tablist" aria-label="导演方案输出类型">
+            <button role="tab" aria-selected="true" aria-controls="output-content" data-tab="params" type="button">参数</button>
+            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="timeline" type="button">时间轴</button>
+            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="image" type="button">首帧</button>
+            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="video" type="button">视频</button>
+            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="negative" type="button">负面</button>
+          </div>
+
+          <div class="output-toolbar">
+            <div><span>ACTIVE DOCUMENT</span><strong id="output-document-title">参数锁定结果</strong></div>
+            <button class="copy-button" id="copy-button" type="button" aria-label="复制当前输出">
+              <span aria-hidden="true">⧉</span><span>复制</span>
+            </button>
+          </div>
+
+          <div class="output-content" id="output-content" role="tabpanel" tabindex="0"></div>
+        </aside>
+      </section>
+
+      <section class="capabilities" aria-labelledby="capabilities-title">
+        <div class="section-heading">
+          <div><span class="section-index">04</span><h2 id="capabilities-title">它真正解决的四个问题</h2></div>
+          <p>不是替模型生成画面，而是给模型一个更清楚、更可检查的任务结构。</p>
+        </div>
+
+        <div class="capability-grid">
+          <article><span>ROUTE</span><strong>主体与模式路由</strong><p>把人物、宠物、卡点和连续舞蹈分开处理，避免规则互相污染。</p></article>
+          <article><span>LOCK</span><strong>参数优先级</strong><p>用户明确要求与参考图优先，系统只补全缺失的低风险字段。</p></article>
+          <article><span>STATE</span><strong>造型消费状态机</strong><p>每个侧边造型激活后永久清空，让换装具有可见的空间因果。</p></article>
+          <article><span>GUARD</span><strong>负面约束与自检</strong><p>集中抑制身份漂移、贴图残留、双影、叠穿和动作断裂。</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>OUTFIT DIRECTOR / CAPABILITY LAB</strong><span>研究型交互演示 · 不代表上游官方产品</span></div>
+      <a href="https://github.com/liyue-aigc/outfit-director">查看原项目 ↗</a>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <noscript><p class="noscript">此演示需要 JavaScript 来切换方案和播放状态机；核心研究内容仍可在研究档案中阅读。</p></noscript>
+  </body>
+</html>

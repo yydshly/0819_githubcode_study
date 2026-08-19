@@ -10,7 +10,7 @@
 | 研究版本 | `c291d92c2638476fed21fc05a30672ea16547bf7`（`1.0.0`） |
 | 研究类型 | Codex / Skills 兼容的导演型提示词 Skill |
 | 独立研究仓库 | — |
-| 在线演示 | — |
+| 能力演示 | [Outfit Director 能力实验室](../../demos/outfit-director/README.md) |
 | 当前状态 | 研究中 |
 | 最后更新 | 2026-08-19 |
 
@@ -202,5 +202,6 @@
 - [原项目 README](https://github.com/liyue-aigc/outfit-director/blob/main/README.md)
 - [核心 Skill](https://github.com/liyue-aigc/outfit-director/blob/main/skill/SKILL.md)
 - [版本更新记录](https://github.com/liyue-aigc/outfit-director/blob/main/CHANGELOG.md)
+- [本地交互能力演示](../../demos/outfit-director/README.md)
 - 独立研究仓库：待建立
 - 在线演示：待建立
