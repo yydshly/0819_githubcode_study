@@ -8,7 +8,7 @@
 
 | 项目 | 原项目 | 研究仓库 | 在线演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- | --- |
-| _待添加_ | — | — | — | 规划中 | — |
+| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) | 本仓库记录 | — | 研究中 | 导演型 Skill、提示词编排、换装视频状态机 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -38,8 +38,8 @@
 
 ## 近期计划
 
-- [ ] 登记第一个研究项目
-- [ ] 建立对应的研究记录
+- [x] 登记第一个研究项目：Outfit Director
+- [x] 建立对应的研究记录
 - [ ] 关联第一个独立研究仓库
 - [ ] 关联第一个可访问的在线演示
 
