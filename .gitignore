@@ -1,0 +1,53 @@
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment variables and local configuration
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+.tmp/
+
+# JavaScript / TypeScript
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.turbo/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Java / Kotlin
+*.class
+.gradle/
+target/
+
+# Rust
+target/
+
+# Go
+bin/
+
+# Local study checkouts and large artifacts
+vendor-projects/
+downloads/
+artifacts/
