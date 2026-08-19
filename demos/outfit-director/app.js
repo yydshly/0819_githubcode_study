@@ -125,6 +125,48 @@ const OUTPUT_TITLES = {
   negative: "负面提示词",
 };
 
+const IMAGE_MODELS = {
+  "generic-image": {
+    label: "通用图像模型",
+    directive: "使用清晰的自然语言描述构图、身份与材质；人物参考作为 Image 1，服装参考依次作为 Image 2–N",
+  },
+  "identity-image": {
+    label: "身份一致性优先图像模型",
+    directive: "提高人物参考权重，先锁定脸、发型、身形与站姿，再逐套替换完整服装；禁止融合不同参考图的人脸",
+  },
+  "layout-image": {
+    label: "多主体构图优先图像模型",
+    directive: "严格遵循中央主体与侧边完整轮廓的位置编号，保持所有人物版本同脸同身形，并保留安全边距",
+  },
+};
+
+const VIDEO_MODELS = {
+  "generic-i2v": {
+    label: "通用图生视频 I2V",
+    directive: "以生成后的首帧为唯一视觉锚点，使用秒级事件表描述换装顺序与运动连续性",
+  },
+  "identity-i2v": {
+    label: "首帧一致性优先 I2V",
+    directive: "最大化首帧身份、服装和构图保持度；动作幅度适中，避免镜头变化引发身份漂移",
+  },
+  "motion-i2v": {
+    label: "动作表现优先 I2V",
+    directive: "用明确动作峰值触发换装，同时锁定脸、身体轴线、落脚点和衣料惯性",
+  },
+  "fast-i2v": {
+    label: "快速预览 I2V",
+    directive: "减少复杂运镜和物理效果，优先验证换装时点、顺序与侧边造型清空逻辑",
+  },
+};
+
+const REAL_LOOKS = [
+  { name: "白衬衫 · 炭灰长裙", short: "通勤基线", description: "适合作为初始身份锚点和通勤基线造型。", position: 0 },
+  { name: "薄荷绿 · 运动套装", short: "轻运动", description: "以颜色和廓形的明显变化验证人物身份是否仍然稳定。", position: 25 },
+  { name: "蓝色丹宁 · 街头造型", short: "丹宁街头", description: "验证同一站姿下更硬挺的牛仔材质与层次切换。", position: 50 },
+  { name: "驼色西装 · 商务造型", short: "轻商务", description: "验证外套轮廓、长裤比例与商务语义的完整变化。", position: 75 },
+  { name: "黑色礼服 · 夜间造型", short: "晚宴终场", description: "作为高反差终场造型，验证色调与场景语义切换。", position: 100 },
+];
+
 const NEGATIVES = [
   "主体数量错误",
   "身份漂移",
@@ -159,15 +201,45 @@ const timelineReadout = document.querySelector("#timeline-readout");
 const outputContent = document.querySelector("#output-content");
 const outputTitle = document.querySelector("#output-document-title");
 const copyButton = document.querySelector("#copy-button");
-const tabs = [...document.querySelectorAll("[role='tab']")];
+const tabs = [...document.querySelectorAll("[data-tab]")];
 const themeToggle = document.querySelector("#theme-toggle");
 const themeIcon = document.querySelector("#theme-icon");
 const toast = document.querySelector("#toast");
+const imageModelSelect = document.querySelector("#image-model-select");
+const videoModelSelect = document.querySelector("#video-model-select");
+const personUpload = document.querySelector("#person-upload");
+const clothesUpload = document.querySelector("#clothes-upload");
+const personInputPreview = document.querySelector("#person-input-preview");
+const personFileName = document.querySelector("#person-file-name");
+const clothesCount = document.querySelector("#clothes-count");
+const clothesFileName = document.querySelector("#clothes-file-name");
+const experimentTabs = [...document.querySelectorAll(".experiment-tab")];
+const promptWorkspace = document.querySelector("#workspace");
+const visualLab = document.querySelector("#visual-lab");
+const wardrobeList = document.querySelector("#wardrobe-list");
+const realModelStage = document.querySelector("#real-model-stage");
+const realModelLayerA = document.querySelector("#real-model-layer-a");
+const realModelLayerB = document.querySelector("#real-model-layer-b");
+const realLookNumber = document.querySelector("#real-look-number");
+const realLookName = document.querySelector("#real-look-name");
+const realLookStatus = document.querySelector("#real-look-status");
+const realPlayButton = document.querySelector("#real-play-button");
+const realPlayLabel = document.querySelector("#real-play-label");
+const realResetButton = document.querySelector("#real-reset-button");
+const realLookProgress = document.querySelector("#real-look-progress");
+const proofLookName = document.querySelector("#proof-look-name");
+const proofLookDescription = document.querySelector("#proof-look-description");
 
 let activeTab = "params";
 let outputs = {};
 let timerIds = [];
 let toastTimer;
+let personPreviewUrl = "";
+let realAssetStatus = "idle";
+let realTimerId;
+let realVisibleLayer = "a";
+let realLookIndex = 0;
+let realPlaying = false;
 let state = {
   subject: "woman",
   mode: "K",
@@ -177,6 +249,10 @@ let state = {
   currentStep: 0,
   activeSide: -1,
   playing: false,
+  imageModel: "generic-image",
+  videoModel: "generic-i2v",
+  personFileName: "内置虚构人物素材",
+  clothingFileNames: [],
 };
 
 function escapeHtml(value) {
@@ -192,8 +268,17 @@ function getSelected(name) {
   return form.elements[name].value;
 }
 
+function fileLabel(fileName) {
+  return fileName
+    .replace(/\.[^.]+$/, "")
+    .replace(/[_-]+/g, " ")
+    .trim();
+}
+
 function getOutfits() {
-  return STYLE_OUTFITS[state.subject][state.style].slice(0, MODES[state.mode].lookCount);
+  const builtIn = STYLE_OUTFITS[state.subject][state.style];
+  const uploaded = state.clothingFileNames.map(fileLabel).filter(Boolean);
+  return [...uploaded, ...builtIn.slice(uploaded.length)].slice(0, MODES[state.mode].lookCount);
 }
 
 function updateMechanismOptions() {
@@ -338,10 +423,19 @@ function buildOutputs() {
   const subject = SUBJECTS[state.subject];
   const outfits = getOutfits();
   const mechanism = MECHANISMS[state.mechanism];
+  const imageModel = IMAGE_MODELS[state.imageModel];
+  const videoModel = VIDEO_MODELS[state.videoModel];
   const note = state.note.trim() || "无额外补充";
   const sideAssignments = mode.positions.map(([, label], index) => `${label}：${outfits[index + 1]}`).join("；");
+  const clothesSource = state.clothingFileNames.length
+    ? state.clothingFileNames.map((name, index) => `Image ${index + 2}「${name}」`).join("；")
+    : "内置五套无品牌造型描述（无真实衣服图片）";
 
   const paramsText = [
+    `首帧图像模型：${imageModel.label}`,
+    `目标视频模型：${videoModel.label}`,
+    `人物素材：Image 1「${state.personFileName}」`,
+    `衣服素材：${clothesSource}`,
     `主体路线：${subject.label}`,
     `基础身份：${subject.route}`,
     `识别锚点：${subject.anchors}`,
@@ -386,9 +480,9 @@ function buildOutputs() {
     .map((row) => `<div class="timeline-row"><strong>${escapeHtml(row.range)}｜${escapeHtml(row.title)}</strong><span>${escapeHtml(row.action)}</span></div>`)
     .join("");
 
-  const imagePrompt = `${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`;
+  const imagePrompt = `【目标模型】${imageModel.label}\n【参考素材】Image 1 是人物身份参考「${state.personFileName}」；${clothesSource}。仅依据素材角色与以下文字执行，不推断未提供的服装细节。\n【模型适配】${imageModel.directive}。\n【生成任务】${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`;
 
-  const videoPrompt = `${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`;
+  const videoPrompt = `【目标模型】${videoModel.label}\n【输入方式】将上一步生成并确认过的首帧作为图生视频输入；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`;
 
   const negativeText = NEGATIVES.join("，");
   const negativeHtml = `<p>以下约束随每次输出一起交付，用来抑制常见生成故障：</p><ul class="negative-list">${NEGATIVES.map((item) => `<li>${item}</li>`).join("")}</ul>`;
@@ -417,6 +511,8 @@ function applyFormState() {
   state.mode = getSelected("mode");
   state.style = styleSelect.value;
   state.mechanism = mechanismSelect.value;
+  state.imageModel = imageModelSelect.value;
+  state.videoModel = videoModelSelect.value;
   state.note = noteInput.value;
   state.currentStep = 0;
   state.activeSide = -1;
@@ -538,6 +634,154 @@ function setTheme(theme) {
   }
 }
 
+function updateAssetLabels() {
+  personFileName.textContent = state.personFileName.replace("素材", "");
+  const count = state.clothingFileNames.length || 5;
+  clothesCount.textContent = String(count).padStart(2, "0");
+  clothesFileName.textContent = state.clothingFileNames.length
+    ? `${state.clothingFileNames.length} 个本地文件`
+    : "内置五套造型";
+}
+
+function handlePersonUpload() {
+  const [file] = personUpload.files;
+  if (!file) return;
+  state.personFileName = file.name;
+  if (personPreviewUrl) URL.revokeObjectURL(personPreviewUrl);
+  personPreviewUrl = URL.createObjectURL(file);
+  personInputPreview.style.setProperty("--person-preview", `url("${personPreviewUrl}")`);
+  personInputPreview.classList.add("has-upload");
+  updateAssetLabels();
+  applyFormState();
+  showToast("人物参考已加入提示词素材清单（仅本地读取）");
+}
+
+function handleClothesUpload() {
+  const files = [...clothesUpload.files].slice(0, 7);
+  state.clothingFileNames = files.map((file) => file.name);
+  updateAssetLabels();
+  applyFormState();
+  showToast(`已加入 ${files.length} 个衣服参考文件名`);
+}
+
+function renderRealWardrobe() {
+  wardrobeList.innerHTML = REAL_LOOKS.map((look, index) => `
+    <button class="wardrobe-item${index === realLookIndex ? " is-active" : ""}" type="button" data-real-look="${index}" aria-pressed="${index === realLookIndex}">
+      <span class="wardrobe-thumb" style="--look-position:${look.position}%" aria-hidden="true"></span>
+      <span><strong>${escapeHtml(look.name)}</strong><small>${escapeHtml(look.short)}</small></span>
+      <small>0${index + 1}</small>
+    </button>`).join("");
+
+  realLookProgress.innerHTML = REAL_LOOKS.map((look, index) => `
+    <button class="real-progress-button${index === realLookIndex ? " is-active" : ""}" type="button" data-real-look="${index}" aria-label="切换至第 ${index + 1} 套：${escapeHtml(look.name)}"></button>`).join("");
+
+  [...wardrobeList.querySelectorAll("[data-real-look]"), ...realLookProgress.querySelectorAll("[data-real-look]")]
+    .forEach((button) => button.addEventListener("click", () => {
+      stopRealPlayback();
+      setRealLook(Number(button.dataset.realLook));
+    }));
+}
+
+function ensureRealAsset() {
+  if (realAssetStatus !== "idle") return;
+  realAssetStatus = "loading";
+  realLookStatus.textContent = "正在载入本地写实造型素材…";
+  const image = new Image();
+  image.onload = () => {
+    realAssetStatus = "ready";
+    document.body.classList.add("real-assets-ready");
+    realLookStatus.textContent = "已锁定同一人物身份与站姿";
+  };
+  image.onerror = () => {
+    realAssetStatus = "error";
+    document.body.classList.add("real-assets-error");
+    realLookStatus.textContent = "素材未载入；当前显示降级色块";
+    showToast("写实造型素材载入失败，已保留可操作降级状态");
+  };
+  image.src = "./assets/fictional-model-five-looks.png";
+}
+
+function updateRealLookText(index) {
+  const look = REAL_LOOKS[index];
+  realLookNumber.textContent = String(index + 1).padStart(2, "0");
+  realLookName.textContent = look.name;
+  proofLookName.textContent = look.name;
+  proofLookDescription.textContent = look.description;
+  realModelStage.setAttribute("aria-label", `当前造型：${look.name}`);
+}
+
+function setRealLook(index) {
+  const nextIndex = Math.max(0, Math.min(index, REAL_LOOKS.length - 1));
+  const nextLook = REAL_LOOKS[nextIndex];
+  const visibleLayer = realVisibleLayer === "a" ? realModelLayerA : realModelLayerB;
+  const nextLayer = realVisibleLayer === "a" ? realModelLayerB : realModelLayerA;
+
+  nextLayer.style.setProperty("--look-position", `${nextLook.position}%`);
+  nextLayer.classList.add("is-visible");
+  visibleLayer.classList.remove("is-visible");
+  realVisibleLayer = realVisibleLayer === "a" ? "b" : "a";
+  realLookIndex = nextIndex;
+  updateRealLookText(nextIndex);
+  renderRealWardrobe();
+}
+
+function stopRealPlayback() {
+  window.clearTimeout(realTimerId);
+  realPlaying = false;
+  realPlayButton.querySelector("span:first-child").textContent = "▶";
+  realPlayLabel.textContent = "自动换装";
+}
+
+function playRealSequence() {
+  if (realPlaying) {
+    stopRealPlayback();
+    return;
+  }
+
+  ensureRealAsset();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    setRealLook(REAL_LOOKS.length - 1);
+    showToast("已在减少动态效果模式下直接展示终场造型");
+    return;
+  }
+
+  realPlaying = true;
+  realPlayButton.querySelector("span:first-child").textContent = "Ⅱ";
+  realPlayLabel.textContent = "暂停换装";
+  let nextIndex = realLookIndex >= REAL_LOOKS.length - 1 ? 0 : realLookIndex + 1;
+
+  const advance = () => {
+    if (!realPlaying) return;
+    setRealLook(nextIndex);
+    nextIndex += 1;
+    if (nextIndex >= REAL_LOOKS.length) {
+      realTimerId = window.setTimeout(stopRealPlayback, 900);
+      return;
+    }
+    realTimerId = window.setTimeout(advance, 1050);
+  };
+
+  advance();
+}
+
+function switchExperiment(experiment) {
+  const showVisual = experiment === "visual";
+  promptWorkspace.hidden = showVisual;
+  visualLab.hidden = !showVisual;
+  experimentTabs.forEach((tab) => {
+    const selected = tab.dataset.experiment === experiment;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+  if (showVisual) {
+    ensureRealAsset();
+    renderRealWardrobe();
+  } else {
+    stopRealPlayback();
+  }
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   applyFormState();
@@ -553,9 +797,33 @@ noteInput.addEventListener("input", () => {
   noteCount.textContent = `${noteInput.value.length} / 120`;
 });
 
+personUpload.addEventListener("change", handlePersonUpload);
+clothesUpload.addEventListener("change", handleClothesUpload);
+
 playButton.addEventListener("click", playSequence);
 resetButton.addEventListener("click", resetStage);
 copyButton.addEventListener("click", copyCurrentOutput);
+realPlayButton.addEventListener("click", playRealSequence);
+realResetButton.addEventListener("click", () => {
+  stopRealPlayback();
+  setRealLook(0);
+  showToast("已回到第一套通勤基线造型");
+});
+
+experimentTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => switchExperiment(tab.dataset.experiment));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let nextIndex = index;
+    if (event.key === "ArrowLeft") nextIndex = (index - 1 + experimentTabs.length) % experimentTabs.length;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % experimentTabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = experimentTabs.length - 1;
+    experimentTabs[nextIndex].click();
+    experimentTabs[nextIndex].focus();
+  });
+});
 
 tabs.forEach((tab, index) => {
   tab.addEventListener("click", () => {
@@ -590,4 +858,7 @@ try {
 setTheme(savedTheme);
 updateMechanismOptions();
 noteCount.textContent = `${noteInput.value.length} / 120`;
+updateAssetLabels();
+renderRealWardrobe();
+updateRealLookText(0);
 applyFormState();

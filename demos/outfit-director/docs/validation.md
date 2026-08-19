@@ -37,8 +37,34 @@
 ## Applicable boundaries
 
 - 单一中文界面，不提供语言切换；已检查中文长标签在 390px 下的换行和控制宽度。
-- 不使用模态框、抽屉、外部 API、媒体资源、Canvas 或 WebGL，因此加载、错误恢复、前景关闭和增强渲染回退不适用。
-- 页面模拟规则输出，不验证真实图像/视频模型的生成质量。
+- 不使用模态框、抽屉、外部 API、Canvas 或 WebGL。Revision 2 新增一张延迟载入的本地写实图片，并提供色块与文字降级状态。
+- 页面模拟规则输出和预生成视觉切换，不验证真实图像/视频模型的生成质量或真实虚拟试衣准确度。
+
+## Revision 2 · 双实验验收
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Desktop | 1440px / A default | pass | A/B 导航、模型选择、人物/衣服素材和原三列工作台完整可见 |
+| A interaction | 身份优先图像 + 动作优先 I2V | pass | 首帧输出出现模型适配、Image 1 与素材边界；视频输出出现目标模型与首帧输入规则 |
+| A upload | 本地人物 + 单个衣服文件 | pass | 参数输出同步为 `Image 1「fictional-model-five-looks.png」` 与 `Image 2`；无网络上传 |
+| Desktop | 1440px / B / look 01 | pass | 写实虚构人物全身、五套衣橱、证明面板和 2D 边界可见 |
+| B interaction | look 05 | pass | 舞台切至黑色礼服；衣橱、造型名称和证明面板同步 |
+| B autoplay | 从 look 05 重新开始 | pass | 自动回到第 1 套并依序运行，结束停留第 5 套且按钮恢复“自动换装” |
+| Tablet | 1024×900 / B | pass | `scrollWidth = clientWidth = 1009`，无横向溢出 |
+| Mobile | 390×844 / B | pass | 衣橱两列、写实舞台、证明面板与能力区按任务顺序单列展示 |
+| Theme | Tablet / light | pass | `data-theme=light`，正文计算颜色 `rgb(21, 32, 27)` |
+| Motion | B / reduced-motion | pass | 自动换装立即到达 `LOOK 05 · 黑色礼服`，结果可读 |
+| Runtime | Errors | pass | 浏览器页面错误为空；JavaScript 语法检查通过 |
+| Performance | Local static server | pass | 预生成素材 1,748,951 bytes，仅进入 B 时加载；FCP 84ms，DCL 52.4ms |
+
+### Revision 2 visual evidence
+
+- Desktop A：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787157589431.png`
+- Desktop B / look 01：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787157617145.png`
+- Desktop B / look 05：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787157707477.png`
+- Mobile B / look 05：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787157880046.png`
+
+Revision 2 截图同样只保存在浏览器工具临时证据目录，不进入产品提交。
 
 ## Terminal audit
 

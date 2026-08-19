@@ -52,12 +52,23 @@
         </dl>
 
         <div class="truth-note" role="note">
-          <strong>演示边界</strong>
-          <span>本页面在浏览器中模拟 Skill 的编排规则，不调用真实图像或视频生成模型。</span>
+          <strong>双实验边界</strong>
+          <span>A 输出提示词供外部模型生成；B 使用预生成的虚构人物素材做网页换装。页面本身不调用生成 API。</span>
         </div>
       </section>
 
-      <section class="workspace" id="workspace" aria-label="Outfit Director 导演工作台">
+      <nav class="experiment-switcher" role="tablist" aria-label="选择能力测试方向">
+        <button class="experiment-tab is-active" id="experiment-a-tab" role="tab" aria-selected="true" aria-controls="workspace" data-experiment="prompt" type="button">
+          <span class="experiment-tab__index">TEST A</span>
+          <span><strong>提示词导演</strong><small>配置模型与素材，输出给外部生成模型</small></span>
+        </button>
+        <button class="experiment-tab" id="experiment-b-tab" role="tab" aria-selected="false" aria-controls="visual-lab" data-experiment="visual" type="button">
+          <span class="experiment-tab__index">TEST B</span>
+          <span><strong>网页换装实验</strong><small>写实人物与五套服装的本地视觉切换</small></span>
+        </button>
+      </nav>
+
+      <section class="workspace experiment-pane" id="workspace" role="tabpanel" aria-labelledby="experiment-a-tab" aria-label="Outfit Director 提示词导演工作台">
         <aside class="panel control-panel" aria-labelledby="controls-title">
           <header class="panel__header">
             <div><span class="step">01</span><h2 id="controls-title">锁定参数</h2></div>
@@ -88,6 +99,50 @@
                   <span><strong>换装舞蹈</strong><small>15 秒 · 7 套</small></span>
                 </label>
               </div>
+            </fieldset>
+
+            <div class="generation-models" aria-labelledby="generation-models-title">
+              <div class="field-heading" id="generation-models-title">
+                <span>目标生成模型</span><small>只改变提示词策略，不调用 API</small>
+              </div>
+              <div class="field field--compact">
+                <label for="image-model-select">首帧图像模型</label>
+                <div class="select-wrap">
+                  <select id="image-model-select" name="imageModel">
+                    <option value="generic-image">通用图像模型</option>
+                    <option value="identity-image">身份一致性优先</option>
+                    <option value="layout-image">多主体构图优先</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field field--compact">
+                <label for="video-model-select">目标视频模型</label>
+                <div class="select-wrap">
+                  <select id="video-model-select" name="videoModel">
+                    <option value="generic-i2v">通用图生视频 I2V</option>
+                    <option value="identity-i2v">首帧一致性优先 I2V</option>
+                    <option value="motion-i2v">动作连续性优先 I2V</option>
+                    <option value="fast-i2v">快速草稿 I2V</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <fieldset class="asset-fieldset">
+              <legend>参考素材</legend>
+              <div class="asset-input-grid">
+                <label class="asset-input" for="person-upload">
+                  <span class="asset-input__thumb asset-input__thumb--person" id="person-input-preview" aria-hidden="true"></span>
+                  <span><strong>人物参考</strong><small id="person-file-name">内置虚构人物</small></span>
+                  <input id="person-upload" type="file" accept="image/*" />
+                </label>
+                <label class="asset-input" for="clothes-upload">
+                  <span class="asset-input__count" id="clothes-count">05</span>
+                  <span><strong>衣服参考</strong><small id="clothes-file-name">内置五套造型</small></span>
+                  <input id="clothes-upload" type="file" accept="image/*" multiple />
+                </label>
+              </div>
+              <p class="field__hint">上传文件只在当前浏览器读取；页面使用文件名描述素材，不会自动识别衣服内容。</p>
             </fieldset>
 
             <div class="field">
@@ -183,6 +238,70 @@
 
           <div class="output-content" id="output-content" role="tabpanel" tabindex="0"></div>
         </aside>
+      </section>
+
+      <section class="visual-lab experiment-pane" id="visual-lab" role="tabpanel" aria-labelledby="experiment-b-tab" hidden>
+        <div class="visual-lab__heading">
+          <div>
+            <span class="step">B</span>
+            <div><p class="eyebrow-mini">PRE-GENERATED VISUAL TEST</p><h2>同一人物，五套完整造型。</h2></div>
+          </div>
+          <p>这里切换的是预先生成的同一虚构人物造型，不是浏览器实时虚拟试衣，也不代表服装 SKU 的精准还原。</p>
+        </div>
+
+        <div class="visual-lab__workspace">
+          <aside class="panel wardrobe-panel" aria-labelledby="wardrobe-title">
+            <header class="panel__header">
+              <div><span class="step">01</span><h2 id="wardrobe-title">选择衣服</h2></div>
+              <span class="panel__meta">WARDROBE</span>
+            </header>
+            <div class="identity-card">
+              <span class="identity-card__portrait contact-sheet-crop" style="--look-position:0%" aria-hidden="true"></span>
+              <span><small>FICTIONAL MODEL / F-01</small><strong>虚构成年女性</strong><em>脸、发型、姿势与镜头锁定</em></span>
+            </div>
+            <div class="wardrobe-list" id="wardrobe-list" aria-label="五套可选服装"></div>
+          </aside>
+
+          <section class="panel real-model-panel" aria-labelledby="real-model-title">
+            <header class="panel__header stage-header">
+              <div><span class="step">02</span><h2 id="real-model-title">写实换装舞台</h2></div>
+              <div class="stage-header__meta"><span>2D PHOTO</span><strong>LOCAL ASSET</strong></div>
+            </header>
+            <div class="real-model-stage" id="real-model-stage" aria-live="polite" aria-label="当前造型：白衬衫与炭灰长裙">
+              <div class="real-model-layer is-visible" id="real-model-layer-a" style="--look-position:0%" aria-hidden="true"></div>
+              <div class="real-model-layer" id="real-model-layer-b" style="--look-position:0%" aria-hidden="true"></div>
+              <div class="real-model-scan" aria-hidden="true"></div>
+              <div class="real-model-caption">
+                <span>LOOK <output id="real-look-number">01</output> / 05</span>
+                <strong id="real-look-name">白衬衫 · 炭灰长裙</strong>
+                <small id="real-look-status">已锁定同一人物身份与站姿</small>
+              </div>
+            </div>
+            <div class="stage-controls real-model-controls">
+              <button class="play-button" id="real-play-button" type="button"><span aria-hidden="true">▶</span><span id="real-play-label">自动换装</span></button>
+              <button class="secondary-button" id="real-reset-button" type="button">回到第一套</button>
+              <span class="simulation-note">预生成完整造型切换 · 非实时试衣</span>
+            </div>
+            <div class="real-look-progress" id="real-look-progress" aria-label="换装进度"></div>
+          </section>
+
+          <aside class="panel proof-panel" aria-labelledby="proof-title">
+            <header class="panel__header">
+              <div><span class="step">03</span><h2 id="proof-title">这项测试证明什么</h2></div>
+              <span class="panel__meta">PROOF</span>
+            </header>
+            <div class="proof-content">
+              <div class="proof-state"><span>CURRENT RESULT</span><strong id="proof-look-name">白衬衫 · 炭灰长裙</strong><p id="proof-look-description">适合作为初始身份锚点和通勤基线造型。</p></div>
+              <dl>
+                <div><dt>已实现</dt><dd>同一虚构人物的五套写实完整造型切换</dd></div>
+                <div><dt>实现方式</dt><dd>项目图片素材 + CSS 裁切 + JavaScript 状态切换</dd></div>
+                <div><dt>不是</dt><dd>3D、视频文件、实时生成或真实服装迁移</dd></div>
+                <div><dt>下一层</dt><dd>接入图像/视频模型，生成真实首帧和视频结果</dd></div>
+              </dl>
+              <div class="proof-note"><strong>素材声明</strong><p>人物由 AI 生成且为虚构成年人；服装无品牌标识，仅用于研究演示。</p></div>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <section class="capabilities" aria-labelledby="capabilities-title">

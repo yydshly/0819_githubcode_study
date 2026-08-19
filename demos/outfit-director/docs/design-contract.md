@@ -2,34 +2,35 @@
 
 ## Contract
 
-- Entry mode：Brief-led greenfield implementation
-- Request revision：1
-- Target user and context：访问研究主库的 AIGC 创作者、提示词设计者和开发者，希望在不安装 Skill、不调用真实模型的情况下理解其输入、编排过程与输出。
+- Entry mode：Revision-led implementation
+- Request revision：2
+- Target user and context：访问研究主库的 AIGC 创作者、提示词设计者和开发者；现在既要生成可交给外部模型的提示词，也要在网页中看见写实人物的换装演示。
 - Desired first impression：专业、清晰、有导演台的节奏感；进入首屏即可知道这是“换装编排能力演示”，而不是虚拟试衣商城。
 - Visual ambition：Editorial
 - Experience architecture：Hybrid Workspace
-- Visual constraints：深色导演工作台为默认主题，提供浅色主题；高对比文字；不依赖外部图片、字体、Canvas、WebGL 或网络资源。
-- Information constraints：必须明确这是本地规则模拟，不调用图像或视频模型；能力、状态和输出均来源于已研究的上游 Skill 规则。
+- Visual constraints：保留深色导演工作台与浅色主题；加入项目内置的虚构写实人物五造型素材；不依赖外部字体、Canvas、WebGL 或运行时网络资源。
+- Information constraints：明确区分“提示词导演”和“网页换装实验”；前者输出给外部模型，后者使用预生成素材做视觉模拟，均不伪装成浏览器内实时生成。
 - Operation constraints：纯前端、无登录、无后端、无真实 API；支持鼠标、触摸和键盘；相对路径资源可部署到 GitHub Pages 子路径。
-- State constraints：支持女性、男性、宠物；K 卡点与 D 舞蹈；造型风格、转场机制、创意补充；播放、重置、输出标签、复制反馈、主题切换。
+- State constraints：保留原有女性、男性、宠物与 K/D 编排；新增 A/B 实验切换、目标图像/视频模型、人物与衣服素材、提示词导出、写实衣橱、单套换装与自动轮播。
 - Environment constraints：现代 Chromium、Firefox、Safari；桌面、平板和 390px 手机；支持 `prefers-reduced-motion`。
-- Primary journey：选择主体与模式 → 调整风格和机制 → 生成编排 → 查看 5/7 造型首帧 → 播放换装状态机 → 检查参数、时间轴和提示词 → 复制输出。
-- User-defined phases：配置、首帧预览、时间轴演示、输出阅读、跨设备验收。
-- Required artifacts：可运行页面、项目 README、设计契约、浏览器验收记录、交接说明。
+- Primary journey A：选择人物/服装来源和目标生成模型 → 生成首帧与视频提示词 → 复制给外部模型。
+- Primary journey B：选择内置写实人物的服装 → 网页立即切换完整造型 → 播放五套造型演示 → 返回选择状态。
+- User-defined phases：A 提示词导演测试、B 网页换装测试、跨设备验收、素材与边界说明。
+- Required artifacts：可运行双实验页面、虚构写实五造型素材、项目 README、设计契约、浏览器验收记录、交接说明。
 - Autonomy authorization：用户于 2026-08-19 明确要求“请先继续，如果有需要请和我交互”，授权在既定范围内直接实施和验证。
-- User-decision boundary：接入真实图像/视频模型、购买服务、创建独立远端仓库、修改公开部署权限或改变品牌方向时再询问。
-- Observable completion criteria：页面可由文档命令启动；默认内容完整；配置会同步改变造型数、布局、时间点和输出；播放会依次消费侧边造型；复制和主题状态有反馈；桌面/平板/390px 无遮挡；键盘焦点可见；reduced-motion 不隐藏信息；浏览器无错误覆盖。
+- User-decision boundary：接入真实图像/视频 API、处理用户敏感照片、购买服务、创建独立远端仓库、修改公开部署权限或改变品牌方向时再询问。
+- Observable completion criteria：A 实验能选择模型与衣服并输出模型感知的首帧/视频提示词；B 实验能用写实五造型素材完成点击换装和自动演示；两者明确能力边界；素材失败时仍有可读回退；桌面/平板/390px、深浅主题、键盘和 reduced-motion 可用；浏览器无错误覆盖。
 
 ## Hybrid workspace architecture
 
-- Scene base：语义化 DOM + CSS 布局 + 内联 SVG 人物/宠物轮廓。
+- Scene base：A 实验保留语义化 DOM + CSS + SVG 结构预览；B 实验使用项目内置写实联系人表图像，通过 CSS 裁切为五个造型画面。
 - Scene persistence：桌面和平板配置时持续可见；进入输出详情不替换舞台。手机端按“配置 → 舞台 → 输出”形成单列任务流，允许舞台随页面滚动，但不隐藏或折叠。
-- Scene actions：生成、播放/暂停、重置和时间点选择属于舞台操作。
-- Detail actions：参数锁定、时间轴全文、首帧提示词、视频提示词、负面约束和复制属于文档详情流。
+- Scene actions：A 实验的生成、播放/暂停、重置和时间点选择；B 实验的衣橱选择、自动换装和重置属于舞台操作。
+- Detail actions：模型配置、素材来源、提示词全文、负面约束、复制和实验边界属于文档详情流。
 - Foreground control model：左侧配置面板、中央舞台工具条、右侧标签式输出检查器；轻量状态提示不抢占焦点。
-- State-to-scene mapping：默认展示当前全部造型；播放时侧边造型依次高亮并永久清空，中央服装同步变化；完成态显示最终造型和全部完成点；重置恢复初始造型。
+- State-to-scene mapping：A 实验保留结构状态机；B 实验中衣橱选中态、人物写实图像和当前服装名称同步，自动播放按衣橱顺序切换，完成后停留在最终造型。
 - Mobile transformation：三列转换为单列任务流，主要操作保持在对应区域顶部，不引入抽屉或模态框。
-- Fallback：SVG 只负责人物轮廓；每个造型仍有可读名称、位置、状态和时间文本。关闭动画时状态立即更新，意义不依赖动画。
+- Fallback：写实素材加载失败时显示可读色块、服装文字和错误状态；关闭动画时造型立即切换，意义不依赖淡入淡出。
 
 ## Design direction
 
@@ -58,3 +59,30 @@
 | 跨设备验收 | reduced-motion 保留信息 | Reduced motion | Browser media emulation or CSS evidence | Stage 7 | pass | 直接到达最终状态并保留文字反馈 |
 | 工程 | 无高成本资产且首屏响应及时 | Default runtime | Resource/performance observation | Stage 8 | pass | 四个本地资源，LCP 48ms，CLS 0 |
 | 交付 | README、验收和交接完整 | Repository | File + build/runtime evidence | Stage 9 | pass | 必要文件与终审记录齐全 |
+
+## Revision 2 direction
+
+| Decision | Preserved | Revised requirement | Acceptance criterion |
+| --- | --- | --- | --- |
+| Composition | 原有导演工作台视觉语言 | 在工作台前增加 A/B 实验导航；两条主流程一次只展示一条 | 用户能在首屏区分“输出提示词”和“网页换装” |
+| Visual anchor | 原有 SVG 状态母图 | B 实验以虚构写实五造型人物为主视觉 | 写实素材完整全身、身份尽量一致且无第三方权利风险 |
+| Controls | 语义表单、标签和复制反馈 | 新增生成模型、素材来源、衣橱和自动换装控件 | 指针、触摸和键盘均可完成两条流程 |
+| State feedback | 激活、清空、完成与 toast | 新增衣服选中、图像切换、自动播放和素材边界状态 | 视觉和文字同时表达当前造型 |
+| Responsive | 1440/1024/390px | 新增素材和衣橱区域不能产生横向溢出 | 两实验在三个视口均完成主流程 |
+| Motion | reduced-motion 立即完成 | 写实换装淡入淡出同样受 reduced-motion 约束 | 减少动态效果时点击与自动演示仍保留结果 |
+
+## Revision 2 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| A 提示词导演测试 | 目标图像/视频模型和素材配置 | Desktop / A default | Browser screenshot + DOM | Stage 3 | pass | 两类模型选择与本地文件字段可用 |
+| A 提示词导演测试 | 输出随模型、服装和模式更新 | K/D / built-in and uploaded assets | Browser interaction + output text | Stage 5 | pass | 身份优先图像与动作优先视频策略实测通过 |
+| A 提示词导演测试 | 可复制给外部模型的结果 | Image/video/negative tabs | Copy feedback + text evidence | Stage 6 | pass | 原复制流程保留，新增输出为纯文本可复制结构 |
+| B 网页换装测试 | 写实五造型素材加载 | Default + asset fallback | Screenshot + resource observation | Stage 2 | pass | 1774×887 本地素材按需载入且可读降级 |
+| B 网页换装测试 | 点击衣橱切换完整造型 | Five wardrobe items | Browser interaction | Stage 5 | pass | 第 1/5 套视觉、名称、证明面板同步通过 |
+| B 网页换装测试 | 自动换装与重置 | Play / complete / reset | DOM state transition | Stage 6 | pass | 自动停留第 5 套，重置回第 1 套 |
+| 素材与边界说明 | 区分预生成模拟与真实模型 | A/B visible notices | Browser text observation | Stage 3 | pass | 首屏、B 标题区和证明面板均有边界说明 |
+| 跨设备验收 | 两实验在深浅主题和三视口可用 | 1440/1024/390 | Screenshots + overflow check | Stage 7 | pass | 桌面与手机截图通过；1024px `scrollWidth = clientWidth` |
+| 跨设备验收 | 键盘与 reduced-motion | A/B primary controls | Keyboard + media emulation | Stage 7 | pass | 语义按钮/标签可聚焦；B 无动画路径直接到第 5 套 |
+| 工程 | 素材大小和加载性能可接受 | Static runtime | Resource + vitals observation | Stage 8 | pass | 素材 1.75 MB 延迟到 B；FCP 84ms，页面错误为空 |
+| 交付 | README、验收、交接和素材说明更新 | Repository | File + terminal audit | Stage 9 | pass | 文档与素材来源说明完成 |
