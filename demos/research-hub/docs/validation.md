@@ -68,4 +68,4 @@ Outfit 页面中的一张长图采用懒加载，未滚动到对应位置时自�
 | 键盘 / 动效 | Blobatar 门户链接焦点为 `solid`；reduced-motion 生效 |
 | 错误面 | error overlay、console error、page error 均为空 |
 
-Revision 4 本地发布候选判定为 `pass`；最终生产 URL 与 Actions 状态在发布后复验。
+Revision 4 本地发布候选判定为 `pass`。生产修复提交 `7288d967585ac8c7d47c02dfb19123e8c3159cf4` 的 GitHub Actions [运行 32393725188](https://github.com/yydshly/0819_githubcode_study/actions/runs/32393725188) 成功；随后直接复验生产门户与 `/blobatar/`，8 张卡片、14 种表情、社区 6 身份、多 Agent 完成态、1440 / 390px 布局均正确，console、page 和 HTTP 资源错误均为 0。Revision 4 最终判定为 `pass`。

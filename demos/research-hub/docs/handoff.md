@@ -62,3 +62,4 @@
 - 页面明确描述确定性 SVG 头像、14 种表情、社区默认身份、多 Agent 角色与五阶段状态适配。
 - 研究记录链接指向 GitHub 可渲染 README，避免浏览器把 Pages 中的 Markdown 当作下载文件。
 - 本地发布候选已通过门户 → Blobatar、Agent 状态、桌面、390px、键盘与 reduced-motion 验收。
+- 生产演示：<https://yydshly.github.io/0819_githubcode_study/blobatar/>；GitHub Actions [32393725188](https://github.com/yydshly/0819_githubcode_study/actions/runs/32393725188) 成功，生产浏览器复验无控制台或资源错误。
