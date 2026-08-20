@@ -45,3 +45,12 @@
 ## 后续维护
 
 新增子项目时同步更新总入口卡片、根 README、工作流复制路径和浏览器路由验收。若删除或改名子项目，应保留旧路径重定向或明确更新外部链接。
+
+## Revision 3：SRT Whiteboard Animation
+
+- Pages 工作流已复制 `demos/srt-whiteboard-animation/` 与 `studies/srt-whiteboard-animation/`。
+- 生产演示：<https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/>
+- 根 README 的“在线演示”已指向生产 URL，不再指向 GitHub 内的 HTML 源码。
+- 研究总入口已增加第六张 SRT 卡片，并延续现有三列、两列、单列响应式体系。
+- GitHub Actions [32383473996](https://github.com/yydshly/0819_githubcode_study/actions/runs/32383473996) 成功；生产浏览器的入口、视频 Range、键盘、桌面与 390px 路径均通过。
+- 本次范围不改变其他研究项目实现，也不删除原有入口。

@@ -135,3 +135,16 @@ New authority required: no
 5. MP4 请求失败最初只触发 `<source>` 错误；同时监听 video/source 后，GIF 回退通过。
 6. Revision 2 的正常媒体切换会主动中断上一条 Range 请求，验收脚本将 `ERR_ABORTED` 与真实网络失败分开；正常路径 console/page/request error 均为 0。
 7. 案例视频被故意改为不存在地址后，回退提示与下载入口可见；该故障注入产生的单条 404 是预期证据。
+
+## Revision 4 生产部署验收
+
+GitHub Pages 工作流 [32383473996](https://github.com/yydshly/0819_githubcode_study/actions/runs/32383473996) 成功，生产 URL 为 <https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/>。
+
+- 页面标题正确，4 个案例均登记，默认 MP4 元数据时长 8.6 秒且无媒体错误。
+- 牛顿第三定律视频 Range 请求返回 HTTP 206，`Content-Range: bytes 0-99/1142911`。
+- 页头返回链接在部署组装后为 `../`，研究记录链接为 `../studies/srt-whiteboard-animation/README.md`。
+- 1440px 与 390px 横向溢出均为 0；390px 下 4 个案例保持可达。
+- 从生产研究总入口以键盘进入 SRT 页面，焦点轮廓可见。
+- 正常主旅程的 console、page 和 request failure 均为 0。
+
+Revision 4 的 Pages、根 README 与主入口关联均判定为 `pass`。

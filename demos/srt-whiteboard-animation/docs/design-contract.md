@@ -81,5 +81,5 @@ Observable completion criteria: 页面可运行；四个真实案例均可播放
 | 2 | 物理案例五步驱动链路 | SRT/源图/JSON/CLI/输出 | 文件与逐步点击观察 | 3–6 | pass | — |
 | 全部 | 四案例桌面、平板、390px 响应式 | 1440/768/390 | 浏览器截图、overflow | 7 | pass | — |
 | 全部 | Revision 3 文档与工程检查 | docs/JS/JSON/MP4 | 文件检查、node、ffprobe | 9 | pass | — |
-| 全部 | GitHub Pages 真实在线演示 | 生产 URL / 媒体 | HTTP、Range、浏览器交互 | 7–9 | continue | 更新工作流并发布验证 |
-| 全部 | 根 README 与研究主入口关联 | README / 总入口 | 链接、卡片、桌面与手机浏览器 | 3,7,9 | continue | 修正链接并增加入口卡片 |
+| 全部 | GitHub Pages 真实在线演示 | 生产 URL / 媒体 | HTTP、Range、浏览器交互 | 7–9 | pass | — |
+| 全部 | 根 README 与研究主入口关联 | README / 总入口 | 链接、卡片、桌面与手机浏览器 | 3,7,9 | pass | — |

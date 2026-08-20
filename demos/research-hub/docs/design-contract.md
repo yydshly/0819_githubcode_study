@@ -43,7 +43,7 @@ Observable completion criteria: 根 URL 呈现包含 SRT 的六项目总入口�
 | 适配 | 桌面 / 平板 / 手机 | 1440 / 900 / 390px | 无横向溢出、可见焦点、截图观察 | pass |
 | 提交 | 只暂存本次范围文件 | `main` | staged diff 与提交 `f027a41` | pass |
 | 部署 | Pages 构建和远端 URL | GitHub Actions | 运行 `32358286573` 成功，在线浏览器复验 | pass |
-| SRT 部署 | Pages 组装并发布演示与研究记录 | `/srt-whiteboard-animation/`、`/studies/srt-whiteboard-animation/` | 本地组装、Actions、生产 HTTP 与媒体 Range | continue |
-| SRT 导航 | 根 README 使用真实在线 URL | GitHub 根 README | 远端 Markdown 链接与真实点击 | continue |
-| SRT 主入口 | 新增第六张 SRT 项目卡片 | 总入口桌面 / 手机 / 键盘 | DOM、截图、真实点击、无溢出 | continue |
-| 交付 | 更新研究门户 README、验收与交接记录 | docs | 文件检查、提交与远端哈希 | continue |
+| SRT 部署 | Pages 组装并发布演示与研究记录 | `/srt-whiteboard-animation/`、`/studies/srt-whiteboard-animation/` | 本地组装、Actions、生产 HTTP 与媒体 Range | pass |
+| SRT 导航 | 根 README 使用真实在线 URL | GitHub 根 README | 远端 Markdown 链接与真实点击 | pass |
+| SRT 主入口 | 新增第六张 SRT 项目卡片 | 总入口桌面 / 手机 / 键盘 | DOM、截图、真实点击、无溢出 | pass |
+| 交付 | 更新研究门户 README、验收与交接记录 | docs | 文件检查、提交与远端哈希 | pass |
