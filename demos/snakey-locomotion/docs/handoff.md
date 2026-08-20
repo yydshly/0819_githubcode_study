@@ -16,7 +16,6 @@
 
 ## 3. 剩余或延期内容
 
-- 未发布远端 GitHub Pages；发布、提交、推送需要用户另行授权。
 - 未实现 M2–M4：TypedArray 环形缓冲、独立 npm 包、任意曲面、WebGPU、自碰撞和物理模型。这些是后续研究范围，不是本阶段缺陷。
 - JavaScript 完全禁用路径保留了 `noscript` 内容，但本轮没有单独启动禁用脚本的浏览器截图；WebGL 能力回退已通过真实浏览器验证。
 
@@ -32,6 +31,7 @@
 - Playwright Chromium：桌面、平板、390px 手机、四种模式、参数、暂停、研究 tabs、抽屉、Escape、焦点返回和 reduced-motion 通过。
 - 禁用 WebGL：回退说明和全部研究内容可读。
 - Pages 临时组装：根卡片、SVG 预览、真实点击、子路径 CSS/JS/Canvas 和两种响应式入口通过。
+- GitHub Pages：提交 `f027a41` 对应 Actions 运行 `32358286573` 成功，生产 WebGL、核心交互、移动端和归档文档通过真实浏览器复验。
 - 源码 `index.html` 不可作为 standalone 文件运行；直接使用 `file://` 时会显示启动说明，正式体验入口必须是 Vite 或 Pages 的 HTTP URL。
 - 详细记录见 [validation.md](validation.md)，最终截图位于忽略目录 `.tmp/snakey-browser-evidence/`。
 

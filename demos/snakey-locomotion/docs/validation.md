@@ -37,6 +37,21 @@ Revision 1 证据：
 - 归档不移除 Pages 路径；`/snakey-locomotion/` 继续作为可运行技术备份发布。
 - 发布前重新执行 `npm ci`、TypeScript 检查和 Vite 生产构建；依赖审计为 0 个漏洞。
 
+## 远端发布证据
+
+| 项目 | 结果 |
+| --- | --- |
+| 实现与归档提交 | `f027a41c347051028347c1434175fd9a98e614af` |
+| GitHub Actions | `32358286573`，`completed / success` |
+| 生产地址 | <https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/> |
+| 总入口 | 显示“已归档 / 按需复用”，四张项目卡片 |
+| WebGL | Canvas 创建成功，默认模式可见，成功切换到“交互场” |
+| 移动端 | 390 × 844，无横向溢出 |
+| 归档文档 | `/studies/snakey-locomotion/ARCHIVE.md` 返回 HTTP 200 |
+| 控制台 / 页面错误 | 0 / 0 |
+
+生产截图保存在忽略目录 `.tmp/snakey-browser-evidence/production-archive-desktop.png` 与 `production-archive-mobile.png`。
+
 ## 主体验矩阵
 
 | 表面 / 状态 | 操作 | 可见结果 | 结论 |

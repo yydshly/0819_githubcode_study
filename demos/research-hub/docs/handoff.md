@@ -25,6 +25,16 @@
 
 工作流支持 `workflow_dispatch`，可从当前研究分支发布验证；推送到 `main` 且命中相关路径时也会自动部署。
 
+## 本次发布记录
+
+| 项目 | 结果 |
+| --- | --- |
+| 实现与归档提交 | `f027a41c347051028347c1434175fd9a98e614af` |
+| Actions 运行 | [32358286573](https://github.com/yydshly/0819_githubcode_study/actions/runs/32358286573)，成功 |
+| 生产总入口 | <https://yydshly.github.io/0819_githubcode_study/> |
+| Snakey 演示 | <https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/> |
+| 生产复验 | WebGL、交互场、归档状态、390px 布局和归档文档通过 |
+
 ## 边界
 
 - 本次已获得直接提交并推送 `main` 的授权，不创建 PR。

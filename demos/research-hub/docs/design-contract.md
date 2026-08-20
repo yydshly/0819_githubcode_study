@@ -41,5 +41,5 @@ Observable completion criteria: 根 URL 呈现总入口；四个演示 URL 返�
 | 引导 | Snakey Locomotion 演示入口 | `/snakey-locomotion/` | HTTP 200、WebGL Canvas、真实点击导航 | pass |
 | 归档 | Snakey 状态、保留能力和恢复条件 | 总入口 / `ARCHIVE.md` | 状态可见、归档文档 HTTP 200 | pass |
 | 适配 | 桌面 / 平板 / 手机 | 1440 / 900 / 390px | 无横向溢出、可见焦点、截图观察 | pass |
-| 提交 | 只暂存本次范围文件 | 当前分支 | staged diff | continue |
-| 部署 | Pages 构建和远端 URL | GitHub Actions | workflow run 与在线 HTTP | continue |
+| 提交 | 只暂存本次范围文件 | `main` | staged diff 与提交 `f027a41` | pass |
+| 部署 | Pages 构建和远端 URL | GitHub Actions | 运行 `32358286573` 成功，在线浏览器复验 | pass |

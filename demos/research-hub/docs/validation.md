@@ -36,4 +36,4 @@ Outfit 页面中的一张长图采用懒加载，未滚动到对应位置时自�
 
 ## 结论
 
-总入口、四项目和 Snakey 归档状态已通过本地 Pages 发布候选验收。用户已授权提交并推送 `main`；远端部署结果在本次发布阶段由 GitHub Actions 和在线 HTTP 继续复核。
+总入口、四项目和 Snakey 归档状态已通过本地与远端验收。实现与归档提交 `f027a41c347051028347c1434175fd9a98e614af` 已推送 `main`，GitHub Actions 运行 [`32358286573`](https://github.com/yydshly/0819_githubcode_study/actions/runs/32358286573) 成功。生产环境真实浏览器确认四张卡片、Snakey 归档状态、WebGL Canvas、“交互场”切换、390px 无溢出和归档文档 HTTP 200；控制台与页面错误为 0。

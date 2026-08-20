@@ -68,6 +68,6 @@
 
 ## 回滚与追溯
 
-- 归档前基线：以包含本文件的首次 `main` 提交为准。
+- 实现与归档基线：`f027a41c347051028347c1434175fd9a98e614af`。
 - 上游来源和许可证分别记录在 [upstream-lock.json](upstream-lock.json) 与 [`UPSTREAM-LICENSE.md`](../../demos/snakey-locomotion/UPSTREAM-LICENSE.md)。
 - 演示构建入口为 [`demos/snakey-locomotion`](../../demos/snakey-locomotion/README.md)，Pages 由仓库统一工作流组装。
