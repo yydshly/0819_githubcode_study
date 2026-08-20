@@ -20,6 +20,7 @@
 | [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
 | [Snakey Locomotion](studies/snakey-locomotion/README.md) | [muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion) | [在线演示](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/) · [说明](demos/snakey-locomotion/README.md) | 已归档 | Three.js 草地环境、长体运动与环境反馈参考 |
 | [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
+| [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [交互研究页](demos/srt-whiteboard-animation/index.html) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -197,6 +198,35 @@
 - [浏览器验收](demos/bigpeng-hot-gzh/docs/validation.md) · [部署说明](demos/bigpeng-hot-gzh/docs/deployment.md)
 - 上游：[BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh)
 
+### SRT Whiteboard Animation：可控白板手绘视频
+
+**作用**
+
+将静态彩色插画转换为可控的白板手绘视频。它不是大模型直接生成视频，而是使用传统图像处理和确定性逐帧渲染，让故事插画、教学图解、流程说明和物理原理按照指定时间顺序逐步出现。
+
+**实现原理**
+
+OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径追踪得到墨迹坐标；程序再根据 `annotation.json` 中的区域、开始时间和持续时间，以及端点优先、交叉点尽量直行、从上到下和从左到右等规则确定落笔顺序。每一帧按照当前坐标更新累计遮罩：第一阶段只显露黑白墨迹，第二阶段再把原图彩色像素刷回；透明画手 PNG 跟随当前坐标移动，最后由 OpenCV 和 FFmpeg 将所有帧编码为 H.264 MP4。
+
+```text
+彩色插画 → OpenCV 提取墨迹与坐标 → 落笔排序 → 逐帧累计遮罩
+         → 黑白线稿显露 → 彩色原图刷回 → 画手跟随 → MP4
+```
+
+**关键边界**
+
+- 自动落笔顺序是几何启发式结果，不等于人类真实笔顺。
+- 源图生成、语义区域标注、旁白、字幕烧录和音频混流不属于内置确定性渲染能力。
+- 适合轮廓清楚、可拆成静态插画区域的内容；不适合写实照片、复杂交叉线稿和要求严格书写顺序的文字公式。
+- 当前研究提供故事、知识、流程和牛顿第三定律四个真实渲染案例。
+
+**网页与文档**
+
+- [交互研究页](demos/srt-whiteboard-animation/index.html) · [复现与运行说明](demos/srt-whiteboard-animation/README.md)
+- [完整研究记录](studies/srt-whiteboard-animation/README.md) · [浏览器验收](demos/srt-whiteboard-animation/docs/validation.md)
+- [上游版本锁](studies/srt-whiteboard-animation/upstream-lock.json) · [MIT 许可证说明](demos/srt-whiteboard-animation/UPSTREAM-LICENSE.md)
+- 上游：[geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation)
+
 ## 研究方式
 
 每个项目尽量保留完整研究链路：
@@ -221,6 +251,7 @@
 ├── xianxia-visual-director/      # 仙侠场景与目标效果
 ├── snakey-locomotion/            # Three.js 程序化场景研究台
 ├── bigpeng-hot-gzh/              # 公众号选题与标题规则实验台
+├── srt-whiteboard-animation/     # OpenCV 白板动画交互研究页
 └── studies/                      # 对应研究记录
 ```
 
@@ -237,12 +268,14 @@
 │   ├── punk-skill/
 │   ├── xianxia-visual-director/
 │   ├── snakey-locomotion/
+│   ├── srt-whiteboard-animation/
 │   └── bigpeng-hot-gzh/
 └── studies/
     ├── outfit-director/
     ├── punk-skill/
     ├── xianxia-visual-director/
     ├── snakey-locomotion/
+    ├── srt-whiteboard-animation/
     └── bigpeng-hot-gzh/
 ```
 
@@ -257,6 +290,7 @@
 - [x] 建立 Snakey Locomotion WebGL 研究台，拆解轨迹、曲面与交互场
 - [x] 归档 Snakey Locomotion，保留在线演示、复用地图与恢复条件
 - [x] 复现 BigPeng Hot GZH，明确“大模型理解 + Skill 规则选择 + 用户决策”的能力边界
+- [x] 复现 SRT Whiteboard Animation，验证墨迹坐标、累计遮罩和黑白/彩色两阶段渲染
 - [ ] 在出现真实需求时继续 CatVTON、严格视频对照或图片模型服从度实验
 
 ## 许可证说明
