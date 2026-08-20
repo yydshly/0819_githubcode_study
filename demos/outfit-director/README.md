@@ -2,7 +2,7 @@
 
 这是 `outfit-director` 研究子项目的纯前端双实验，用来分别验证“导演提示词”与“网页视觉换装”两层能力。女性专项规则适配自 [`female-outfit-director`](https://github.com/liyue-aigc/female-outfit-director)，在通用导演之上增加妆容、配饰、衣料约束与 M1–M12 转场机制。
 
-演示不会调用真实图像或视频模型。用户选择的本地文件不会上传，页面只读取文件名并把它们组织成提示词素材角色。
+演示不会调用真实图像或视频模型。用户选择的本地文件不会上传，页面只读取文件名并把它们组织成提示词素材角色；E001 区域播放的是用户在外部 MiniMax H3 生成后主动回填的项目本地 MP4。
 
 页面同时提供“从展示换装到真实虚拟试衣”的五目标路线面板。路线面板是研究索引，不会把尚未接入的模型、3D 或 AR 能力标成已实现；完整拆解见 [虚拟试衣技术研究路线](../../docs/virtual-tryon-technology-roadmap.md)。
 
@@ -46,6 +46,17 @@ python -m http.server 4173 --directory demos/outfit-director
 
 这里显示的是同一虚构成年人物的五张预生成完整造型，通过 CSS 裁切与 JavaScript 状态切换实现。四种效果用于解释转场机制，不是 3D、视频文件、浏览器实时生成或真实服装 SKU 迁移。M3–M7、M9、M11、M12 只进入 A 的外部模型提示词，不在 B 中伪装成已实现网页特效。
 
+## E001 · 第一条真实视频基线
+
+- 模型记录：MiniMax H3；纯文本 T2V；D 模式；15 秒；七套造型；M13。
+- 项目保存原始 MP4、32 KB 封面、完整提示词、SHA-256、媒体元数据和基线观察。
+- 页面使用原生视频控件，不自动播放，默认只预载媒体元数据，并提供直接 MP4 链接。
+- 已观察到七套造型、单一全身主体和稳定摄影棚；身份细节与服装精确度为部分满足。
+- 实际媒体为 1344×768 横版，不是目标 9:16；六个换装变化点整体略早。
+- E001 暴露了“M13 侧边激活”与“禁止侧边人物”的冲突，新的纯 T2V 输出已改为“舞蹈峰值原地换装”。
+
+完整记录见 [E001 实验档案](../../studies/outfit-director/experiments/e001-minimax-h3-m13.md)。
+
 ## 技术路线面板
 
 页面下方按顺序展示并可切换五个研究目标：提示词换装视频、2D AI 虚拟试衣、3D 参数化试衣间、实时 AR 试衣镜、尺码与穿搭智能。每个目标都明确列出：
@@ -71,7 +82,9 @@ demos/outfit-director/
 │   ├── transition-mechanisms.js
 │   └── outfit-presets.js
 ├── assets/
-│   └── fictional-model-five-looks.png
+│   ├── fictional-model-five-looks.png
+│   ├── e001-minimax-h3-m13.mp4
+│   └── e001-minimax-h3-m13-poster.jpg
 └── docs/
     ├── design-contract.md
     ├── validation.md
@@ -91,6 +104,6 @@ https://<owner>.github.io/<repository>/demos/outfit-director/
 
 ## 能力边界
 
-A 实验中的舞台人物和宠物仍是用于表达身份锁定与造型变化的 SVG 示意轮廓。B 实验素材由 OpenAI 内置图像生成工具创建，人物为虚构成年人，服装无品牌标识，仅用于研究演示。所有提示词由浏览器中的确定性规则生成，不能用来证明下游生成模型一定可以准确完成多主体、真实虚拟试衣、长时序或精确卡点任务。
+A 实验中的舞台人物和宠物仍是用于表达身份锁定与造型变化的 SVG 示意轮廓。B 实验素材由 OpenAI 内置图像生成工具创建，人物为虚构成年人，服装无品牌标识，仅用于研究演示。E001 是用户提供的外部模型实际输出，不代表上游仓库或本页面具有视频生成能力。所有提示词由浏览器中的确定性规则生成，单条成功结果不能证明下游模型一定可以稳定完成多主体、真实虚拟试衣、长时序或精确卡点任务。
 
 上游版本、MIT 许可与衍生边界见 [来源与许可说明](docs/upstream-attribution.md)；女性专项差异分析与逐机制实验计划见 [变体研究](../../studies/outfit-director/variants/female-outfit-director.md) 和 [F001–F012 实验矩阵](../../studies/outfit-director/experiments/female-transition-matrix.md)。

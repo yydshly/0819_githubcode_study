@@ -146,6 +146,34 @@ Revision 4 截图只保存在浏览器工具临时证据目录，不进入产品
 
 Revision 5 截图只保存在浏览器工具临时证据目录，不进入产品提交。
 
+## Revision 6 · E001 MiniMax H3 真实视频回填
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Asset | MP4 provenance | pass | 项目文件 1,819,595 bytes；SHA-256 `54EC7D3F50483CC786C3A505FC2D310B6DE7EE20819FD3DC885DE2008505A952` 与用户源文件一致 |
+| Media | ffprobe | pass | 15.083333s；1344×768；H.264；24fps；AAC 32kHz 双声道；音轨平均约 -9.3dB |
+| Baseline | eight planned samples | pass | 七套造型、单一全身女性和固定摄影棚可见；身份与服装精确度记为 partial；实际横版记为 fail |
+| Timing | six change windows | pass | scene-change 近似点为 1.958 / 3.833 / 6.000 / 8.125 / 10.458 / 12.375 秒；平均绝对偏差约 0.325 秒 |
+| Rule regression | T2V / D / M13 | pass | 选项与输出为“舞蹈峰值原地换装”；包含单一主体执行规则；不再输出“侧边激活” |
+| Desktop | 1440×1000 / dark / E001 | pass | 播放器与基线观察形成双栏；媒体事实、状态、直接链接和提示词入口可见 |
+| Playback | native controls | pass | 无 autoplay；`controls=true`、`preload=metadata`、duration 15.083333；点击播放后时间推进并可暂停 |
+| Keyboard | prompt details | pass | `summary` 获得焦点后按 Enter，`details.open=true` 且焦点保留 |
+| Tablet | 1024×900 / light | pass | 视频与观察区改为纵向层级；`scrollWidth 1009 < innerWidth 1024` |
+| Mobile | 390×844 / dark | pass | 播放器、操作链接和评估卡单列；`scrollWidth 375 < innerWidth 390` |
+| Fallback | static media | pass | MP4 返回 200 `video/mp4`；poster 返回 200 `image/jpeg`；播放器内含文字回退和直接 MP4 链接 |
+| Performance | no autoplay / metadata | pass | 独立未播放会话观察到 poster 32,617B、MP4 metadata 响应 300B；视频不作为首屏交互依赖 |
+| Runtime | errors / console / syntax | pass | 浏览器错误和控制台为空；`node --check` 与 `git diff --check` 通过 |
+
+### Revision 6 visual evidence
+
+- Desktop dark / E001：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787197567514.png`
+- Tablet light / E001：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787197758311.png`
+- Mobile dark / E001：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787197793977.png`
+- Keyframe contact sheet：`E:\0819_codex_project\.tmp\e001-frames\contact-sheet.png`
+- First-transition contact sheet：`E:\0819_codex_project\.tmp\e001-transition-01\contact-sheet.png`
+
+浏览器截图和关键帧接触表属于临时验证证据，不进入产品提交；可复现结论保存在 E001 实验档案中。
+
 ## Terminal audit
 
 - continue：无

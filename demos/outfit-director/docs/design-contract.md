@@ -182,3 +182,37 @@
 | 跨设备 | 新字段和效果在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面深色、平板浅色、手机深色无横向溢出 |
 | 无障碍与动态 | 键盘和 reduced-motion 保留结果 | Keyboard / reduced motion | Interaction + state evidence | Stage 7 | pass | Space 选择 profile；B reduced-motion 直接到终场且无 changing 类 |
 | 工程与交付 | 语法、错误、README、验收和交接同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 文档、静态检查与浏览器终审完成 |
+
+## Revision 6 direction
+
+- Entry mode：Revision-led implementation。
+- Request revision：6。
+- Target user：希望把外部模型生成的第一条真实换装视频作为 E001 基线纳入研究闭环的维护者与研究访客。
+- Desired first impression：目标一不再只是“等待外部生成”，而是可以直接播放真实 MP4，并同时看到模型、提示词、媒体参数和诚实的基线观察。
+- Visual ambition：Editorial；播放器是研究证据，不替代 A/B 两个实验。
+- Experience architecture：Hybrid Workspace；在 A/B 操作区与长期路线之间增加 E001 结果区，保持“编排 → 外部生成 → 回填 → 评估”的连续阅读路径。
+- User phases：保存用户提供的 MP4；记录 MiniMax H3 与完整 T2V 提示词；抽取关键帧进行基线观察；在 Web 中提供原生视频回放、元数据和评估入口；同步研究文档。
+- Visual constraints：沿用现有面板、编号和信息层级；竖版视频保持 9:16，不自动播放，不循环，不用视频承载唯一文本信息；窄屏改为单列。
+- Information constraints：区分“媒体事实”“关键帧观察”“尚需人工观看确认”；不从离散关键帧虚构精确换装或音画卡点结论。
+- Operation constraints：原生 `video controls` 可播放、暂停、拖动和全屏；提供 MP4 下载/新窗口入口；播放器失败时保留文字与直接链接。
+- State constraints：首屏不加载自动播放声音；浏览器支持 reduced-motion 时不改变用户主动控制的视频，只禁用装饰动画。
+- Environment constraints：纯静态 GitHub Pages；规范地址 `http://127.0.0.1:4173/`；桌面、1024px、390px、深浅主题和键盘。
+- Source boundary：视频由用户提供，原文件 `C:\Users\yun68\Downloads\video_1787194785064.mp4`；模型标记为用户报告的 `MiniMax H3`；不得将结果表述为上游仓库官方产出。
+- Required artifacts：规范命名 MP4、本地 E001 实验记录、Web 结果区、路线状态更新、README、验收和交接更新。
+- Autonomy authorization：用户于 2026-08-20 主动提供视频文件、模型和完整参数，授权在当前研究项目内回填第一条结果。
+- User-decision boundary：公开发布视频、向第三方上传、调用模型 API、产生费用或收集额外人物数据时再确认；本轮只进行本地项目接入和检查。
+- Observable completion：MP4 可追溯且媒体参数记录完整；关键帧观察有证据和限制；网页能播放并显示 E001 状态；目标一从“待回填”更新为“首条基线已回填”；三个视口、主题、键盘、媒体加载和错误检查通过。
+
+## Revision 6 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| 视频回填 | 保存规范命名 MP4 并记录来源 | Repository | File hash + metadata | Stage 1 | pass | MP4 与封面已保存；ffprobe 和 SHA-256 已归档 |
+| 基线观察 | 关键时间点可检查且结论不越界 | E001 frames | Contact sheet + observation | Stage 3 | pass | 八个主采样点、首个转场加密采样和六个变化点已记录 |
+| 规则回归 | T2V M13 不再同时要求侧边激活与禁止侧边人物 | A / T2V / D | Generated prompt observation | Stage 5 | pass | 选项与输出改为单主体舞蹈峰值原地换装；无“侧边激活” |
+| Web 结果区 | 原生播放器、模型和参数可发现 | Desktop / E001 | Screenshot + DOM + media state | Stage 4 | pass | 播放器、事实、五项基线观察和完整提示词均可见 |
+| Web 状态 | 目标一标记首条真实基线已回填 | Roadmap / goal 01 | Browser text observation | Stage 6 | pass | 顶栏、路线摘要、目标一和完成标准同步为 E001 |
+| 无障碍与回退 | 键盘可操作、无自动播放、直接链接可用 | Video controls / fallback | DOM + keyboard + HTTP | Stage 7 | pass | 原生控件语义可见；summary Enter 可开；MP4/JPG 为 200；直接链接存在 |
+| 跨设备 | 播放器和记录在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面深色、平板浅色、手机深色无横向溢出 |
+| 性能 | 1.8 MB 视频不阻塞首屏 | Static runtime | Resource/loading observation | Stage 8 | pass | 无自动播放；metadata preload 首次观察仅 300B 响应，封面 32KB |
+| 工程与交付 | 研究记录、README、验收、交接和提交同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 文档、浏览器、媒体、语法和 Git 空白终审完成 |

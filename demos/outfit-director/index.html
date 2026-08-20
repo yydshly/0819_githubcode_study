@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Outfit Director 能力实验室：提示词换装、2D 视觉原型与真实虚拟试衣五目标技术路线。"
+      content="Outfit Director 能力实验室：提示词换装、MiniMax H3 真实视频基线、2D 视觉原型与虚拟试衣技术路线。"
     />
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
+    <link rel="stylesheet" href="./styles.css?v=8" />
     <script src="./data/director-profiles.js?v=1" defer></script>
     <script src="./data/transition-mechanisms.js?v=1" defer></script>
     <script src="./data/outfit-presets.js?v=1" defer></script>
-    <script src="./app.js?v=7" defer></script>
+    <script src="./app.js?v=8" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -29,7 +29,7 @@
       </a>
 
       <div class="topbar__actions">
-        <span class="status-pill"><i aria-hidden="true"></i>规则模拟器</span>
+        <span class="status-pill"><i aria-hidden="true"></i>E001 已回填</span>
         <a class="text-link" href="#research-roadmap">技术路线</a>
         <a class="text-link" href="../../studies/outfit-director/README.md">研究档案</a>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题">
@@ -367,22 +367,88 @@
         </div>
       </section>
 
+      <section class="e001-result" id="e001-result" aria-labelledby="e001-title">
+        <div class="section-heading e001-heading">
+          <div><span class="section-index">04</span><h2 id="e001-title">第一条真实视频基线</h2></div>
+          <p>提示词已经交给外部模型执行。这里保留原始 MP4、模型记录、媒体事实和关键帧观察，让“生成成功”继续变成可比较的实验结果。</p>
+        </div>
+
+        <div class="e001-grid">
+          <article class="panel e001-video-card" aria-labelledby="e001-video-title">
+            <header class="panel__header">
+              <div><span class="step">E001</span><h2 id="e001-video-title">MiniMax H3 · M13</h2></div>
+              <span class="panel__meta">REAL MP4</span>
+            </header>
+            <div class="e001-video-frame">
+              <video controls playsinline preload="metadata" poster="./assets/e001-minimax-h3-m13-poster.jpg" aria-label="E001 MiniMax H3 换装视频">
+                <source src="./assets/e001-minimax-h3-m13.mp4" type="video/mp4" />
+                当前浏览器无法播放 MP4；请使用下方直接链接打开。
+              </video>
+              <span class="e001-video-badge">15.083 SEC · 7 LOOKS</span>
+            </div>
+            <div class="e001-video-actions">
+              <p><strong>用户提供的首条外部生成结果</strong><span>H.264 视频 + AAC 双声道 · 24 fps · 1.82 MB</span></p>
+              <a href="./assets/e001-minimax-h3-m13.mp4" target="_blank" rel="noreferrer">打开原始 MP4 ↗</a>
+            </div>
+          </article>
+
+          <aside class="panel e001-evidence" aria-labelledby="e001-evidence-title">
+            <header class="panel__header">
+              <div><span class="step">01</span><h2 id="e001-evidence-title">基线观察</h2></div>
+              <span class="panel__meta">RECORDED</span>
+            </header>
+            <div class="e001-evidence__body">
+              <div class="e001-status"><span>BASELINE STATUS</span><strong>首条结果已回填</strong><p>先记录模型真实服从度，再据此优化第二轮提示词。</p></div>
+              <dl class="e001-facts">
+                <div><dt>模型</dt><dd>MiniMax H3 <small>用户记录</small></dd></div>
+                <div><dt>路线</dt><dd>T2V · D 模式 · M13</dd></div>
+                <div><dt>实际画幅</dt><dd>1344 × 768 <small>横版</small></dd></div>
+                <div><dt>目标画幅</dt><dd>9:16 <small>未服从</small></dd></div>
+              </dl>
+              <ul class="e001-checks" aria-label="E001 基线检查结果">
+                <li class="e001-check--pass"><span>PASS</span><p><strong>时长与造型数量</strong>15.083 秒；在八个采样点观察到完整的七套造型和最终银色造型。</p></li>
+                <li class="e001-check--pass"><span>PASS</span><p><strong>主体与摄影棚</strong>采样帧均为单一全身女性、固定灰色摄影棚和近似稳定机位。</p></li>
+                <li class="e001-check--partial"><span>PARTIAL</span><p><strong>身份与服装语义</strong>整体人物相近，但脸、发型和细节存在漂移；服装类别基本对应，不是精确造型复刻。</p></li>
+                <li class="e001-check--partial"><span>PARTIAL</span><p><strong>换装时间</strong>画面变化约始于 1.96 / 3.83 / 6.00 / 8.13 / 10.46 / 12.38 秒，比计划点整体偏早。</p></li>
+                <li class="e001-check--fail"><span>FAIL</span><p><strong>画幅与 M13 因果</strong>输出为横版；首个换装采样表现为直接服装切换，未观察到“侧边激活”来源。</p></li>
+              </ul>
+              <p class="e001-caveat">关键帧可以验证构图、造型和近似时间点；是否严格踩音乐节拍、音轨是否仅含背景音乐，仍需完整人工观看确认。</p>
+            </div>
+          </aside>
+        </div>
+
+        <details class="e001-prompt">
+          <summary><span>查看本次完整生成提示词</span><small>MiniMax H3 · T2V · 15 秒</small></summary>
+          <pre>【生成方式】纯文本生成视频 T2V
+【目标模型】通用视频模型
+【画幅与时长】竖版 9:16，15 秒，单一连续镜头。
+【主体】原创中国成年女性，视觉年龄 22–28 岁；始终保持自然东亚面部特征、深色长发、匀称身形、清晰全身比例，从开头到结尾必须是同一个主体。
+【场景与机位】简洁摄影棚背景，固定正面全身机位，允许轻微呼吸式推近，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与发丝细节。
+【造型顺序】1. 白衬衫学院风；2. 短款运动套装；3. 牛仔街头风；4. 轻熟通勤装；5. 甜酷黑色套装；6. 亮色派对装；7. 银白舞台装。
+【动作与换装】15 秒换装舞蹈，使用 M13 · 侧边激活 + 舞蹈峰值；在 2.0 秒从“白衬衫学院风”换为“短款运动套装”；4.1 秒从“短款运动套装”换为“牛仔街头风”；6.3 秒从“牛仔街头风”换为“轻熟通勤装”；8.5 秒从“轻熟通勤装”换为“甜酷黑色套装”；10.8 秒从“甜酷黑色套装”换为“亮色派对装”；13.0 秒从“亮色派对装”换为“银白舞台装”。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。
+【模型适配】按时间顺序理解同一镜头中的服装变化；不要把每套造型拆成互不相关的多个人或多个镜头。
+【声音】15 秒卡点舞曲，仅背景音乐。
+【补充】固定正面机位，背景保持简洁，强调身份一致性。
+【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“银白舞台装”完成收尾。</pre>
+        </details>
+      </section>
+
       <section class="research-roadmap" id="research-roadmap" aria-labelledby="roadmap-title">
         <div class="section-heading roadmap-heading">
-          <div><span class="section-index">04</span><h2 id="roadmap-title">从展示换装，到真实虚拟试衣</h2></div>
+          <div><span class="section-index">05</span><h2 id="roadmap-title">从展示换装，到真实虚拟试衣</h2></div>
           <p>五个目标按依赖递进。选中目标可查看输入、接入能力、输出与完成标准；页面只把已经存在的能力标为“当前实验”。</p>
         </div>
 
         <div class="roadmap-summary" role="note">
           <span>CURRENT RESEARCH POSITION</span>
-          <strong>目标一正在验证 · 目标二等待模型选型</strong>
-          <p>Outfit Director 负责编排提示词和换装时间轴；真实视频、2D 试衣、3D 布料与 AR 都需要各自的模型或运行时。</p>
+          <strong>目标一已有 E001 基线 · 目标二等待模型选型</strong>
+          <p>Outfit Director 已完成一次“编排 → MiniMax H3 → MP4 回填”；画幅和 M13 因果仍需第二轮对照优化。</p>
         </div>
 
         <div class="roadmap-layout">
           <div class="roadmap-steps" role="tablist" aria-label="虚拟试衣五个研究目标">
             <button class="roadmap-step is-active" id="roadmap-goal-1" role="tab" aria-selected="true" aria-controls="roadmap-detail" data-roadmap-goal="0" type="button">
-              <span class="roadmap-step__number">01</span><span><small>当前实验</small><strong>提示词换装视频</strong><em>编排 → 外部生成 → 回填 MP4</em></span>
+              <span class="roadmap-step__number">01</span><span><small>E001 已回填</small><strong>提示词换装视频</strong><em>MiniMax H3 · 15 秒 · M13</em></span>
             </button>
             <button class="roadmap-step" id="roadmap-goal-2" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="1" type="button" tabindex="-1">
               <span class="roadmap-step__number">02</span><span><small>下一阶段</small><strong>2D AI 虚拟试衣</strong><em>人物照 + 服装图 → 新试衣图</em></span>
@@ -414,7 +480,7 @@
 
       <section class="capabilities" aria-labelledby="capabilities-title">
         <div class="section-heading">
-          <div><span class="section-index">05</span><h2 id="capabilities-title">它真正解决的四个问题</h2></div>
+          <div><span class="section-index">06</span><h2 id="capabilities-title">它真正解决的四个问题</h2></div>
           <p>不是替模型生成画面，而是给模型一个更清楚、更可检查的任务结构。</p>
         </div>
 

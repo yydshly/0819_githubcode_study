@@ -209,18 +209,18 @@ const REAL_LOOKS = [
 const ROADMAP_GOALS = [
   {
     phase: "M0–M2",
-    status: "当前实验",
+    status: "E001 已回填",
     tone: "current",
     title: "提示词生成换装视频",
-    summary: "用 Outfit Director 把人物、服装、动作与卡点编成可执行提示词，再交给外部视频模型生成真实结果。",
+    summary: "首条 MiniMax H3 T2V 结果已回填：15.083 秒、七套造型与单主体成立；实际为横版，M13 侧边激活和身份细节仍需第二轮优化。",
     inputs: ["人物与服装要求", "参考图（I2V 可选）", "时长、节奏与转场"],
     capabilities: ["通用 + 女性专项规则编排", "T2V / I2V 提示词", "M1–M13 时间轴与负面约束"],
     outputs: ["可复制的视频提示词", "外部模型生成的 MP4", "模型、参数与评估记录"],
-    steps: ["生成并保存提示词", "在外部模型生成视频", "回填 MP4 与生成参数", "评估身份、服装、卡点和伪影"],
-    done: "至少完成 1 个可复现的真实视频样例；只有页面预演或提示词不算完成。",
-    dependency: "需要外部视频模型；当前网页不调用生成 API。",
+    steps: ["E001 提示词已保存", "MiniMax H3 已生成", "MP4 与参数已回填", "以 E002 做画幅和转场对照"],
+    done: "M1 阶段已达到：一个可追溯的真实 MP4、提示词、媒体元数据和基线观察均已保存。",
+    dependency: "第二轮仍需外部视频模型；当前网页不调用生成 API。",
     action: "prompt",
-    actionLabel: "进入提示词实验",
+    actionLabel: "生成第二条对照提示词",
   },
   {
     phase: "M3–M4",
@@ -417,6 +417,7 @@ function getOutfits() {
 function updateMechanismOptions() {
   const mode = getSelected("mode");
   const profile = getSelected("directorProfile");
+  const isT2V = getSelected("generationRoute") === "t2v";
   const previous = mechanismSelect.value;
   const generalMechanisms = mode === "D" ? ["M10", "M13"] : ["M1", "M2", "M8", "M10"];
   const available = Object.entries(MECHANISMS).filter(([key, item]) => {
@@ -425,7 +426,7 @@ function updateMechanismOptions() {
   });
 
   mechanismSelect.innerHTML = available
-    .map(([key, item]) => `<option value="${key}">${item.label}</option>`)
+    .map(([key, item]) => `<option value="${key}">${key === "M13" && isT2V ? "M13 · 舞蹈峰值原地换装" : item.label}</option>`)
     .join("");
 
   const fallback = mode === "D" ? "M13" : "M1";
@@ -436,6 +437,10 @@ function updateMechanismOptions() {
 function updateMechanismHint() {
   const mechanism = MECHANISMS[mechanismSelect.value];
   if (!mechanism) return;
+  if (mechanismSelect.value === "M13" && getSelected("generationRoute") === "t2v") {
+    mechanismHint.textContent = "E001 修正规则：单一主体在舞蹈峰值原地换装，不再同时要求侧边人物 · 仅生成外部模型提示词";
+    return;
+  }
   const support = mechanism.webEffect ? "B 实验可网页预演" : "仅生成外部模型提示词";
   mechanismHint.textContent = `${mechanism.hint} · ${support}`;
 }
@@ -587,6 +592,15 @@ function buildOutputs() {
   const imageModel = IMAGE_MODELS[state.imageModel];
   const videoModel = VIDEO_MODELS[state.videoModel];
   const isI2V = state.generationRoute === "i2v";
+  const isT2VDancePeak = !isI2V && state.mode === "D" && state.mechanism === "M13";
+  const deliveryMechanism = isT2VDancePeak
+    ? {
+        ...mechanism,
+        label: "M13 · 舞蹈峰值原地换装",
+        action: "每次到达舞蹈动作峰值时，只在当前单一主体身上原地替换服装，不出现侧边人物、复制体或拼贴",
+        constraint: "保持舞步、重心和视线连续，以服装变化而不是额外人物建立换装因果",
+      }
+    : mechanism;
   const note = state.note.trim() || "无额外补充";
   const sideAssignments = mode.positions.map(([, label], index) => `${label}：${outfits[index + 1]}`).join("；");
   const clothesSource = isI2V && state.clothingFileNames.length
@@ -599,8 +613,8 @@ function buildOutputs() {
     ? `女性专项：${femaleProfile.identityRule}；造型方向为${femalePreset.label || STYLE_LABELS[state.style]}，色彩为${femalePreset.palette || "遵循用户设定"}；${femaleProfile.compositionRule}。妆容、配饰与衣料锚点：${femaleAnchors}。`
     : "";
   const femaleVideoDirective = isFemaleProfile
-    ? `【女性专项】${femaleProfile.identityRule}；${femaleProfile.physicalRule}。妆容、配饰与衣料锚点为${femaleAnchors}。\n【机制执行】${mechanism.action}；${mechanism.constraint}。`
-    : `【机制执行】${mechanism.action || mechanism.hint}`;
+    ? `【女性专项】${femaleProfile.identityRule}；${femaleProfile.physicalRule}。妆容、配饰与衣料锚点为${femaleAnchors}。\n【机制执行】${deliveryMechanism.action}；${deliveryMechanism.constraint}。`
+    : `【机制执行】${deliveryMechanism.action || deliveryMechanism.hint}`;
 
   const paramsText = [
     `导演配置：${profile.label}`,
@@ -617,11 +631,11 @@ function buildOutputs() {
     `视频模式：${state.mode}｜${mode.name}`,
     `造型方向：${STYLE_LABELS[state.style]}`,
     `造型数量：正好 ${mode.lookCount} 套`,
-    `中央造型：${outfits[0]}`,
-    `侧边造型：${sideAssignments}`,
-    `画面布局：${mode.layout}`,
+    `${isI2V ? "中央造型" : "初始造型"}：${outfits[0]}`,
+    `${isI2V ? "侧边造型" : "后续造型"}：${isI2V ? sideAssignments : outfits.slice(1).join(" → ")}`,
+    `画面布局：${isI2V ? mode.layout : "单一全身主体；不生成拼贴、分屏或侧边人物"}`,
     `时长与机位：${mode.duration} 秒；${mode.camera}`,
-    `换装机制：${mechanism.label}`,
+    `换装机制：${deliveryMechanism.label}`,
     `声音：${mode.audio}`,
     `系统补全：${note}`,
   ].filter(Boolean).join("\n");
@@ -639,7 +653,9 @@ function buildOutputs() {
   mode.points.forEach((point, index) => {
     const position = mode.positions[index][1];
     const action = state.mode === "D"
-      ? `中央主体延续连续舞步，${position}贴图在动作峰值激活并从原位清空，换为“${outfits[index + 1]}”。`
+      ? isI2V
+        ? `中央主体延续连续舞步，${position}贴图在动作峰值激活并从原位清空，换为“${outfits[index + 1]}”。`
+        : `单一主体延续连续舞步，在动作峰值原地换为“${outfits[index + 1]}”；不出现侧边人物或复制体。`
       : `${position}造型激活并从原位清空；${mechanism.action || mechanism.hint}，换为“${outfits[index + 1]}”。`;
     timelineRows.push({ range: `${previous.toFixed(1)}–${point.toFixed(1)}s`, title: `第 ${index + 1} 次换装 · ${point.toFixed(1)}s 完成`, action });
     previous = point;
@@ -647,7 +663,9 @@ function buildOutputs() {
   timelineRows.push({
     range: `${previous.toFixed(1)}–${mode.duration.toFixed(1)}s`,
     title: "最终造型展示",
-    action: `保持“${outfits.at(-1)}”，完成收尾动作；中央始终只保留一个主体，全部侧边位置保持清空。`,
+    action: isI2V
+      ? `保持“${outfits.at(-1)}”，完成收尾动作；中央始终只保留一个主体，全部侧边位置保持清空。`
+      : `保持“${outfits.at(-1)}”，由同一主体完成收尾动作；不再发生换装或出现额外人物。`,
   });
 
   const timelineText = timelineRows.map((row) => `${row.range}｜${row.title}\n${row.action}`).join("\n\n");
@@ -662,7 +680,7 @@ function buildOutputs() {
   const outfitSequence = outfits.map((outfit, index) => `${index + 1}. ${outfit}`).join("；");
   const videoPrompt = isI2V
     ? `【生成方式】首帧图生视频 I2V\n【导演配置】${profile.label}\n【目标模型】${videoModel.label}\n【输入】将“首帧”标签中生成并确认过的图片作为唯一视频首帧；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n${femaleVideoDirective}\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`
-    : `【生成方式】纯文本生成视频 T2V\n【导演配置】${profile.label}\n【目标模型】${videoModel.label}\n【画幅与时长】竖版 9:16，${mode.duration} 秒，单一连续镜头。\n【主体】${subject.route}；始终保持${subject.anchors}，从开头到结尾必须是同一个主体。\n${femaleVideoDirective}\n【场景与机位】简洁摄影棚背景，${mode.camera}，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与${state.subject === "pet" ? "毛发" : "发丝"}细节。\n【造型顺序】${outfitSequence}。\n【动作与换装】${mode.name}，使用${mechanism.label}；在 ${mode.points.map((point, index) => `${point.toFixed(1)} 秒从“${outfits[index]}”换为“${outfits[index + 1]}”`).join("；")}。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。\n【模型适配】${T2V_DIRECTIVES[state.videoModel]}。\n【声音】${mode.audio}。\n【补充】${note}。\n【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“${outfits.at(-1)}”完成收尾。`;
+    : `【生成方式】纯文本生成视频 T2V\n【导演配置】${profile.label}\n【目标模型】${videoModel.label}\n【画幅与时长】竖版 9:16，${mode.duration} 秒，单一连续镜头。\n【主体】${subject.route}；始终保持${subject.anchors}，从开头到结尾必须是同一个主体。\n${femaleVideoDirective}\n【场景与机位】简洁摄影棚背景，${mode.camera}，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与${state.subject === "pet" ? "毛发" : "发丝"}细节。\n【造型顺序】${outfitSequence}。\n【动作与换装】${mode.name}，使用${deliveryMechanism.label}；在 ${mode.points.map((point, index) => `${point.toFixed(1)} 秒从“${outfits[index]}”换为“${outfits[index + 1]}”`).join("；")}。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。\n【模型适配】${T2V_DIRECTIVES[state.videoModel]}。\n【声音】${mode.audio}。\n【补充】${note}。\n【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“${outfits.at(-1)}”完成收尾。`;
 
   const negativeText = NEGATIVES.join("，");
   const negativeHtml = `<p>以下约束随每次输出一起交付，用来抑制常见生成故障：</p><ul class="negative-list">${NEGATIVES.map((item) => `<li>${item}</li>`).join("")}</ul>`;
@@ -1065,6 +1083,7 @@ form.addEventListener("change", (event) => {
   if (event.target === mechanismSelect) updateMechanismHint();
   if (event.target.name === "generationRoute") {
     activeTab = "video";
+    updateMechanismOptions();
     applyFormState();
   }
 });

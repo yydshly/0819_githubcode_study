@@ -195,12 +195,13 @@
 
 已确认该项目的核心资产是领域编排规则，而非模型或程序代码。它将换装视频抽象成“主体身份锁定 + 首帧状态编码 + 侧边造型消费 + 连续时间轴 + 负面约束”的流程，适合作为本研究库中导演型 Skill 和生成视频提示词工程的第一个基准案例。
 
-已完成女性专项规则的静态 Web 适配与 M1/M2/M8/M10 网页状态模拟；尚未完成下游图像、视频生成验证，因此所有关于生成稳定性的判断仍应视为待实验假设。
+已完成女性专项规则的静态 Web 适配、M1/M2/M8/M10 网页状态模拟，并回填第一条 `MiniMax H3 / T2V / M13` 真实视频。E001 表明七套造型与单主体可实现，但画幅、身份细节、精确时间和 M13 空间因果仍不稳定；单条样例不能外推为模型稳定能力。
 
 ## 关联资源
 
 - [Female Outfit Director 女性专项变体研究](variants/female-outfit-director.md)
 - [女性换装机制实验矩阵](experiments/female-transition-matrix.md)
+- [E001 · MiniMax H3 / T2V / M13 基线](experiments/e001-minimax-h3-m13.md)
 - [虚拟试衣总体技术路线](../../docs/virtual-tryon-technology-roadmap.md)
 - [原项目 README](https://github.com/liyue-aigc/outfit-director/blob/main/README.md)
 - [核心 Skill](https://github.com/liyue-aigc/outfit-director/blob/main/skill/SKILL.md)
