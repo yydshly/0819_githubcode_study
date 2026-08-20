@@ -1,6 +1,6 @@
 # Outfit Director 能力实验室
 
-这是 `outfit-director` 研究子项目的纯前端双实验，用来分别验证“导演提示词”与“网页视觉换装”两层能力。
+这是 `outfit-director` 研究子项目的纯前端双实验，用来分别验证“导演提示词”与“网页视觉换装”两层能力。女性专项规则适配自 [`female-outfit-director`](https://github.com/liyue-aigc/female-outfit-director)，在通用导演之上增加妆容、配饰、衣料约束与 M1–M12 转场机制。
 
 演示不会调用真实图像或视频模型。用户选择的本地文件不会上传，页面只读取文件名并把它们组织成提示词素材角色。
 
@@ -25,6 +25,7 @@ python -m http.server 4173 --directory demos/outfit-director
 - 默认使用“纯文本生成视频 T2V”：不需要首帧，生成后直接复制视频提示词给外部模型。
 - 可切换“首帧图生视频 I2V”：先生成首帧，再把首帧作为唯一视觉输入生成视频。
 - 切换女性、男性和宠物主体路线。
+- 可选择“女性专项导演”，配置妆容、配饰和衣料重点，并使用 M1–M12；男性或宠物会自动回到通用导演。
 - 切换 9 秒五造型卡点模式与 15 秒七造型舞蹈模式。
 - 选择首帧图像模型策略与目标图生视频模型策略。
 - 选择本地人物和衣服参考；结果按 `Image 1`、`Image 2–N` 组织素材。
@@ -38,12 +39,12 @@ python -m http.server 4173 --directory demos/outfit-director
 ### B · 网页换装实验
 
 - 在五套写实造型之间手动切换。
-- 在柔和溶解、布料扫光和卡点闪切三种换装效果之间选择。
+- 在 M1 人物飞入、M2 袖摆遮镜、M8 贴纸翻页和 M10 动作卡点四种网页近似效果之间选择。
 - 播放完整的五套自动换装序列并重置。
 - 同步查看当前造型名称、测试结论和实现边界。
 - 在桌面、平板与手机尺寸下切换深浅主题。
 
-这里显示的是同一虚构成年人物的五张预生成完整造型，通过 CSS 裁切与 JavaScript 状态切换实现。它不是 3D、视频文件、浏览器实时生成或真实服装 SKU 迁移。
+这里显示的是同一虚构成年人物的五张预生成完整造型，通过 CSS 裁切与 JavaScript 状态切换实现。四种效果用于解释转场机制，不是 3D、视频文件、浏览器实时生成或真实服装 SKU 迁移。M3–M7、M9、M11、M12 只进入 A 的外部模型提示词，不在 B 中伪装成已实现网页特效。
 
 ## 技术路线面板
 
@@ -65,12 +66,17 @@ demos/outfit-director/
 ├── app.js
 ├── favicon.svg
 ├── README.md
+├── data/
+│   ├── director-profiles.js
+│   ├── transition-mechanisms.js
+│   └── outfit-presets.js
 ├── assets/
 │   └── fictional-model-five-looks.png
 └── docs/
     ├── design-contract.md
     ├── validation.md
-    └── handoff.md
+    ├── handoff.md
+    └── upstream-attribution.md
 ```
 
 ## GitHub Pages
@@ -86,3 +92,5 @@ https://<owner>.github.io/<repository>/demos/outfit-director/
 ## 能力边界
 
 A 实验中的舞台人物和宠物仍是用于表达身份锁定与造型变化的 SVG 示意轮廓。B 实验素材由 OpenAI 内置图像生成工具创建，人物为虚构成年人，服装无品牌标识，仅用于研究演示。所有提示词由浏览器中的确定性规则生成，不能用来证明下游生成模型一定可以准确完成多主体、真实虚拟试衣、长时序或精确卡点任务。
+
+上游版本、MIT 许可与衍生边界见 [来源与许可说明](docs/upstream-attribution.md)；女性专项差异分析与逐机制实验计划见 [变体研究](../../studies/outfit-director/variants/female-outfit-director.md) 和 [F001–F012 实验矩阵](../../studies/outfit-director/experiments/female-transition-matrix.md)。

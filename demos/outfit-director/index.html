@@ -10,8 +10,11 @@
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=6" />
-    <script src="./app.js?v=6" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=7" />
+    <script src="./data/director-profiles.js?v=1" defer></script>
+    <script src="./data/transition-mechanisms.js?v=1" defer></script>
+    <script src="./data/outfit-presets.js?v=1" defer></script>
+    <script src="./app.js?v=7" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -92,6 +95,21 @@
               <p class="route-guidance" id="route-guidance"><strong>当前路线：</strong>无需首帧，生成后直接复制“视频”结果。</p>
             </fieldset>
 
+            <fieldset class="director-profile-fieldset">
+              <legend>导演配置</legend>
+              <div class="director-profile-options">
+                <label class="director-profile-card">
+                  <input type="radio" name="directorProfile" value="general" checked />
+                  <span><small>GENERAL</small><strong>通用换装导演</strong><em>女性、男性、宠物与 K/D 路线</em></span>
+                </label>
+                <label class="director-profile-card">
+                  <input type="radio" name="directorProfile" value="female" />
+                  <span><small>FEMALE / MIT</small><strong>女性专项导演</strong><em>妆容、配饰、衣料与 M1–M12</em></span>
+                </label>
+              </div>
+              <p class="profile-guidance" id="profile-guidance"><strong>当前配置：</strong>通用主体路由与换装编排。</p>
+            </fieldset>
+
             <fieldset>
               <legend>主体路线</legend>
               <div class="segmented segmented--three">
@@ -100,6 +118,27 @@
                 <label><input type="radio" name="subject" value="pet" /><span>宠物</span></label>
               </div>
             </fieldset>
+
+            <div class="female-profile-fields" id="female-profile-fields" hidden>
+              <div class="field-heading">
+                <span>女性专项锚点</span><small>适配自 female-outfit-director · 只影响提示词</small>
+              </div>
+              <div class="female-profile-grid">
+                <div class="field field--compact">
+                  <label for="female-makeup-select">妆容</label>
+                  <div class="select-wrap"><select id="female-makeup-select" name="femaleMakeup"><option value="natural">自然清透妆</option><option value="cool">清冷低饱和妆</option><option value="stage">精致舞台妆</option></select></div>
+                </div>
+                <div class="field field--compact">
+                  <label for="female-accessory-select">配饰</label>
+                  <div class="select-wrap"><select id="female-accessory-select" name="femaleAccessory"><option value="minimal">极简耳饰</option><option value="oriental">发簪与耳坠</option><option value="none">无明显配饰</option></select></div>
+                </div>
+                <div class="field field--compact">
+                  <label for="female-fabric-select">衣料重点</label>
+                  <div class="select-wrap"><select id="female-fabric-select" name="femaleFabric"><option value="mixed">真实混合面料</option><option value="flowing">长袖、裙摆与披帛</option><option value="structured">挺括廓形与层次</option></select></div>
+                </div>
+              </div>
+              <div class="profile-source-note" role="note"><span>12 PROMPT MECHANISMS</span><strong>4 个可在 B 中预演 · 8 个交给外部视频模型</strong><a href="https://github.com/liyue-aigc/female-outfit-director">规则来源 ↗</a></div>
+            </div>
 
             <fieldset>
               <legend>视频模式</legend>
@@ -267,7 +306,7 @@
             <span class="step">B</span>
             <div><p class="eyebrow-mini">PRE-GENERATED VISUAL TEST</p><h2>同一人物，五套完整造型。</h2></div>
           </div>
-          <p>这里切换的是预先生成的同一虚构人物造型，不是浏览器实时虚拟试衣，也不代表服装 SKU 的精准还原。</p>
+          <p>这里用预生成造型近似演示女性专项机制 M1、M2、M8、M10；它不是浏览器实时虚拟试衣，也不代表服装 SKU 的精准还原。</p>
         </div>
 
         <div class="visual-lab__workspace">
@@ -291,6 +330,7 @@
             <div class="real-model-stage" id="real-model-stage" aria-live="polite" aria-label="当前造型：白衬衫与炭灰长裙">
               <div class="real-model-layer is-visible" id="real-model-layer-a" style="--look-position:0%" aria-hidden="true"></div>
               <div class="real-model-layer" id="real-model-layer-b" style="--look-position:0%" aria-hidden="true"></div>
+              <div class="real-model-flight" id="real-model-flight" style="--look-position:0%" aria-hidden="true"></div>
               <div class="real-model-transition" aria-hidden="true"><span></span></div>
               <div class="real-model-scan" aria-hidden="true"></div>
               <div class="real-model-caption">
@@ -300,7 +340,7 @@
               </div>
             </div>
             <div class="stage-controls real-model-controls">
-              <label class="effect-select" for="real-effect-select"><span>换装效果</span><select id="real-effect-select"><option value="dissolve">柔和溶解</option><option value="veil">布料扫光</option><option value="beat">卡点闪切</option></select></label>
+              <label class="effect-select" for="real-effect-select"><span>女性专项机制 · 网页模拟</span><select id="real-effect-select"><option value="M1">M1 · 人物飞入</option><option value="M2">M2 · 袖摆遮镜</option><option value="M8">M8 · 贴纸翻页</option><option value="M10">M10 · 动作卡点</option></select></label>
               <button class="play-button" id="real-play-button" type="button"><span aria-hidden="true">▶</span><span id="real-play-label">自动换装</span></button>
               <button class="secondary-button" id="real-reset-button" type="button">回到第一套</button>
               <span class="simulation-note">预生成完整造型切换 · 非实时试衣</span>
@@ -316,12 +356,12 @@
             <div class="proof-content">
               <div class="proof-state"><span>CURRENT RESULT</span><strong id="proof-look-name">白衬衫 · 炭灰长裙</strong><p id="proof-look-description">适合作为初始身份锚点和通勤基线造型。</p></div>
               <dl>
-                <div><dt>已实现</dt><dd>同一虚构人物的五套写实完整造型切换</dd></div>
+                <div><dt>已实现</dt><dd>五套完整造型切换 + M1/M2/M8/M10 网页近似机制</dd></div>
                 <div><dt>实现方式</dt><dd>项目图片素材 + CSS 裁切 + JavaScript 状态切换</dd></div>
                 <div><dt>不是</dt><dd>3D、视频文件、实时生成或真实服装迁移</dd></div>
-                <div><dt>下一层</dt><dd>接入图像/视频模型，生成真实首帧和视频结果</dd></div>
+                <div><dt>提示词专用</dt><dd>M3/M4/M5/M6/M7/M9/M11/M12 交给外部视频模型</dd></div>
               </dl>
-              <div class="proof-note"><strong>素材声明</strong><p>人物由 AI 生成且为虚构成年人；服装无品牌标识，仅用于研究演示。</p></div>
+              <div class="proof-note"><strong>规则来源与素材声明</strong><p>机制适配自 MIT 的 female-outfit-director；人物由 AI 生成且为虚构成年人，服装无品牌标识。</p></div>
             </div>
           </aside>
         </div>

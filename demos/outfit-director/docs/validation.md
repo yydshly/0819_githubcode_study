@@ -119,6 +119,33 @@ Revision 3 截图只保存在浏览器工具临时证据目录，不进入产品
 
 Revision 4 截图只保存在浏览器工具临时证据目录，不进入产品提交。
 
+## Revision 5 · Female Outfit Director 规则接入
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Source | female variant pin | pass | 上游固定为 `2d30d40d09368aab333d054c035289061c9fcf47`；MIT、来源和适配边界已写入仓库 |
+| Static data | profiles / mechanisms / presets | pass | 女性 profile、M1–M13 与四类预设分离；页面加载三个数据文件且回退数据仍可用 |
+| Desktop A | 1440px / dark / female / M12 | pass | 女性专项字段展开；视频输出包含女性身份锚点、妆容/配饰/衣料和 M12 衣纹执行规则 |
+| A route guard | female → male | pass | 自动切回 `general`，专项字段隐藏，K 机制由 12 个回到 4 个网页可预览项 |
+| Desktop B | M1 / M2 / M8 / M10 | pass | 四种选择分别产生 `effect-person-fly`、`effect-veil`、`effect-sticker-flip`、`effect-beat`，造型名称与结果同步 |
+| Capability boundary | A and B notices | pass | 页面明确 4 个网页模拟、8 个外部提示词专用；未声称真实服装迁移 |
+| Keyboard | female profile | pass | 聚焦女性专项单选并按 Space 后保持焦点、选中状态与字段可见状态同步 |
+| Tablet | 1024×900 / light / female | pass | `scrollWidth 1009 < innerWidth 1024`，新增配置和状态母图保持双栏可读 |
+| Mobile A | 390×844 / dark / female | pass | 完整单列流程可读；`scrollWidth 375 < innerWidth 390` |
+| Mobile B | 390×844 / dark | pass | 衣橱、写实舞台和效果说明按任务顺序单列，无横向溢出 |
+| Motion | B / reduced-motion | pass | 媒体查询为 true；自动换装直接到“黑色礼服 · 夜间造型”，无 `is-changing`，按钮保持“自动换装” |
+| Runtime | errors / console / syntax | pass | 页面错误和控制台为空；JavaScript 语法与 Git 空白检查通过 |
+
+### Revision 5 visual evidence
+
+- Desktop A / 女性专项 M12：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787196349708.png`
+- Desktop B / M1：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787196280881.png`
+- Tablet light / 女性专项：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787196433422.png`
+- Mobile A / 女性专项：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787196590887.png`
+- Mobile B：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787196650034.png`
+
+Revision 5 截图只保存在浏览器工具临时证据目录，不进入产品提交。
+
 ## Terminal audit
 
 - continue：无

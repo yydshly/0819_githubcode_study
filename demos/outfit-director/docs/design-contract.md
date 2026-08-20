@@ -146,3 +146,39 @@
 | 无障碍 | 目标选择可键盘操作且状态语义正确 | Keyboard | Focus + ARIA evidence | Stage 7 | pass | tablist、tabpanel、ARIA 状态与方向键焦点同步通过 |
 | 工程 | 静态运行无错误、无新增高成本资产 | Runtime | Syntax + browser + performance | Stage 8 | pass | 浏览器错误为空；语法与空白检查通过；无新增媒体 |
 | 交付 | README、验收与交接同步 | Repository | File + terminal audit | Stage 9 | pass | 主索引、演示说明、验证与交接已同步 |
+
+## Revision 5 direction
+
+- Entry mode：Revision-led implementation。
+- Request revision：5。
+- Target user：希望把 `female-outfit-director` 的女性造型和转场规则真正接入当前研究原型的维护者与研究访客。
+- Desired first impression：A 能明确选择“女性专项导演”并看到其输入改变提示词；B 能选择与上游机制编号一致的网页模拟效果。
+- Visual ambition：Editorial。
+- Experience architecture：Hybrid Workspace；A 的参数与输出、B 的人物舞台继续承担两条操作路径，规则来源和能力边界进入详情流。
+- User phases：建立女性专项规则数据层；接入 A 的女性参数与 M1–M12；接入 B 的 M1/M2/M8/M10 网页模拟；形成机制对照实验记录。
+- Visual constraints：沿用现有导演台体系；女性专项字段按需展开；机制支持状态使用文字和徽标，不仅依赖颜色；不新增图片、Canvas、WebGL 或网络运行时。
+- Information constraints：明确“女性专项提示词已接入”“四种网页视觉机制已模拟”“其余八种只输出给外部模型”；不得把 CSS 转场称为真实服装迁移。
+- Operation constraints：女性专项只适用于女性主体；选择男性或宠物时自动回到通用导演；A 的机制选项、提示词和参数同步；B 的效果编号与上游转场库一致。
+- State constraints：保留 T2V/I2V、K/D、A/B、深浅主题和 reduced-motion；女性专项默认 K 模式并允许 M1–M12；D 模式仍使用通用 M13。
+- Environment constraints：纯静态 GitHub Pages；规范地址 `http://127.0.0.1:4173/`；1440/1024/390px、鼠标/触摸/键盘。
+- Source boundary：规则适配自 `liyue-aigc/female-outfit-director` commit `2d30d40d09368aab333d054c035289061c9fcf47`，MIT；保留来源和许可证说明，不复制第三方模型或服务。
+- Primary journey：A 选择女性专项 → 配置妆容/配饰/衣料 → 选择 M1–M12 → 生成女性专项参数和视频提示词；B 选择 M1/M2/M8/M10 → 切换造型 → 观察与机制一致的网页状态变化。
+- Required artifacts：结构化规则数据、女性专项 Web 控件与输出、四种 B 效果、变体研究文档、实验矩阵、来源说明、README、验收与交接更新。
+- Autonomy authorization：用户于 2026-08-20 在接入方案后明确“继续”，授权在既定静态原型范围内直接实现和验证。
+- User-decision boundary：调用真实生成 API、上传并分析真实人物图片、保存身体数据、产生费用或创建新的远端仓库时再确认。
+- Observable completion：女性专项状态可选择且强制女性主体；12 种机制可发现并改变输出；B 四种机制产生可观察且可降级的视觉变化；来源/边界可发现；三视口、两主题、键盘、reduced-motion 和浏览器错误检查通过。
+
+## Revision 5 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| 规则接入 | 上游来源、版本、许可与差异可追溯 | Repository | Source + file inspection | Stage 0 | pass | commit、MIT、差异和衍生边界已记录 |
+| 规则接入 | 女性 profile、12 机制和预设结构化 | Static data | Syntax + file inspection | Stage 3 | pass | 三个独立数据文件已接入并通过语法检查 |
+| A 女性专项 | 专项选择与字段按需展开 | A / female profile | Browser interaction + screenshot | Stage 4 | pass | 专项 profile、三类字段和来源入口可见 |
+| A 女性专项 | M1–M12 可选并改变提示词 | A / K / female | Browser output observation | Stage 5 | pass | 12 选项可发现，M12 输出含衣纹执行规则和女性锚点 |
+| A 路由保护 | 男性或宠物自动返回通用导演 | A / subject change | Browser state observation | Stage 6 | pass | 男性实测切回 general、字段隐藏、K 机制缩为 4 个 |
+| B 特效模拟 | M1/M2/M8/M10 可选择且视觉不同 | B / four effects | Browser screenshots + DOM | Stage 5 | pass | 四个 data-effect 类和造型状态同步实测通过 |
+| 能力边界 | 4 个网页已模拟、8 个提示词专用清楚可见 | A/B notices | Browser text observation | Stage 3 | pass | A 支持说明、B 标题和证明面板均明确边界 |
+| 跨设备 | 新字段和效果在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面深色、平板浅色、手机深色无横向溢出 |
+| 无障碍与动态 | 键盘和 reduced-motion 保留结果 | Keyboard / reduced motion | Interaction + state evidence | Stage 7 | pass | Space 选择 profile；B reduced-motion 直接到终场且无 changing 类 |
+| 工程与交付 | 语法、错误、README、验收和交接同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 文档、静态检查与浏览器终审完成 |

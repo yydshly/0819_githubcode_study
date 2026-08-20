@@ -89,7 +89,7 @@ const PALETTES = {
   stage: ["#252a2e", "#d65449", "#3869be", "#d2a640", "#76549d", "#aab6bd", "#e1d8c3"],
 };
 
-const MECHANISMS = {
+const FALLBACK_MECHANISMS = {
   M1: {
     label: "M1 · 完整主体飞入重合",
     hint: "侧边轮廓飞向中央并对齐，空间因果最清楚。",
@@ -114,6 +114,38 @@ const MECHANISMS = {
     label: "M13 · 侧边激活 + 舞蹈峰值",
     hint: "六个侧边造型依次清空，并在连续舞步峰值换装。",
     modes: ["D"],
+  },
+};
+
+const DIRECTOR_DATA = window.OutfitDirectorData || {};
+const DIRECTOR_PROFILES = DIRECTOR_DATA.profiles || {
+  general: { label: "通用换装导演", description: "通用主体路由与换装编排。" },
+  female: {
+    label: "女性专项导演",
+    description: "女性造型与换装机制专项编排。",
+    identityRule: "保持同一成年女性身份、脸、发型、肤色和身材比例，只改变穿搭",
+    physicalRule: "长袖、裙摆和流苏保持自然重力、惯性与回落",
+    compositionRule: "中央主体与侧边造型保持同一人物身份",
+  },
+};
+const MECHANISMS = DIRECTOR_DATA.transitions || FALLBACK_MECHANISMS;
+const FEMALE_PRESETS = DIRECTOR_DATA.femalePresets || {};
+
+const FEMALE_FIELD_LABELS = {
+  makeup: {
+    natural: "自然清透妆",
+    cool: "清冷低饱和妆",
+    stage: "精致舞台妆",
+  },
+  accessory: {
+    minimal: "极简耳饰",
+    oriental: "发簪与耳坠",
+    none: "无明显配饰",
+  },
+  fabric: {
+    mixed: "真实混合面料",
+    flowing: "长袖、裙摆与披帛",
+    structured: "挺括廓形与层次",
   },
 };
 
@@ -182,7 +214,7 @@ const ROADMAP_GOALS = [
     title: "提示词生成换装视频",
     summary: "用 Outfit Director 把人物、服装、动作与卡点编成可执行提示词，再交给外部视频模型生成真实结果。",
     inputs: ["人物与服装要求", "参考图（I2V 可选）", "时长、节奏与转场"],
-    capabilities: ["Skill 规则编排", "T2V / I2V 提示词", "换装时间轴与负面约束"],
+    capabilities: ["通用 + 女性专项规则编排", "T2V / I2V 提示词", "M1–M13 时间轴与负面约束"],
     outputs: ["可复制的视频提示词", "外部模型生成的 MP4", "模型、参数与评估记录"],
     steps: ["生成并保存提示词", "在外部模型生成视频", "回填 MP4 与生成参数", "评估身份、服装、卡点和伪影"],
     done: "至少完成 1 个可复现的真实视频样例；只有页面预演或提示词不算完成。",
@@ -262,6 +294,11 @@ const NEGATIVES = [
 ];
 
 const form = document.querySelector("#director-form");
+const femaleProfileFields = document.querySelector("#female-profile-fields");
+const profileGuidance = document.querySelector("#profile-guidance");
+const femaleMakeupSelect = document.querySelector("#female-makeup-select");
+const femaleAccessorySelect = document.querySelector("#female-accessory-select");
+const femaleFabricSelect = document.querySelector("#female-fabric-select");
 const mechanismSelect = document.querySelector("#mechanism-select");
 const mechanismHint = document.querySelector("#mechanism-hint");
 const styleSelect = document.querySelector("#style-select");
@@ -306,6 +343,7 @@ const wardrobeList = document.querySelector("#wardrobe-list");
 const realModelStage = document.querySelector("#real-model-stage");
 const realModelLayerA = document.querySelector("#real-model-layer-a");
 const realModelLayerB = document.querySelector("#real-model-layer-b");
+const realModelFlight = document.querySelector("#real-model-flight");
 const realLookNumber = document.querySelector("#real-look-number");
 const realLookName = document.querySelector("#real-look-name");
 const realLookStatus = document.querySelector("#real-look-status");
@@ -329,6 +367,7 @@ let realVisibleLayer = "a";
 let realLookIndex = 0;
 let realPlaying = false;
 let state = {
+  directorProfile: "general",
   subject: "woman",
   mode: "K",
   style: "urban",
@@ -342,6 +381,9 @@ let state = {
   videoModel: "generic-i2v",
   personFileName: "内置虚构人物素材",
   clothingFileNames: [],
+  femaleMakeup: "natural",
+  femaleAccessory: "minimal",
+  femaleFabric: "mixed",
 };
 
 function escapeHtml(value) {
@@ -374,8 +416,13 @@ function getOutfits() {
 
 function updateMechanismOptions() {
   const mode = getSelected("mode");
+  const profile = getSelected("directorProfile");
   const previous = mechanismSelect.value;
-  const available = Object.entries(MECHANISMS).filter(([, item]) => item.modes.includes(mode));
+  const generalMechanisms = mode === "D" ? ["M10", "M13"] : ["M1", "M2", "M8", "M10"];
+  const available = Object.entries(MECHANISMS).filter(([key, item]) => {
+    if (!item.modes.includes(mode)) return false;
+    return profile === "female" && mode === "K" ? item.female : generalMechanisms.includes(key);
+  });
 
   mechanismSelect.innerHTML = available
     .map(([key, item]) => `<option value="${key}">${item.label}</option>`)
@@ -387,7 +434,26 @@ function updateMechanismOptions() {
 }
 
 function updateMechanismHint() {
-  mechanismHint.textContent = MECHANISMS[mechanismSelect.value].hint;
+  const mechanism = MECHANISMS[mechanismSelect.value];
+  if (!mechanism) return;
+  const support = mechanism.webEffect ? "B 实验可网页预演" : "仅生成外部模型提示词";
+  mechanismHint.textContent = `${mechanism.hint} · ${support}`;
+}
+
+function updateDirectorProfileUi({ announce = false } = {}) {
+  const isFemale = getSelected("directorProfile") === "female";
+  if (isFemale && getSelected("subject") !== "woman") {
+    form.elements.subject.value = "woman";
+  }
+  femaleProfileFields.hidden = !isFemale;
+  femaleMakeupSelect.disabled = !isFemale;
+  femaleAccessorySelect.disabled = !isFemale;
+  femaleFabricSelect.disabled = !isFemale;
+  profileGuidance.innerHTML = isFemale
+    ? "<strong>当前配置：</strong>女性主体已锁定；启用妆容、配饰、衣料物理和 M1–M12。"
+    : "<strong>当前配置：</strong>通用主体路由与换装编排。";
+  updateMechanismOptions();
+  if (announce) showToast(isFemale ? "已启用女性专项导演与 M1–M12" : "已切回通用换装导演");
 }
 
 function humanFigure(subject, color) {
@@ -514,6 +580,10 @@ function buildOutputs() {
   const subject = SUBJECTS[state.subject];
   const outfits = getOutfits();
   const mechanism = MECHANISMS[state.mechanism];
+  const profile = DIRECTOR_PROFILES[state.directorProfile];
+  const isFemaleProfile = state.directorProfile === "female" && state.subject === "woman";
+  const femaleProfile = DIRECTOR_PROFILES.female || {};
+  const femalePreset = FEMALE_PRESETS[state.style] || {};
   const imageModel = IMAGE_MODELS[state.imageModel];
   const videoModel = VIDEO_MODELS[state.videoModel];
   const isI2V = state.generationRoute === "i2v";
@@ -522,8 +592,18 @@ function buildOutputs() {
   const clothesSource = isI2V && state.clothingFileNames.length
     ? state.clothingFileNames.map((name, index) => `Image ${index + 2}「${name}」`).join("；")
     : isI2V ? "内置五套无品牌造型描述（无真实衣服图片）" : "纯文本造型描述";
+  const femaleAnchors = isFemaleProfile
+    ? `${FEMALE_FIELD_LABELS.makeup[state.femaleMakeup]}、${FEMALE_FIELD_LABELS.accessory[state.femaleAccessory]}、${FEMALE_FIELD_LABELS.fabric[state.femaleFabric]}`
+    : "";
+  const femaleImageDirective = isFemaleProfile
+    ? `女性专项：${femaleProfile.identityRule}；造型方向为${femalePreset.label || STYLE_LABELS[state.style]}，色彩为${femalePreset.palette || "遵循用户设定"}；${femaleProfile.compositionRule}。妆容、配饰与衣料锚点：${femaleAnchors}。`
+    : "";
+  const femaleVideoDirective = isFemaleProfile
+    ? `【女性专项】${femaleProfile.identityRule}；${femaleProfile.physicalRule}。妆容、配饰与衣料锚点为${femaleAnchors}。\n【机制执行】${mechanism.action}；${mechanism.constraint}。`
+    : `【机制执行】${mechanism.action || mechanism.hint}`;
 
   const paramsText = [
+    `导演配置：${profile.label}`,
     `生成路线：${isI2V ? "首帧图生视频 I2V" : "纯文本生成视频 T2V"}`,
     `首帧图像模型：${isI2V ? imageModel.label : "不需要"}`,
     `目标视频模型：${videoModel.label}`,
@@ -532,6 +612,8 @@ function buildOutputs() {
     `主体路线：${subject.label}`,
     `基础身份：${subject.route}`,
     `识别锚点：${subject.anchors}`,
+    isFemaleProfile ? `女性造型锚点：${femaleAnchors}` : "",
+    isFemaleProfile ? `女性衣料物理：${femaleProfile.physicalRule}` : "",
     `视频模式：${state.mode}｜${mode.name}`,
     `造型方向：${STYLE_LABELS[state.style]}`,
     `造型数量：正好 ${mode.lookCount} 套`,
@@ -542,7 +624,7 @@ function buildOutputs() {
     `换装机制：${mechanism.label}`,
     `声音：${mode.audio}`,
     `系统补全：${note}`,
-  ].join("\n");
+  ].filter(Boolean).join("\n");
 
   const paramsHtml = `<dl>${paramsText
     .split("\n")
@@ -558,7 +640,7 @@ function buildOutputs() {
     const position = mode.positions[index][1];
     const action = state.mode === "D"
       ? `中央主体延续连续舞步，${position}贴图在动作峰值激活并从原位清空，换为“${outfits[index + 1]}”。`
-      : `${position}完整主体轮廓激活并从原位清空，通过${mechanism.label.replace(/^M\d+ · /, "")}与中央对齐，换为“${outfits[index + 1]}”。`;
+      : `${position}造型激活并从原位清空；${mechanism.action || mechanism.hint}，换为“${outfits[index + 1]}”。`;
     timelineRows.push({ range: `${previous.toFixed(1)}–${point.toFixed(1)}s`, title: `第 ${index + 1} 次换装 · ${point.toFixed(1)}s 完成`, action });
     previous = point;
   });
@@ -574,13 +656,13 @@ function buildOutputs() {
     .join("");
 
   const imagePrompt = isI2V
-    ? `【目标模型】${imageModel.label}\n【参考素材】Image 1 是人物身份参考「${state.personFileName}」；${clothesSource}。仅依据素材角色与以下文字执行，不推断未提供的服装细节。\n【模型适配】${imageModel.directive}。\n【生成任务】${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`
+    ? `【目标模型】${imageModel.label}\n【参考素材】Image 1 是人物身份参考「${state.personFileName}」；${clothesSource}。仅依据素材角色与以下文字执行，不推断未提供的服装细节。\n【模型适配】${imageModel.directive}。\n【生成任务】${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。${femaleImageDirective}画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`
     : `当前选择“纯文本生成视频 T2V”，不需要先生成首帧。若外部模型必须提供图片，可切换到“先做首帧，再生成视频 I2V”。`;
 
   const outfitSequence = outfits.map((outfit, index) => `${index + 1}. ${outfit}`).join("；");
   const videoPrompt = isI2V
-    ? `【生成方式】首帧图生视频 I2V\n【目标模型】${videoModel.label}\n【输入】将“首帧”标签中生成并确认过的图片作为唯一视频首帧；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`
-    : `【生成方式】纯文本生成视频 T2V\n【目标模型】${videoModel.label}\n【画幅与时长】竖版 9:16，${mode.duration} 秒，单一连续镜头。\n【主体】${subject.route}；始终保持${subject.anchors}，从开头到结尾必须是同一个主体。\n【场景与机位】简洁摄影棚背景，${mode.camera}，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与${state.subject === "pet" ? "毛发" : "发丝"}细节。\n【造型顺序】${outfitSequence}。\n【动作与换装】${mode.name}，使用${mechanism.label}；在 ${mode.points.map((point, index) => `${point.toFixed(1)} 秒从“${outfits[index]}”换为“${outfits[index + 1]}”`).join("；")}。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。\n【模型适配】${T2V_DIRECTIVES[state.videoModel]}。\n【声音】${mode.audio}。\n【补充】${note}。\n【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“${outfits.at(-1)}”完成收尾。`;
+    ? `【生成方式】首帧图生视频 I2V\n【导演配置】${profile.label}\n【目标模型】${videoModel.label}\n【输入】将“首帧”标签中生成并确认过的图片作为唯一视频首帧；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n${femaleVideoDirective}\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`
+    : `【生成方式】纯文本生成视频 T2V\n【导演配置】${profile.label}\n【目标模型】${videoModel.label}\n【画幅与时长】竖版 9:16，${mode.duration} 秒，单一连续镜头。\n【主体】${subject.route}；始终保持${subject.anchors}，从开头到结尾必须是同一个主体。\n${femaleVideoDirective}\n【场景与机位】简洁摄影棚背景，${mode.camera}，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与${state.subject === "pet" ? "毛发" : "发丝"}细节。\n【造型顺序】${outfitSequence}。\n【动作与换装】${mode.name}，使用${mechanism.label}；在 ${mode.points.map((point, index) => `${point.toFixed(1)} 秒从“${outfits[index]}”换为“${outfits[index + 1]}”`).join("；")}。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。\n【模型适配】${T2V_DIRECTIVES[state.videoModel]}。\n【声音】${mode.audio}。\n【补充】${note}。\n【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“${outfits.at(-1)}”完成收尾。`;
 
   const negativeText = NEGATIVES.join("，");
   const negativeHtml = `<p>以下约束随每次输出一起交付，用来抑制常见生成故障：</p><ul class="negative-list">${NEGATIVES.map((item) => `<li>${item}</li>`).join("")}</ul>`;
@@ -595,7 +677,9 @@ function buildOutputs() {
 }
 
 function renderActiveOutput() {
-  outputTitle.textContent = OUTPUT_TITLES[activeTab];
+  outputTitle.textContent = state.directorProfile === "female" && activeTab === "video"
+    ? "女性专项视频提示词"
+    : OUTPUT_TITLES[activeTab];
   outputContent.innerHTML = outputs[activeTab].html;
   tabs.forEach((tab) => {
     const selected = tab.dataset.tab === activeTab;
@@ -621,6 +705,7 @@ function updateGenerationRouteUi() {
 }
 
 function applyFormState() {
+  state.directorProfile = getSelected("directorProfile");
   state.generationRoute = getSelected("generationRoute");
   state.subject = getSelected("subject");
   state.mode = getSelected("mode");
@@ -629,6 +714,9 @@ function applyFormState() {
   state.imageModel = imageModelSelect.value;
   state.videoModel = videoModelSelect.value;
   state.note = noteInput.value;
+  state.femaleMakeup = femaleMakeupSelect.value;
+  state.femaleAccessory = femaleAccessorySelect.value;
+  state.femaleFabric = femaleFabricSelect.value;
   state.currentStep = 0;
   state.activeSide = -1;
   stopPlayback();
@@ -836,11 +924,12 @@ function setRealLook(index) {
   window.clearTimeout(realEffectTimerId);
   realModelStage.classList.remove("is-changing");
   realModelStage.dataset.effect = realEffectSelect.value;
+  realModelFlight.style.setProperty("--look-position", `${nextLook.position}%`);
   if (!reducedMotion && nextIndex !== realLookIndex) {
     void realModelStage.offsetWidth;
     realModelStage.classList.add("is-changing");
     realLookStatus.textContent = `${realEffectSelect.options[realEffectSelect.selectedIndex].text} · 正在完成换装`;
-    const duration = realEffectSelect.value === "veil" ? 760 : realEffectSelect.value === "beat" ? 300 : 650;
+    const duration = { M1: 820, M2: 760, M8: 620, M10: 300 }[realEffectSelect.value] || 650;
     realEffectTimerId = window.setTimeout(() => {
       realModelStage.classList.remove("is-changing");
       realLookStatus.textContent = "已锁定同一人物身份与站姿";
@@ -959,6 +1048,19 @@ form.addEventListener("submit", (event) => {
 });
 
 form.addEventListener("change", (event) => {
+  if (event.target.name === "directorProfile") {
+    if (event.target.value === "female") form.elements.mode.value = "K";
+    updateDirectorProfileUi({ announce: true });
+  }
+  if (event.target.name === "subject") {
+    if (event.target.value !== "woman" && getSelected("directorProfile") === "female") {
+      form.elements.directorProfile.value = "general";
+      updateDirectorProfileUi();
+      showToast("男性与宠物使用通用换装导演");
+    } else {
+      updateMechanismOptions();
+    }
+  }
   if (event.target.name === "mode") updateMechanismOptions();
   if (event.target === mechanismSelect) updateMechanismHint();
   if (event.target.name === "generationRoute") {
@@ -1057,7 +1159,7 @@ try {
 }
 
 setTheme(savedTheme);
-updateMechanismOptions();
+updateDirectorProfileUi();
 noteCount.textContent = `${noteInput.value.length} / 120`;
 updateAssetLabels();
 realModelStage.dataset.effect = realEffectSelect.value;

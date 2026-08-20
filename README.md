@@ -8,7 +8,7 @@
 
 | 项目 | 原项目 | 研究仓库 | 演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- | --- |
-| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) | 本仓库记录 | [交互能力实验室](demos/outfit-director/README.md) | 研究中 | 导演型 Skill、提示词编排、换装视频状态机 |
+| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | 本仓库记录 | [交互能力实验室](demos/outfit-director/README.md) | 研究中 | 通用/女性专项导演、M1–M13、换装视频状态机 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -59,7 +59,9 @@
 - [x] 建立对应的研究记录
 - [x] 建立第一个本地交互能力演示
 - [x] 落地虚拟试衣总体技术路线并接入 Web 展示
+- [x] 接入女性专项导演规则、M1–M12 和四种网页机制模拟
 - [ ] 完成 E001：生成并回填第一个真实换装视频基线
+- [ ] 按 F001–F012 矩阵比较女性专项转场的外部模型服从度
 - [ ] 对目标二的开源 VTON 模型与托管 API 完成候选比较
 - [ ] 关联第一个独立研究仓库
 - [ ] 关联第一个可访问的在线演示
