@@ -86,3 +86,32 @@
 | 跨设备验收 | 键盘与 reduced-motion | A/B primary controls | Keyboard + media emulation | Stage 7 | pass | 语义按钮/标签可聚焦；B 无动画路径直接到第 5 套 |
 | 工程 | 素材大小和加载性能可接受 | Static runtime | Resource + vitals observation | Stage 8 | pass | 素材 1.75 MB 延迟到 B；FCP 84ms，页面错误为空 |
 | 交付 | README、验收、交接和素材说明更新 | Repository | File + terminal audit | Stage 9 | pass | 文档与素材来源说明完成 |
+
+## Revision 3 direction
+
+- Entry mode：Revision-led refinement。
+- Request revision：3。
+- User phases：第一，使用提示词直接交给外部视频模型；第二，保留并优化网页写实换装演示。
+- Preserved：A/B 双实验、原 K/D 编排规则、素材本地读取、写实五造型资产、静态 GitHub Pages 兼容、无真实模型 API。
+- Revised primary journey：默认进入 A → 选择“纯文本生成视频 T2V”或“首帧图生视频 I2V” → 生成后直接落到视频提示词 → 复制到外部模型；随后进入 B → 选择换装效果 → 手动或自动演示五套造型。
+- Visual calibration：A 的生成路线与最终视频提示词成为第一视觉任务，参数和首帧退为可检查详情；B 的人物仍为主视觉，过渡光效只解释状态变化，不遮挡衣服和人物。
+- Operation constraints：外部模型生成仍由用户执行；页面不声称已经生成视频，不引入后端、密钥或付费 API。
+- State constraints：T2V 不要求首帧输入；I2V 明确先生成首帧再生成视频；B 提供柔和溶解、布料扫光和卡点闪切，并支持 reduced-motion 即时完成。
+- Observable completion：A 默认能在一次提交后展示可复制视频提示词，并正确区分 T2V/I2V 输入说明；B 三种效果能改变可观察过渡且最终造型、衣橱选中态和证明面板一致；桌面、1024px、390px、深浅主题和键盘保持可用。
+- Autonomy authorization：用户于 2026-08-20 明确要求两个方向都进行尝试并规定顺序，授权继续实现与验收。
+- User-decision boundary：实际调用外部模型、上传真实人物照片、产生费用或持久化用户素材时再请求授权。
+
+## Revision 3 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| 第一：提示词生成视频 | T2V / I2V 路线可选择且说明清楚 | A / default | Screenshot + DOM | Stage 3 | pass | T2V 默认，I2V 按需展开专用字段 |
+| 第一：提示词生成视频 | 生成后默认落到视频提示词 | A / submit | Browser interaction + output text | Stage 5 | pass | 视频标签默认激活，提交后保持并刷新结果 |
+| 第一：提示词生成视频 | T2V 不依赖首帧、I2V 明确首帧输入 | A / both routes | Prompt text observation | Stage 6 | pass | 两路线输入说明和提示词分支实测通过 |
+| 第一：提示词生成视频 | 一键复制结果给外部模型 | A / video result | Copy feedback | Stage 6 | pass | 复制反馈显示“直接视频提示词” |
+| 第二：网页效果优化 | 三种换装效果可选择 | B / manual | Screenshot + interaction | Stage 4 | pass | 柔和溶解、布料扫光、卡点闪切可选择 |
+| 第二：网页效果优化 | 手动和自动换装结果一致 | B / look 01–05 | DOM + visual state | Stage 5 | pass | 手动结果同步；自动结束第 5 套并清理过渡类 |
+| 第二：网页效果优化 | reduced-motion 保留结果 | B / reduced-motion | Media emulation | Stage 7 | pass | 即时到达第 5 套且不播放效果层 |
+| 跨设备 | 双实验保持桌面、平板、手机可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面/手机截图、平板无溢出与浅色主题通过 |
+| 工程 | 动画不增加高成本运行时资产 | Static runtime | Resource/performance observation | Stage 8 | pass | 纯 CSS 效果；无新增媒体；FCP 64ms，错误为空 |
+| 交付 | README、验收与交接同步 | Repository | File + terminal audit | Stage 9 | pass | 文档、语法、空白和状态审计完成 |

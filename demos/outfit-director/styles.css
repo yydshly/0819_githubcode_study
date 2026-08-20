@@ -1359,6 +1359,85 @@ footer a {
 }
 
 /* Prompt Director additions */
+.route-fieldset {
+  margin-bottom: 18px;
+}
+
+.generation-route-options {
+  display: grid;
+  gap: 8px;
+}
+
+.generation-route-card {
+  position: relative;
+  min-height: 72px;
+  display: block;
+  padding: 11px 12px 10px 42px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.generation-route-card:hover {
+  color: var(--text);
+  transform: translateX(2px);
+}
+
+.generation-route-card:has(input:checked) {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface-2));
+  border-color: var(--accent);
+}
+
+.generation-route-card input {
+  position: absolute;
+  top: 17px;
+  left: 14px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-strong);
+}
+
+.generation-route-card small,
+.generation-route-card strong,
+.generation-route-card em {
+  display: block;
+}
+
+.generation-route-card small {
+  color: var(--accent);
+  font: 800 0.48rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .1em;
+}
+
+.generation-route-card strong {
+  margin-top: 6px;
+  font-size: .7rem;
+}
+
+.generation-route-card em {
+  margin-top: 3px;
+  color: var(--faint);
+  font-size: .56rem;
+  font-style: normal;
+}
+
+.route-guidance {
+  margin: 9px 0 0;
+  padding: 9px 10px;
+  color: var(--muted);
+  background: var(--surface-3);
+  border-radius: 8px;
+  font-size: .58rem;
+}
+
+.route-guidance strong {
+  color: var(--gold);
+}
+
 .generation-models {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1368,6 +1447,10 @@ footer a {
   background: color-mix(in srgb, var(--surface-2) 64%, transparent);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+}
+
+.generation-models:has(#image-model-field[hidden]) {
+  grid-template-columns: 1fr;
 }
 
 .field-heading {
@@ -1488,6 +1571,25 @@ footer a {
 
 .asset-input__count {
   font: 900 0.8rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.external-handoff {
+  display: grid;
+  gap: 5px;
+  margin: 12px 13px 0;
+  padding: 12px;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+.external-handoff span {
+  font: 900 .49rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .1em;
+}
+
+.external-handoff strong {
+  font-size: .66rem;
 }
 
 /* Realistic 2D wardrobe test */
@@ -1699,6 +1801,66 @@ footer a {
   transform: translateX(-50%) scale(1);
 }
 
+.real-model-transition {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.real-model-transition span {
+  position: absolute;
+  inset: -20%;
+  display: block;
+}
+
+.real-model-stage[data-effect="dissolve"].is-changing .real-model-transition {
+  animation: effect-dissolve 620ms ease both;
+  background: radial-gradient(circle at 50% 50%, rgba(169, 247, 207, .26), transparent 48%);
+}
+
+.real-model-stage[data-effect="veil"] .real-model-layer {
+  transition-duration: 520ms;
+}
+
+.real-model-stage[data-effect="veil"].is-changing .real-model-transition {
+  opacity: 1;
+}
+
+.real-model-stage[data-effect="veil"].is-changing .real-model-transition span {
+  animation: effect-veil 720ms cubic-bezier(.65,0,.2,1) both;
+  background:
+    linear-gradient(105deg, transparent 24%, rgba(169,247,207,.12) 35%, rgba(255,255,255,.72) 48%, rgba(169,247,207,.2) 60%, transparent 74%);
+  filter: blur(8px);
+}
+
+.real-model-stage[data-effect="beat"] .real-model-layer {
+  transition-duration: 120ms;
+}
+
+.real-model-stage[data-effect="beat"].is-changing .real-model-transition {
+  animation: effect-beat 260ms steps(2, end) both;
+  background: rgba(255,255,255,.82);
+  mix-blend-mode: screen;
+}
+
+@keyframes effect-dissolve {
+  0%, 100% { opacity: 0; transform: scale(.98); }
+  44% { opacity: 1; transform: scale(1.03); }
+}
+
+@keyframes effect-veil {
+  from { transform: translateX(-85%) skewX(-8deg); }
+  to { transform: translateX(85%) skewX(-8deg); }
+}
+
+@keyframes effect-beat {
+  0%, 100% { opacity: 0; }
+  35%, 60% { opacity: .92; }
+}
+
 .real-model-scan {
   position: absolute;
   z-index: 2;
@@ -1745,6 +1907,29 @@ footer a {
 
 .real-model-controls {
   border-top: 1px solid var(--line);
+}
+
+.effect-select {
+  min-width: 132px;
+  display: grid;
+  gap: 3px;
+  margin-right: auto;
+}
+
+.effect-select span {
+  color: var(--faint);
+  font: 750 .48rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .08em;
+}
+
+.effect-select select {
+  min-height: 34px;
+  padding: 0 28px 0 9px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: .62rem;
 }
 
 .real-look-progress {
@@ -2129,6 +2314,11 @@ footer a {
     left: 10px;
     right: 10px;
     bottom: 10px;
+  }
+
+  .real-model-controls .effect-select {
+    flex-basis: 100%;
+    margin-right: 0;
   }
 
   .proof-content {

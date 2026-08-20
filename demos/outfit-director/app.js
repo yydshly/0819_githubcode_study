@@ -121,7 +121,7 @@ const OUTPUT_TITLES = {
   params: "参数锁定结果",
   timeline: "完整视频时间轴",
   image: "首帧图片提示词",
-  video: "精简视频提示词",
+  video: "直接视频提示词",
   negative: "负面提示词",
 };
 
@@ -142,21 +142,28 @@ const IMAGE_MODELS = {
 
 const VIDEO_MODELS = {
   "generic-i2v": {
-    label: "通用图生视频 I2V",
+    label: "通用视频模型",
     directive: "以生成后的首帧为唯一视觉锚点，使用秒级事件表描述换装顺序与运动连续性",
   },
   "identity-i2v": {
-    label: "首帧一致性优先 I2V",
+    label: "身份一致性优先视频模型",
     directive: "最大化首帧身份、服装和构图保持度；动作幅度适中，避免镜头变化引发身份漂移",
   },
   "motion-i2v": {
-    label: "动作表现优先 I2V",
+    label: "动作表现优先视频模型",
     directive: "用明确动作峰值触发换装，同时锁定脸、身体轴线、落脚点和衣料惯性",
   },
   "fast-i2v": {
-    label: "快速预览 I2V",
+    label: "快速预览视频模型",
     directive: "减少复杂运镜和物理效果，优先验证换装时点、顺序与侧边造型清空逻辑",
   },
+};
+
+const T2V_DIRECTIVES = {
+  "generic-i2v": "按时间顺序理解同一镜头中的服装变化；不要把每套造型拆成互不相关的多个人或多个镜头",
+  "identity-i2v": "反复强调同一人物的脸、发型、身形与机位不变；只允许服装在指定时间点发生变化",
+  "motion-i2v": "用落脚、拍手或转身回正作为动作峰值，在峰值完成服装变化，并保持身体轴线和惯性连续",
+  "fast-i2v": "使用固定机位、简单动作和清晰卡点，优先验证人物一致性、造型顺序与换装节奏",
 };
 
 const REAL_LOOKS = [
@@ -207,6 +214,11 @@ const themeIcon = document.querySelector("#theme-icon");
 const toast = document.querySelector("#toast");
 const imageModelSelect = document.querySelector("#image-model-select");
 const videoModelSelect = document.querySelector("#video-model-select");
+const imageModelField = document.querySelector("#image-model-field");
+const assetFieldset = document.querySelector("#asset-fieldset");
+const routeGuidance = document.querySelector("#route-guidance");
+const handoffRouteLabel = document.querySelector("#handoff-route-label");
+const handoffSummary = document.querySelector("#handoff-summary");
 const personUpload = document.querySelector("#person-upload");
 const clothesUpload = document.querySelector("#clothes-upload");
 const personInputPreview = document.querySelector("#person-input-preview");
@@ -229,14 +241,16 @@ const realResetButton = document.querySelector("#real-reset-button");
 const realLookProgress = document.querySelector("#real-look-progress");
 const proofLookName = document.querySelector("#proof-look-name");
 const proofLookDescription = document.querySelector("#proof-look-description");
+const realEffectSelect = document.querySelector("#real-effect-select");
 
-let activeTab = "params";
+let activeTab = "video";
 let outputs = {};
 let timerIds = [];
 let toastTimer;
 let personPreviewUrl = "";
 let realAssetStatus = "idle";
 let realTimerId;
+let realEffectTimerId;
 let realVisibleLayer = "a";
 let realLookIndex = 0;
 let realPlaying = false;
@@ -249,6 +263,7 @@ let state = {
   currentStep: 0,
   activeSide: -1,
   playing: false,
+  generationRoute: "t2v",
   imageModel: "generic-image",
   videoModel: "generic-i2v",
   personFileName: "内置虚构人物素材",
@@ -277,7 +292,9 @@ function fileLabel(fileName) {
 
 function getOutfits() {
   const builtIn = STYLE_OUTFITS[state.subject][state.style];
-  const uploaded = state.clothingFileNames.map(fileLabel).filter(Boolean);
+  const uploaded = state.generationRoute === "i2v"
+    ? state.clothingFileNames.map(fileLabel).filter(Boolean)
+    : [];
   return [...uploaded, ...builtIn.slice(uploaded.length)].slice(0, MODES[state.mode].lookCount);
 }
 
@@ -425,16 +442,18 @@ function buildOutputs() {
   const mechanism = MECHANISMS[state.mechanism];
   const imageModel = IMAGE_MODELS[state.imageModel];
   const videoModel = VIDEO_MODELS[state.videoModel];
+  const isI2V = state.generationRoute === "i2v";
   const note = state.note.trim() || "无额外补充";
   const sideAssignments = mode.positions.map(([, label], index) => `${label}：${outfits[index + 1]}`).join("；");
-  const clothesSource = state.clothingFileNames.length
+  const clothesSource = isI2V && state.clothingFileNames.length
     ? state.clothingFileNames.map((name, index) => `Image ${index + 2}「${name}」`).join("；")
-    : "内置五套无品牌造型描述（无真实衣服图片）";
+    : isI2V ? "内置五套无品牌造型描述（无真实衣服图片）" : "纯文本造型描述";
 
   const paramsText = [
-    `首帧图像模型：${imageModel.label}`,
+    `生成路线：${isI2V ? "首帧图生视频 I2V" : "纯文本生成视频 T2V"}`,
+    `首帧图像模型：${isI2V ? imageModel.label : "不需要"}`,
     `目标视频模型：${videoModel.label}`,
-    `人物素材：Image 1「${state.personFileName}」`,
+    `人物素材：${isI2V ? `Image 1「${state.personFileName}」` : "提示词内置虚构主体描述"}`,
     `衣服素材：${clothesSource}`,
     `主体路线：${subject.label}`,
     `基础身份：${subject.route}`,
@@ -480,9 +499,14 @@ function buildOutputs() {
     .map((row) => `<div class="timeline-row"><strong>${escapeHtml(row.range)}｜${escapeHtml(row.title)}</strong><span>${escapeHtml(row.action)}</span></div>`)
     .join("");
 
-  const imagePrompt = `【目标模型】${imageModel.label}\n【参考素材】Image 1 是人物身份参考「${state.personFileName}」；${clothesSource}。仅依据素材角色与以下文字执行，不推断未提供的服装细节。\n【模型适配】${imageModel.directive}。\n【生成任务】${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`;
+  const imagePrompt = isI2V
+    ? `【目标模型】${imageModel.label}\n【参考素材】Image 1 是人物身份参考「${state.personFileName}」；${clothesSource}。仅依据素材角色与以下文字执行，不推断未提供的服装细节。\n【模型适配】${imageModel.directive}。\n【生成任务】${mode.duration === 15 ? "竖版全身时尚摄影" : "竖版社交媒体拼贴摄影"}，${subject.route}，严格锁定${subject.anchors}。画面中正好 ${mode.lookCount} 个同一主体版本，只改变服装、配饰和编排姿势。中央为大型完整主体，穿“${outfits[0]}”；${sideAssignments}。${mode.layout}。侧边贴图沿真实主体轮廓裁切，使用独立白色虚线描边，不得出现矩形卡片。背景简洁，柔和轮廓光，服装面料和${state.subject === "pet" ? "毛发" : "发丝"}清晰，完整保留头部、四肢和脚部。造型方向为${STYLE_LABELS[state.style]}。${note}。硬性限制：主体身份完全一致，正好 ${mode.lookCount} 个版本，无额外主体，无肢体缺失，无服装叠穿。`
+    : `当前选择“纯文本生成视频 T2V”，不需要先生成首帧。若外部模型必须提供图片，可切换到“先做首帧，再生成视频 I2V”。`;
 
-  const videoPrompt = `【目标模型】${videoModel.label}\n【输入方式】将上一步生成并确认过的首帧作为图生视频输入；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`;
+  const outfitSequence = outfits.map((outfit, index) => `${index + 1}. ${outfit}`).join("；");
+  const videoPrompt = isI2V
+    ? `【生成方式】首帧图生视频 I2V\n【目标模型】${videoModel.label}\n【输入】将“首帧”标签中生成并确认过的图片作为唯一视频首帧；不要把多张衣服参考直接当作视频首帧。\n【模型适配】${videoModel.directive}。\n【生成任务】${mode.duration} 秒${mode.name}，继承首帧中的${subject.label}身份、全部 ${mode.lookCount} 套造型、侧边位置、画面布局和摄影质感。中央主体保持${mode.camera}，使用${mechanism.label}。在 ${mode.points.map((point) => `${point.toFixed(1)} 秒`).join("、")}依次完成换装；激活顺序为${mode.positions.map(([, label]) => label).join(" → ")}。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和${state.subject === "pet" ? "四足支点" : "旋转方向"}连续，衣摆、发丝或毛发保持重力与惯性。${mode.audio}。最终造型展示至 ${mode.duration.toFixed(1)} 秒并完成收尾。${note}`
+    : `【生成方式】纯文本生成视频 T2V\n【目标模型】${videoModel.label}\n【画幅与时长】竖版 9:16，${mode.duration} 秒，单一连续镜头。\n【主体】${subject.route}；始终保持${subject.anchors}，从开头到结尾必须是同一个主体。\n【场景与机位】简洁摄影棚背景，${mode.camera}，完整保留头部、身体和脚部，柔和轮廓光，真实服装面料与${state.subject === "pet" ? "毛发" : "发丝"}细节。\n【造型顺序】${outfitSequence}。\n【动作与换装】${mode.name}，使用${mechanism.label}；在 ${mode.points.map((point, index) => `${point.toFixed(1)} 秒从“${outfits[index]}”换为“${outfits[index + 1]}”`).join("；")}。换装发生在同一动作峰值，人物位置、脸、身体比例、视线和运动方向保持连续，不切镜头。\n【模型适配】${T2V_DIRECTIVES[state.videoModel]}。\n【声音】${mode.audio}。\n【补充】${note}。\n【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“${outfits.at(-1)}”完成收尾。`;
 
   const negativeText = NEGATIVES.join("，");
   const negativeHtml = `<p>以下约束随每次输出一起交付，用来抑制常见生成故障：</p><ul class="negative-list">${NEGATIVES.map((item) => `<li>${item}</li>`).join("")}</ul>`;
@@ -506,7 +530,24 @@ function renderActiveOutput() {
   });
 }
 
+function updateGenerationRouteUi() {
+  const isI2V = getSelected("generationRoute") === "i2v";
+  imageModelField.hidden = !isI2V;
+  assetFieldset.hidden = !isI2V;
+  imageModelSelect.disabled = !isI2V;
+  personUpload.disabled = !isI2V;
+  clothesUpload.disabled = !isI2V;
+  routeGuidance.innerHTML = isI2V
+    ? "<strong>当前路线：</strong>先用人物与衣服参考生成首帧，再把首帧交给视频模型。"
+    : "<strong>当前路线：</strong>无需首帧，生成后直接复制“视频”结果。";
+  handoffRouteLabel.textContent = isI2V ? "CONTROL / I2V" : "SIMPLE / T2V";
+  handoffSummary.textContent = isI2V
+    ? "先复制首帧提示词生成图片，再复制视频提示词生成视频"
+    : "复制视频提示词，直接交给外部视频模型";
+}
+
 function applyFormState() {
+  state.generationRoute = getSelected("generationRoute");
   state.subject = getSelected("subject");
   state.mode = getSelected("mode");
   state.style = styleSelect.value;
@@ -517,6 +558,7 @@ function applyFormState() {
   state.currentStep = 0;
   state.activeSide = -1;
   stopPlayback();
+  updateGenerationRouteUi();
   buildOutputs();
   renderStage();
   renderActiveOutput();
@@ -715,6 +757,21 @@ function setRealLook(index) {
   const nextLook = REAL_LOOKS[nextIndex];
   const visibleLayer = realVisibleLayer === "a" ? realModelLayerA : realModelLayerB;
   const nextLayer = realVisibleLayer === "a" ? realModelLayerB : realModelLayerA;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  window.clearTimeout(realEffectTimerId);
+  realModelStage.classList.remove("is-changing");
+  realModelStage.dataset.effect = realEffectSelect.value;
+  if (!reducedMotion && nextIndex !== realLookIndex) {
+    void realModelStage.offsetWidth;
+    realModelStage.classList.add("is-changing");
+    realLookStatus.textContent = `${realEffectSelect.options[realEffectSelect.selectedIndex].text} · 正在完成换装`;
+    const duration = realEffectSelect.value === "veil" ? 760 : realEffectSelect.value === "beat" ? 300 : 650;
+    realEffectTimerId = window.setTimeout(() => {
+      realModelStage.classList.remove("is-changing");
+      realLookStatus.textContent = "已锁定同一人物身份与站姿";
+    }, duration);
+  }
 
   nextLayer.style.setProperty("--look-position", `${nextLook.position}%`);
   nextLayer.classList.add("is-visible");
@@ -784,13 +841,18 @@ function switchExperiment(experiment) {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  activeTab = "video";
   applyFormState();
-  showToast(`已生成 ${SUBJECTS[state.subject].label} · ${MODES[state.mode].name} 方案`);
+  showToast(state.generationRoute === "i2v" ? "已生成首帧 + 视频两步提示词" : "已生成可直接复制的视频提示词");
 });
 
 form.addEventListener("change", (event) => {
   if (event.target.name === "mode") updateMechanismOptions();
   if (event.target === mechanismSelect) updateMechanismHint();
+  if (event.target.name === "generationRoute") {
+    activeTab = "video";
+    applyFormState();
+  }
 });
 
 noteInput.addEventListener("input", () => {
@@ -804,6 +866,10 @@ playButton.addEventListener("click", playSequence);
 resetButton.addEventListener("click", resetStage);
 copyButton.addEventListener("click", copyCurrentOutput);
 realPlayButton.addEventListener("click", playRealSequence);
+realEffectSelect.addEventListener("change", () => {
+  realModelStage.dataset.effect = realEffectSelect.value;
+  showToast(`换装效果：${realEffectSelect.options[realEffectSelect.selectedIndex].text}`);
+});
 realResetButton.addEventListener("click", () => {
   stopRealPlayback();
   setRealLook(0);
@@ -859,6 +925,7 @@ setTheme(savedTheme);
 updateMechanismOptions();
 noteCount.textContent = `${noteInput.value.length} / 120`;
 updateAssetLabels();
+realModelStage.dataset.effect = realEffectSelect.value;
 renderRealWardrobe();
 updateRealLookText(0);
 applyFormState();

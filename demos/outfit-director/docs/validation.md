@@ -66,6 +66,34 @@
 
 Revision 2 截图同样只保存在浏览器工具临时证据目录，不进入产品提交。
 
+## Revision 3 · 提示词优先与网页效果优化
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Desktop | 1440px / A / T2V default | pass | SIMPLE / T2V 为默认路线；I2V 专用首帧和素材字段隐藏；视频标签默认激活 |
+| A interaction | T2V submit | pass | 提交后仍停留视频标签；输出以“纯文本生成视频 T2V”开头，包含画幅、主体、造型顺序、时间点与硬性限制 |
+| A interaction | Copy | pass | 复制反馈为“已复制：直接视频提示词” |
+| A interaction | I2V selected | pass | 首帧模型、人物与衣服字段按需出现；输出明确要求把确认后的首帧作为唯一视频输入 |
+| A state | I2V → T2V | pass | 路线切换后输出立即同步，不保留上一条路线的旧提示词 |
+| Desktop | 1440px / B / veil | pass | 布料扫光触发 `is-changing`，舞台、衣橱和证明面板同步到第 4 套 |
+| B interaction | Beat / manual | pass | 卡点闪切触发 `data-effect=beat`，结果同步到第 5 套 |
+| B interaction | Autoplay | pass | 自动播放结束为 `LOOK 05`，按钮恢复“自动换装”，过渡类清理 |
+| Mobile | 390×844 / A and B | pass | 两路线单列可读，效果选择器占完整一行；`scrollWidth = clientWidth = 375` |
+| Tablet | 1024×900 / light | pass | 浅色主题正常，`scrollWidth = clientWidth = 1009` |
+| Keyboard | Experiment navigation | pass | 焦点位于 A 标签时按 Enter 可切换；工作台显示、`aria-selected=true`、焦点 outline 为 solid |
+| Motion | B / reduced-motion | pass | 重置后自动换装立即到达 `LOOK 05`，舞台无 `is-changing` 类 |
+| Runtime | Errors and overlay | pass | 浏览器错误为空；正文非空；无框架错误覆盖；JavaScript 语法检查通过 |
+| Performance | Static runtime | pass | 未新增图片或运行时依赖；首次绘制 64ms |
+
+### Revision 3 visual evidence
+
+- Desktop A / T2V：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787190761232.png`
+- Desktop B / veil：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787190957022.png`
+- Mobile A：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787191110919.png`
+- Mobile B：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787191200437.png`
+
+Revision 3 截图只保存在浏览器工具临时证据目录，不进入产品提交。
+
 ## Terminal audit
 
 - continue：无

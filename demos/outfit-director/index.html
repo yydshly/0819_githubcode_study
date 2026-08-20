@@ -10,8 +10,8 @@
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=4" />
+    <script src="./app.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -76,6 +76,21 @@
           </header>
 
           <form id="director-form">
+            <fieldset class="route-fieldset">
+              <legend>生成视频路线</legend>
+              <div class="generation-route-options">
+                <label class="generation-route-card">
+                  <input type="radio" name="generationRoute" value="t2v" checked />
+                  <span><small>SIMPLE / T2V</small><strong>直接提示词生成视频</strong><em>复制一段完整视频提示词给外部模型</em></span>
+                </label>
+                <label class="generation-route-card">
+                  <input type="radio" name="generationRoute" value="i2v" />
+                  <span><small>CONTROL / I2V</small><strong>先做首帧，再生成视频</strong><em>身份与五套造型更容易保持一致</em></span>
+                </label>
+              </div>
+              <p class="route-guidance" id="route-guidance"><strong>当前路线：</strong>无需首帧，生成后直接复制“视频”结果。</p>
+            </fieldset>
+
             <fieldset>
               <legend>主体路线</legend>
               <div class="segmented segmented--three">
@@ -105,7 +120,7 @@
               <div class="field-heading" id="generation-models-title">
                 <span>目标生成模型</span><small>只改变提示词策略，不调用 API</small>
               </div>
-              <div class="field field--compact">
+              <div class="field field--compact" id="image-model-field" hidden>
                 <label for="image-model-select">首帧图像模型</label>
                 <div class="select-wrap">
                   <select id="image-model-select" name="imageModel">
@@ -119,16 +134,16 @@
                 <label for="video-model-select">目标视频模型</label>
                 <div class="select-wrap">
                   <select id="video-model-select" name="videoModel">
-                    <option value="generic-i2v">通用图生视频 I2V</option>
-                    <option value="identity-i2v">首帧一致性优先 I2V</option>
-                    <option value="motion-i2v">动作连续性优先 I2V</option>
-                    <option value="fast-i2v">快速草稿 I2V</option>
+                    <option value="generic-i2v">通用视频模型</option>
+                    <option value="identity-i2v">身份一致性优先</option>
+                    <option value="motion-i2v">动作连续性优先</option>
+                    <option value="fast-i2v">快速草稿</option>
                   </select>
                 </div>
               </div>
             </div>
 
-            <fieldset class="asset-fieldset">
+            <fieldset class="asset-fieldset" id="asset-fieldset" hidden>
               <legend>参考素材</legend>
               <div class="asset-input-grid">
                 <label class="asset-input" for="person-upload">
@@ -172,7 +187,7 @@
             </div>
 
             <button class="primary-button" type="submit">
-              <span>生成导演方案</span><span aria-hidden="true">↗</span>
+              <span>生成可复制视频提示词</span><span aria-hidden="true">↗</span>
             </button>
           </form>
         </aside>
@@ -221,16 +236,21 @@
             <span class="panel__meta">OUTPUT</span>
           </header>
 
+          <div class="external-handoff" aria-live="polite">
+            <span id="handoff-route-label">DIRECT T2V</span>
+            <strong id="handoff-summary">生成后复制视频提示词，直接交给外部视频模型</strong>
+          </div>
+
           <div class="tabs" role="tablist" aria-label="导演方案输出类型">
-            <button role="tab" aria-selected="true" aria-controls="output-content" data-tab="params" type="button">参数</button>
+            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="params" type="button">参数</button>
             <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="timeline" type="button">时间轴</button>
             <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="image" type="button">首帧</button>
-            <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="video" type="button">视频</button>
+            <button role="tab" aria-selected="true" aria-controls="output-content" data-tab="video" type="button">视频</button>
             <button role="tab" aria-selected="false" aria-controls="output-content" data-tab="negative" type="button">负面</button>
           </div>
 
           <div class="output-toolbar">
-            <div><span>ACTIVE DOCUMENT</span><strong id="output-document-title">参数锁定结果</strong></div>
+            <div><span>READY FOR EXTERNAL MODEL</span><strong id="output-document-title">直接视频提示词</strong></div>
             <button class="copy-button" id="copy-button" type="button" aria-label="复制当前输出">
               <span aria-hidden="true">⧉</span><span>复制</span>
             </button>
@@ -270,6 +290,7 @@
             <div class="real-model-stage" id="real-model-stage" aria-live="polite" aria-label="当前造型：白衬衫与炭灰长裙">
               <div class="real-model-layer is-visible" id="real-model-layer-a" style="--look-position:0%" aria-hidden="true"></div>
               <div class="real-model-layer" id="real-model-layer-b" style="--look-position:0%" aria-hidden="true"></div>
+              <div class="real-model-transition" aria-hidden="true"><span></span></div>
               <div class="real-model-scan" aria-hidden="true"></div>
               <div class="real-model-caption">
                 <span>LOOK <output id="real-look-number">01</output> / 05</span>
@@ -278,6 +299,7 @@
               </div>
             </div>
             <div class="stage-controls real-model-controls">
+              <label class="effect-select" for="real-effect-select"><span>换装效果</span><select id="real-effect-select"><option value="dissolve">柔和溶解</option><option value="veil">布料扫光</option><option value="beat">卡点闪切</option></select></label>
               <button class="play-button" id="real-play-button" type="button"><span aria-hidden="true">▶</span><span id="real-play-label">自动换装</span></button>
               <button class="secondary-button" id="real-reset-button" type="button">回到第一套</button>
               <span class="simulation-note">预生成完整造型切换 · 非实时试衣</span>
