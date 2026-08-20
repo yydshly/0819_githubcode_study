@@ -11,11 +11,13 @@ on:
       - "demos/xianxia-visual-director/**"
       - "demos/snakey-locomotion/**"
       - "demos/bigpeng-hot-gzh/**"
+      - "demos/srt-whiteboard-animation/**"
       - "studies/outfit-director/**"
       - "studies/punk-skill/**"
       - "studies/xianxia-visual-director/**"
       - "studies/snakey-locomotion/**"
       - "studies/bigpeng-hot-gzh/**"
+      - "studies/srt-whiteboard-animation/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
   workflow_dispatch:
 
@@ -60,28 +62,34 @@ jobs:
           mkdir -p _site/xianxia-visual-director
           mkdir -p _site/snakey-locomotion
           mkdir -p _site/bigpeng-hot-gzh
+          mkdir -p _site/srt-whiteboard-animation
           mkdir -p _site/studies/outfit-director
           mkdir -p _site/studies/punk-skill
           mkdir -p _site/studies/xianxia-visual-director
           mkdir -p _site/studies/snakey-locomotion
           mkdir -p _site/studies/bigpeng-hot-gzh
+          mkdir -p _site/studies/srt-whiteboard-animation
           cp -a demos/research-hub/. _site/
           cp -a demos/outfit-director/. _site/outfit-director/
           cp -a demos/punk-skill/. _site/punk-skill/
           cp -a demos/xianxia-visual-director/. _site/xianxia-visual-director/
           cp -a demos/snakey-locomotion/dist/. _site/snakey-locomotion/
           cp -a demos/bigpeng-hot-gzh/. _site/bigpeng-hot-gzh/
+          cp -a demos/srt-whiteboard-animation/. _site/srt-whiteboard-animation/
           cp -a studies/outfit-director/. _site/studies/outfit-director/
           cp -a studies/punk-skill/. _site/studies/punk-skill/
           cp -a studies/xianxia-visual-director/. _site/studies/xianxia-visual-director/
           cp -a studies/snakey-locomotion/. _site/studies/snakey-locomotion/
           cp -a studies/bigpeng-hot-gzh/. _site/studies/bigpeng-hot-gzh/
+          cp -a studies/srt-whiteboard-animation/. _site/studies/srt-whiteboard-animation/
           sed -i 's#../../studies/outfit-director/#../studies/outfit-director/#g' _site/outfit-director/index.html
           sed -i 's#../../studies/punk-skill/#../studies/punk-skill/#g' _site/punk-skill/index.html
           sed -i 's#../../studies/xianxia-visual-director/#../studies/xianxia-visual-director/#g' _site/xianxia-visual-director/index.html
           sed -i 's#../../studies/snakey-locomotion/#../studies/snakey-locomotion/#g' _site/snakey-locomotion/index.html
           sed -i 's#../research-hub/#../#g' _site/bigpeng-hot-gzh/index.html
           sed -i 's#../../studies/bigpeng-hot-gzh/#../studies/bigpeng-hot-gzh/#g' _site/bigpeng-hot-gzh/index.html
+          sed -i 's#../research-hub/#../#g' _site/srt-whiteboard-animation/index.html
+          sed -i 's#../../studies/srt-whiteboard-animation/#../studies/srt-whiteboard-animation/#g' _site/srt-whiteboard-animation/index.html
           touch _site/.nojekyll
 
       - name: Upload static research labs

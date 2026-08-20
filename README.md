@@ -20,7 +20,7 @@
 | [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
 | [Snakey Locomotion](studies/snakey-locomotion/README.md) | [muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion) | [在线演示](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/) · [说明](demos/snakey-locomotion/README.md) | 已归档 | Three.js 草地环境、长体运动与环境反馈参考 |
 | [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
-| [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [交互研究页](demos/srt-whiteboard-animation/index.html) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
+| [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [在线演示](https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -222,7 +222,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 
 **网页与文档**
 
-- [交互研究页](demos/srt-whiteboard-animation/index.html) · [复现与运行说明](demos/srt-whiteboard-animation/README.md)
+- [在线交互研究页](https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/) · [复现与运行说明](demos/srt-whiteboard-animation/README.md)
 - [完整研究记录](studies/srt-whiteboard-animation/README.md) · [浏览器验收](demos/srt-whiteboard-animation/docs/validation.md)
 - [上游版本锁](studies/srt-whiteboard-animation/upstream-lock.json) · [MIT 许可证说明](demos/srt-whiteboard-animation/UPSTREAM-LICENSE.md)
 - 上游：[geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation)
