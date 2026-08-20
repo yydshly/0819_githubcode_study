@@ -249,3 +249,121 @@
 | 跨设备 | 双结果在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 三视口均实测；1024 宽无溢出，390 宽标签单列且 9:16 视频不裁切 |
 | 性能与回退 | 11.6 MB E002 不自动播放且媒体入口可用 | Static media | Resource + HTTP | Stage 8 | pass | metadata preload、poster、文字回退、直接链接和正确 MIME 均成立 |
 | 工程与交付 | 路线、README、验收、交接和本地提交同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 路线、README、验收、交接同步；语法、HTTP 与 Git 审计通过 |
+
+## Revision 8 · E002.1 首帧安全区局部修复
+
+- Entry mode：Repair-led localized refinement。
+- Authorization：用户确认采用 E002.1，只优化首帧布局。
+- Observed defect：E002 原始视频像素中的六个侧边人物贴近左右边界，部分身体和服装被裁切；Web 播放器使用 `contain`，不是根因。
+- Preserved invariants：E001/E002 真实结果、中央人物、七套造型顺序、M13、Seedance 2.0 VIP、I2V、9:16、15 秒和视频提示词保持不变。
+- Minimal intervention：生成并保存侧边人物缩小约 25%、左右保留 6%–8% 安全区的首帧候选；结果区只增加“待生成”候选卡，不把 E002.1 标成完成的视频。
+- Primary journey：选择 E002 → 看到原视频边界问题 → 检查 E002.1 首帧 → 下载 720×1280 输入 → 用同一视频提示词重新生成。
+- Affected surfaces：E002 结果面板、目标一路线摘要、研究文档；桌面、1024px、390px、深浅主题。
+- Acceptance：候选图中六个侧边人物完整可见；下载入口可用；状态明确为等待外部视频；新增区域无裁切或横向溢出；图片懒加载。
+
+### Revision 8 compact coverage
+
+| Item | Evidence | Stage | Status | Next action |
+| --- | --- | --- | --- | --- |
+| 首帧资产 | 视觉检查、尺寸、hash | Stage 1–3 | pass | 母版与 720×1280 输入均保存；六个侧边人物完整可见 |
+| Web 候选卡 | 浏览器截图、文本与链接 | Stage 3–5 | pass | E002 下方显示 pending 状态、唯一变量、预览、下载和实验说明 |
+| 响应与性能 | 1440/1024/390、主题、图片请求 | Stage 7–8 | pass | 三视口无溢出；390px 单列；隐藏 E002 时候选图不提前请求 |
+| 文档与工程 | 研究档案、路线、语法、Git | Stage 9 | pass | README、路线、实验、验收和交接同步；语法与空白检查通过 |
+
+## Revision 9 · Seedance 2.5 新视频回填
+
+- Entry mode：Revision-led implementation。
+- Authorization：用户提供 `video_1787199755191.mp4`、Seedance 2.5 标签和完整提示词，并要求接入与分析。
+- Experiment identity：记录为 `E003 · Seedance 2.5 / I2V / M13 / safe-layout input`；不覆盖 E002 或 E002.1 首帧资产。
+- Causal boundary：相对 E002 同时改变模型和首帧布局；相对 E002.1 计划改变了模型，不能把任何改善单独归因于安全区首帧。
+- Source boundary：模型名称来自用户记录；平台界面前缀“內容由 AI 生成，請謹慎甄別 / 結果 / 靈感 / 日期”属于界面元数据，不并入生成提示词正文。
+- Primary journey：选择 E003 → 播放真实 MP4 → 查看媒体事实、侧边裁切、身份、M13、时间点与 E002 对照 → 检查完整提示词。
+- Visual direction：真实结果标签从两项扩展为三项，继续单次只展示一个播放器；E003 使用原生画幅完整 `contain`，不伪装为 9:16。
+- Required artifacts：规范 MP4、封面、hash、媒体事实、关键帧/换装窗口、E003 实验档案、Web 第三基线、路线/README/验收/交接更新。
+- Environment：规范 URL `http://127.0.0.1:4173/`；桌面 1440×1000、平板 1024×900、手机 390×844、深浅主题、键盘、播放与静态媒体回退。
+- Observable completion：E003 媒体与观察可追溯；侧边裁切结论来自原始帧；多变量限制明确；三基线切换、播放、三视口和错误检查通过。
+
+### Revision 9 coverage manifest
+
+| Item | Evidence | Stage | Status | Next action |
+| --- | --- | --- | --- | --- |
+| E003 媒体 | File/hash/ffprobe/audio | Stage 1 | pass | MP4/hash 一致；15.072s、560×750、H.264/AAC 和音量已记录 |
+| 视觉观察 | Planned frames + transition windows | Stage 3 | pass | 四组接触表覆盖安全区、七套造型、M13、构图漂移和六个时间窗口 |
+| 对照归因 | E002/E003 matrix | Stage 3 | pass | 对照矩阵明确模型与首帧同时变化，不做单变量归因 |
+| Web 第三基线 | Tab/player/evidence/prompt | Stage 4–6 | pass | 第三标签、真实播放器、事实、结论和完整提示词已接入 |
+| 跨表面与媒体 | 1440/1024/390、keyboard/playback/HTTP | Stage 7–8 | pass | 三视口、键盘、播放、reduced-motion、lazy source 和静态 MIME 均通过 |
+| 工程交付 | Docs/syntax/Git audit | Stage 9 | pass | README、路线、研究、验收与交接同步；语法与空白检查通过 |
+
+## Revision 10 · 2D AI 虚拟试衣验证台
+
+- Entry mode：Revision-led implementation。
+- Request revision：10。
+- Target user：准备从预生成网页模拟进入“真实人物图 + 真实服装图 → VTON 结果图”实验的项目维护者与研究访客。
+- Desired first impression：目标二已经进入可执行准备阶段；人物图、服装图、模型服务和结果状态彼此独立，未连接模型时不出现伪造试衣结果。
+- Visual ambition：Functional / Editorial；沿用现有导演台视觉语言，以输入有效性和服务状态为主，不增加装饰性高成本媒体。
+- Experience architecture：Hybrid Workspace；新增 TEST C 作为真实 VTON 输入与推理操作面，TEST B 继续明确为预生成视觉模拟。
+- User phases：模型选型与本机可行性 → 人物/服装双输入验证 → 本地服务探测 → 真实推理结果回填。
+- Model direction：首个候选为 CatVTON（官方说明 1024×768、bf16 推理约需 8GB 显存）；IDM-VTON 作为质量对照。两者代码和权重均为 CC BY-NC-SA 4.0，仅用于非商业研究验证。
+- Local constraint：本机 RTX 4070 Laptop GPU，检测到 8188 MiB 显存；与 CatVTON 官方门槛接近，第一轮应使用单任务、较保守尺寸并记录峰值显存，不能预先保证稳定运行。
+- Information constraints：客户端只验证格式、尺寸和长宽比；“全身完整、无遮挡、服装平铺干净”仍需人工确认。服务未连接时结果区必须保持空状态。
+- Operation constraints：文件默认只在浏览器本地预览；只有用户点击推理且本地适配器健康时才提交到明确显示的 `127.0.0.1` 地址。不调用第三方付费 API，不持久化真实照片。
+- State constraints：覆盖空输入、输入合格、输入警告、服务离线、服务在线、推理中、成功和失败；错误必须可恢复，重复选择文件时释放旧 Object URL。
+- Environment constraints：当前静态页继续支持 GitHub Pages；真实推理只在另行启动的本机适配器存在时增强可用。桌面、1024px、390px、深浅主题、键盘和 reduced-motion 保持可用。
+- Primary journey：进入 TEST C → 选择人物全身照与服装图 → 检查输入建议 → 选择服装类别 → 检测本机服务 → 发起真实推理 → 查看/下载结果；服务缺席时停留在诚实的“等待本地模型”状态。
+- Required artifacts：TEST C 页面、客户端输入检查、本地服务健康检查和推理请求、模型选型实验记录、稳定的本地适配器接口契约、README/路线/验收/交接更新。
+- Autonomy authorization：用户于 2026-08-20 要求“现在先驱动下一步”，授权推进目标二中不产生费用、不上传第三方且可逆的本地实现准备。
+- User-decision boundary：下载数 GB 模型权重、安装独立 CUDA/Python 环境、接受非商业 ShareAlike 许可进入实际推理，或向外部服务发送真人照片前需要用户明确确认。
+- Observable completion：第三条实验路线可发现；双图片输入有真实预览和可解释检查；本地服务状态可手动重试；服务离线时按钮不可误触且没有假结果；接口契约足以独立实现适配器；受影响视口、主题、键盘、错误和静态工程检查通过。
+
+### Revision 10 coverage manifest
+
+| Item | Surface / state | Evidence needed | Stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- |
+| 选型与边界 | Repository | 官方来源、许可、本机 GPU 事实 | Stage 0 | pass | CatVTON 第一候选、IDM-VTON 对照、8188 MiB 与许可均已记录 |
+| TEST C 入口 | Desktop / default | Screenshot + DOM | Stage 2–4 | pass | 第三实验标签、真实输入标题与模型缺席边界可发现 |
+| 双输入验证 | Empty / valid / warning | Browser interaction + DOM | Stage 5–6 | pass | 本地预览、格式/大小/尺寸建议、重选与 Object URL 释放已实现 |
+| 模型服务 | Offline / online / error | Fetch observation + state text | Stage 5–6 | pass | 健康检查、localhost 限制、错误恢复和严格按钮门控实测通过 |
+| 真实结果 | Loading / success / failure | Adapter contract + browser state | Stage 6 | pass | 接口桩 image/png 响应、结果与下载通过；明确不记为 E004 |
+| 跨表面 | 1440/1024/390, dark/light, keyboard | Browser screenshots + interaction | Stage 7 | pass | 三视口无横向溢出；两主题和 A→B→C 方向键通过 |
+| 性能与隐私 | Static runtime / object URLs | Resource + source observation | Stage 8 | pass | 选择前无新增媒体；提交前不发送；localhost 与对象 URL 生命周期已记录 |
+| 工程交付 | Repository/runtime | Syntax + docs + terminal audit | Stage 9 | pass | 路线、README、实验、接口、验收与交接同步；语法和浏览器终审通过 |
+
+## Revision 11 · TEST C 演示模式定稿
+
+- Entry mode：Revision-led state clarification。
+- Authorization：用户于 2026-08-20 明确决定“暂时不做下载，后续按需下载，这里暂时演示即可”。
+- Preserved：TEST C 双输入、本地预览、输入检查、localhost 接口契约与未来推理路径全部保留。
+- Revised state：CatVTON 不再显示为当前待部署动作；页面状态改为“输入演示已就绪、模型未安装、后续按需接入”。
+- Primary journey：进入 TEST C → 上传两张图片 → 检查输入与隐私说明 → 理解真实模型接入位置；当前不要求健康检查或生成结果。
+- Acceptance：首屏、TEST C、路线和文档对当前状态表述一致；模型缺席不会被理解为错误或未完成；未来仍可直接复用适配器控件；桌面和手机无布局回归。
+
+### Revision 11 compact coverage
+
+| Item | Evidence | Status | Next action |
+| --- | --- | --- | --- |
+| 状态文案 | TEST C / roadmap / README / handoff | pass | 已统一为“演示就绪、模型按需” |
+| 演示流程 | Empty + local preview | pass | 双输入可预览；推理保持禁用；适配器请求为 0 |
+| 响应布局 | 1440 dark / 1024 light / 390 dark | pass | 三视口无溢出，状态文案完整 |
+| 工程 | Syntax / diff / runtime | pass | 浏览器错误为空；语法、HTTP 与空白终审通过 |
+
+## Revision 12 · TEST C 内置默认演示
+
+- Entry mode：Revision-led implementation。
+- Authorization：用户要求“默认接入一个演示，同时支持后期扩展接入模型测试”。
+- Primary journey：进入 TEST C 即看到一组虚构人物、独立服装和预生成试衣结果 → 明确这是演示而非模型推理 → 上传自定义图片后切换为空结果 → 可一键恢复内置演示 → 未来本机模型在线后沿用同一输入与结果区。
+- Visual direction：三张素材使用统一摄影棚、无品牌和虚构成年人；结果必须和输入形成可理解对照。预生成结果持续显示 `PRE-GENERATED DEMO`，不得使用 `AI MODEL RESULT` 等误导标签。
+- State constraints：`built-in demo`、`custom input / no result`、`adapter online`、`real result` 四种状态互斥；自定义上传必须立即清除预生成结果，恢复样例不能发起网络请求。
+- Operation constraints：增加“恢复内置演示”；默认静态资源本地加载；未来接口仍为 localhost `/health` 与 `/api/v1/try-on`，不因演示模式删除。
+- Asset boundary：三张图片由 OpenAI 内置图像生成工具生成，人物为虚构成年人、服装无商标；作为项目演示资产保存并记录来源。
+- Acceptance：默认页面可完整说明输入→输出；自定义任一输入后不再显示预生成结果；恢复后人物、服装、结果和文字状态同步；两主题三视口、键盘、无横向溢出、无浏览器错误；模型服务未点击时请求为 0。
+
+### Revision 12 coverage
+
+| Item | Evidence | Status | Next action |
+| --- | --- | --- | --- |
+| 三张内置资产 | Visual inspection + files | pass | 人物 1024×1536、服装 1254×1254、结果 1024×1536 已保存并人工检查 |
+| 默认演示 | Browser screenshot + DOM | pass | 初始加载三张本地资源；标签明确为 `PRE-GENERATED DEMO · 非模型推理` |
+| 自定义状态 | File upload interaction | pass | 任一上传后结果与演示标签隐藏，显示等待真实模型状态 |
+| 恢复状态 | Button + DOM | pass | 键盘 Enter 恢复三张素材、清空文件控件且适配器请求仍为 0 |
+| 模型扩展 | Source + existing adapter checks | pass | 健康检查后真实按钮解锁；接口桩图片响应、下载与真实结果文案通过 |
+| 跨表面与工程 | 1440/1024/390 + syntax + diff | pass | 两主题三视口无溢出、无浏览器错误；语法与空白检查通过 |

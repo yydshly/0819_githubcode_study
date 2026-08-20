@@ -1,0 +1,88 @@
+openapi: 3.1.0
+info:
+  title: Outfit Director Local VTON Adapter
+  version: 0.1.0
+  description: Stable localhost-only contract for research virtual try-on inference.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /health:
+    get:
+      summary: Report adapter and model readiness
+      operationId: getHealth
+      responses:
+        "200":
+          description: Adapter is ready to accept inference requests.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, model, device]
+                properties:
+                  status:
+                    type: string
+                    const: ok
+                  model:
+                    type: string
+                    examples: [catvton]
+                  device:
+                    type: string
+                    examples: [cuda:0]
+                  precision:
+                    type: string
+                    examples: [bf16]
+  /api/v1/try-on:
+    post:
+      summary: Generate one real 2D virtual try-on result
+      operationId: createTryOn
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [person_image, garment_image, category]
+              properties:
+                person_image:
+                  type: string
+                  format: binary
+                garment_image:
+                  type: string
+                  format: binary
+                category:
+                  type: string
+                  enum: [upper_body, lower_body, dress]
+                mask_mode:
+                  type: string
+                  enum: [auto, manual]
+                  default: auto
+                seed:
+                  type: integer
+                  default: 42
+      responses:
+        "200":
+          description: Generated try-on image. No JSON wrapper is used.
+          headers:
+            X-VTON-Model:
+              schema:
+                type: string
+            X-VTON-Duration-Ms:
+              schema:
+                type: integer
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Invalid image, category, or request field.
+        "413":
+          description: An uploaded image exceeds the adapter limit.
+        "422":
+          description: Human parsing, masking, or garment preprocessing failed.
+        "503":
+          description: Model is unavailable or GPU memory is insufficient.

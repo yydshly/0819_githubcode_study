@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Outfit Director 能力实验室：提示词换装、MiniMax H3 与 Seedance 2.0 VIP 真实视频对照、2D 视觉原型与虚拟试衣技术路线。"
+      content="Outfit Director 能力实验室：MiniMax H3、Seedance 2.0 VIP 与 Seedance 2.5 真实换装视频对照、2D 视觉原型与虚拟试衣技术路线。"
     />
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=14" />
     <script src="./data/director-profiles.js?v=1" defer></script>
     <script src="./data/transition-mechanisms.js?v=1" defer></script>
     <script src="./data/outfit-presets.js?v=1" defer></script>
-    <script src="./app.js?v=9" defer></script>
+    <script src="./app.js?v=14" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -29,7 +29,7 @@
       </a>
 
       <div class="topbar__actions">
-        <span class="status-pill"><i aria-hidden="true"></i>02 个真实基线</span>
+          <span class="status-pill"><i aria-hidden="true"></i>目标二默认演示</span>
         <a class="text-link" href="#research-roadmap">技术路线</a>
         <a class="text-link" href="../../studies/outfit-director/README.md">研究档案</a>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题">
@@ -56,8 +56,8 @@
         </dl>
 
         <div class="truth-note" role="note">
-          <strong>双实验边界</strong>
-          <span>A 输出提示词供外部模型生成；B 使用预生成的虚构人物素材做网页换装。页面本身不调用生成 API。</span>
+          <strong>三条实验边界</strong>
+          <span>A 输出提示词；B 使用预生成素材模拟视觉切换；C 接收真实人物图与服装图，只在本机 VTON 服务连接后进行真实推理。</span>
         </div>
       </section>
 
@@ -69,6 +69,10 @@
         <button class="experiment-tab" id="experiment-b-tab" role="tab" aria-selected="false" aria-controls="visual-lab" data-experiment="visual" type="button">
           <span class="experiment-tab__index">TEST B</span>
           <span><strong>网页换装实验</strong><small>写实人物与五套服装的本地视觉切换</small></span>
+        </button>
+        <button class="experiment-tab" id="experiment-c-tab" role="tab" aria-selected="false" aria-controls="vton-lab" data-experiment="vton" type="button">
+          <span class="experiment-tab__index">TEST C</span>
+          <span><strong>真实 2D 试衣</strong><small>内置演示 · 模型扩展接口</small></span>
         </button>
       </nav>
 
@@ -300,6 +304,117 @@
         </aside>
       </section>
 
+      <section class="vton-lab experiment-pane" id="vton-lab" role="tabpanel" aria-labelledby="experiment-c-tab" hidden>
+        <div class="visual-lab__heading vton-lab__heading">
+          <div>
+            <span class="step">C</span>
+            <div><p class="eyebrow-mini">REAL 2D VTON / DEMO</p><h2>默认看演示，也可换成自己的素材。</h2></div>
+          </div>
+          <p>页面内置一组人物、服装和预生成结果，帮助理解完整流程；它不是模型推理。上传自己的素材后，结果区会等待后续本机模型。</p>
+        </div>
+
+        <div class="vton-workspace">
+          <form class="panel vton-input-panel" id="vton-form" novalidate>
+            <header class="panel__header">
+              <div><span class="step">01</span><h2>准备输入</h2></div>
+              <span class="panel__meta">LOCAL FILES</span>
+            </header>
+
+            <div class="vton-upload-grid">
+              <label class="vton-upload" for="vton-person-input">
+                <span class="vton-upload__index">P</span>
+                <span><strong>人物全身照</strong><small id="vton-person-label">选择 JPG / PNG / WebP，建议正面站立</small></span>
+                <input id="vton-person-input" name="person_image" type="file" accept="image/jpeg,image/png,image/webp" />
+              </label>
+              <label class="vton-upload" for="vton-garment-input">
+                <span class="vton-upload__index">G</span>
+                <span><strong>单件服装图</strong><small id="vton-garment-label">选择平铺或商品图，背景尽量干净</small></span>
+                <input id="vton-garment-input" name="garment_image" type="file" accept="image/jpeg,image/png,image/webp" />
+              </label>
+            </div>
+
+            <fieldset class="vton-category">
+              <legend>服装类别</legend>
+              <label><input type="radio" name="category" value="upper_body" checked /><span><strong>上装</strong><small>衬衫 / 外套 / 针织</small></span></label>
+              <label><input type="radio" name="category" value="lower_body" /><span><strong>下装</strong><small>裤装 / 半裙</small></span></label>
+              <label><input type="radio" name="category" value="dress" /><span><strong>连衣裙</strong><small>整件连身服装</small></span></label>
+            </fieldset>
+
+            <div class="vton-quality" aria-live="polite">
+              <span>INPUT READINESS</span>
+              <ul id="vton-quality-list">
+                <li data-check="person"><i aria-hidden="true"></i><span>等待人物图</span></li>
+                <li data-check="garment"><i aria-hidden="true"></i><span>等待服装图</span></li>
+                <li data-check="manual"><i aria-hidden="true"></i><span>仍需人工确认：全身完整、无遮挡、服装单件清楚</span></li>
+              </ul>
+            </div>
+
+            <div class="vton-demo-controls">
+              <span><small>BUILT-IN SAMPLE</small><strong>虚构人物 + 绿松石工装夹克</strong></span>
+              <button class="secondary-button" id="vton-demo-reset" type="button">恢复内置演示</button>
+            </div>
+          </form>
+
+          <section class="panel vton-preview-panel" aria-labelledby="vton-preview-title">
+            <header class="panel__header">
+              <div><span class="step">02</span><h2 id="vton-preview-title">检查输入对</h2></div>
+              <span class="panel__meta">SOURCE PAIR</span>
+            </header>
+            <div class="vton-preview-grid">
+              <figure class="vton-preview-card" id="vton-person-preview-card">
+                <div class="vton-preview-empty"><span>P</span><strong>人物图尚未选择</strong><small>头顶到鞋底应完整进入画面</small></div>
+                <img id="vton-person-preview" alt="待试衣人物图预览" hidden />
+                <figcaption><span>PERSON</span><strong id="vton-person-meta">—</strong></figcaption>
+              </figure>
+              <figure class="vton-preview-card" id="vton-garment-preview-card">
+                <div class="vton-preview-empty"><span>G</span><strong>服装图尚未选择</strong><small>优先使用正面、平整、无遮挡商品图</small></div>
+                <img id="vton-garment-preview" alt="待试穿服装图预览" hidden />
+                <figcaption><span>GARMENT</span><strong id="vton-garment-meta">—</strong></figcaption>
+              </figure>
+            </div>
+            <p class="vton-privacy"><strong>当前状态：</strong><span id="vton-privacy-status">内置虚构样例 · 本地静态资源 · 未调用模型。</span></p>
+          </section>
+
+          <aside class="panel vton-run-panel" aria-labelledby="vton-run-title">
+            <header class="panel__header">
+              <div><span class="step">03</span><h2 id="vton-run-title">连接与推理</h2></div>
+              <span class="panel__meta">LOCAL ADAPTER</span>
+            </header>
+
+            <div class="vton-model-card">
+              <div><span>OPTIONAL MODEL · NOT INSTALLED</span><strong>CatVTON · bf16</strong><small>后续按需下载 · 当前只演示输入与接口</small></div>
+              <a href="https://github.com/Zheng-Chong/CatVTON" target="_blank" rel="noreferrer">官方仓库 ↗</a>
+            </div>
+
+            <label class="vton-endpoint" for="vton-endpoint">
+              <span>适配器地址</span>
+              <input id="vton-endpoint" name="endpoint" type="url" value="http://127.0.0.1:8000" inputmode="url" spellcheck="false" />
+            </label>
+
+            <div class="vton-service-state" id="vton-service-state" data-state="offline" role="status" aria-live="polite">
+              <i aria-hidden="true"></i>
+              <span><small>DEMO MODE</small><strong id="vton-service-title">模型未安装</strong><em id="vton-service-detail">当前无需检测；本机适配器保留给后续按需接入。</em></span>
+            </div>
+
+            <div class="vton-run-actions">
+              <button class="secondary-button" id="vton-health-button" type="button">检测本机服务（可选）</button>
+              <button class="play-button" id="vton-run-button" type="submit" form="vton-form" disabled>开始真实试衣</button>
+            </div>
+
+            <div class="vton-output" id="vton-output" data-state="empty" aria-live="polite">
+              <div class="vton-output__empty" id="vton-output-empty"><span>WAITING FOR MODEL</span><strong>等待真实试衣结果</strong><p>上传自己的两张图片并连接本机模型后，结果会显示在这里。</p></div>
+              <span class="vton-result-badge" id="vton-result-badge" hidden>PRE-GENERATED DEMO · 非模型推理</span>
+              <img id="vton-result-image" alt="真实 2D 虚拟试衣结果" hidden />
+              <a id="vton-result-download" class="vton-result-download" download="vton-result.png" hidden>下载结果图</a>
+            </div>
+
+            <p class="vton-result-note" id="vton-result-note">预生成试衣演示只用于说明“人物图 + 衣服图 → 结果图”的界面流程，不代表 CatVTON 输出。</p>
+
+            <p class="vton-license-note">CatVTON 与 IDM-VTON 的代码和权重均采用 CC BY-NC-SA 4.0；当前路线只用于非商业研究验证。</p>
+          </aside>
+        </div>
+      </section>
+
       <section class="visual-lab experiment-pane" id="visual-lab" role="tabpanel" aria-labelledby="experiment-b-tab" hidden>
         <div class="visual-lab__heading">
           <div>
@@ -370,7 +485,7 @@
       <section class="e001-result" id="e001-result" aria-labelledby="e001-title">
         <div class="section-heading e001-heading">
           <div><span class="section-index">04</span><h2 id="e001-title">真实视频基线对照</h2></div>
-          <p>两条提示词已经交给不同外部模型执行。切换 E001 / E002，可对照 T2V 与首帧 I2V 的真实 MP4、媒体事实、状态机表现和失败边界。</p>
+          <p>三条提示词已经交给外部模型执行。切换 E001 / E002 / E003，可对照 T2V、首帧 I2V、安全区布局、媒体事实、状态机表现和失败边界。</p>
         </div>
 
         <div class="baseline-tabs" role="tablist" aria-label="选择真实视频基线">
@@ -380,12 +495,15 @@
           <button class="baseline-tab" id="baseline-tab-e002" role="tab" aria-selected="false" aria-controls="baseline-e002" data-baseline-target="baseline-e002" type="button" tabindex="-1">
             <span>E002</span><strong>Seedance 2.0 VIP</strong><small>I2V · 9:16 · M13 状态机成立</small>
           </button>
+          <button class="baseline-tab" id="baseline-tab-e003" role="tab" aria-selected="false" aria-controls="baseline-e003" data-baseline-target="baseline-e003" type="button" tabindex="-1">
+            <span>E003</span><strong>Seedance 2.5</strong><small>I2V · 560×750 · 侧边安全 / 全身失败</small>
+          </button>
         </div>
 
         <div class="baseline-comparison-note" role="note">
           <span>MULTI-VARIABLE COMPARISON</span>
-          <strong>E002 的整体控制表现更好，但不能单独归因于首帧。</strong>
-          <p>模型、T2V/I2V 路线、画幅设置和提示词同时变化；本轮比较整体方案，不宣称单变量因果。</p>
+          <strong>E003 修复了侧边裁切，但同时更换模型，不能作为 E002.1 单变量结论。</strong>
+          <p>E003 的模型与首帧同时变化；可记录当前输出的直接表现，但不把改善或退化单独归因于安全区布局或 Seedance 2.5。</p>
         </div>
 
         <div class="baseline-pane" id="baseline-e001" role="tabpanel" aria-labelledby="baseline-tab-e001">
@@ -457,8 +575,8 @@
                 <span class="panel__meta">REAL MP4</span>
               </header>
               <div class="e001-video-frame e001-video-frame--portrait">
-                <video controls playsinline preload="metadata" poster="./assets/e002-seedance-2-vip-i2v-m13-poster.jpg" aria-label="E002 Seedance 2.0 VIP 首帧换装视频" data-baseline-video>
-                  <source src="./assets/e002-seedance-2-vip-i2v-m13.mp4" type="video/mp4" />
+                <video controls playsinline preload="metadata" data-poster="./assets/e002-seedance-2-vip-i2v-m13-poster.jpg" aria-label="E002 Seedance 2.0 VIP 首帧换装视频" data-baseline-video>
+                  <source data-src="./assets/e002-seedance-2-vip-i2v-m13.mp4" type="video/mp4" />
                   当前浏览器无法播放 MP4；请使用下方直接链接打开。
                 </video>
                 <span class="e001-video-badge">15.104 SEC · 9:16 · 7 LOOKS</span>
@@ -499,6 +617,80 @@
             <summary><span>查看 E002 完整生成提示词</span><small>Seedance 2.0 VIP · I2V · 15 秒</small></summary>
             <pre>15 秒15 秒换装舞蹈，继承首帧中的女性身份、全部 7 套造型、侧边位置、画面布局和摄影质感。中央主体保持固定正面全身机位，允许轻微呼吸式推近，使用M13 · 侧边激活 + 舞蹈峰值。在 2.0 秒、4.1 秒、6.3 秒、8.5 秒、10.8 秒、13.0 秒依次完成换装；激活顺序为左上 → 右上 → 左中 → 右中 → 左下 → 右下。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和旋转方向连续，衣摆、发丝或毛发保持重力与惯性。15 秒卡点舞曲，仅背景音乐。最终造型展示至 15.0 秒并完成收尾。固定正面机位，背景保持简洁，强调身份一致性。</pre>
           </details>
+
+          <article class="e002-next-frame" aria-labelledby="e002-next-frame-title">
+            <figure>
+              <img src="./assets/e002-1-first-frame-safe-layout-720x1280.png" loading="lazy" width="720" height="1280" alt="E002.1 首帧候选：中央学院风女性与左右两列完整显示的六个换装造型" />
+              <figcaption>720 × 1280 · SAFE LAYOUT</figcaption>
+            </figure>
+            <div>
+              <span class="e002-next-frame__status">E002.1 · STRICT REPRO STILL PENDING</span>
+              <h3 id="e002-next-frame-title">安全区首帧已用于 E003；同模型单变量复现仍待完成</h3>
+              <p>这张首帧缩小并内移了六个侧边人物。E003 已使用它，但模型同时改为 Seedance 2.5，因此只能观察当前输出，不能把结果作为严格 E002.1 结论。</p>
+              <ul>
+                <li>左上运动 → 右上丹宁</li>
+                <li>左中通勤 → 右中黑色</li>
+                <li>左下派对 → 右下银白舞台</li>
+              </ul>
+              <div class="e002-next-frame__actions">
+                <a class="primary-button" href="./assets/e002-1-first-frame-safe-layout-720x1280.png" download>下载标准首帧</a>
+                <a class="text-link" href="../../studies/outfit-director/experiments/e002-1-first-frame-safe-layout.md">查看实验说明 ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="baseline-pane" id="baseline-e003" role="tabpanel" aria-labelledby="baseline-tab-e003" hidden>
+          <div class="e001-grid">
+            <article class="panel e001-video-card" aria-labelledby="e003-video-title">
+              <header class="panel__header">
+                <div><span class="step">E003</span><h2 id="e003-video-title">Seedance 2.5 · I2V · M13</h2></div>
+                <span class="panel__meta">REAL MP4</span>
+              </header>
+              <div class="e001-video-frame e001-video-frame--portrait e001-video-frame--e003">
+                <video controls playsinline preload="metadata" data-poster="./assets/e003-seedance-2-5-i2v-m13-safe-layout-poster.jpg" aria-label="E003 Seedance 2.5 安全区首帧换装视频" data-baseline-video>
+                  <source data-src="./assets/e003-seedance-2-5-i2v-m13-safe-layout.mp4" type="video/mp4" />
+                  当前浏览器无法播放 MP4；请使用下方直接链接打开。
+                </video>
+                <span class="e001-video-badge">15.072 SEC · 560×750 · 7 LOOKS</span>
+              </div>
+              <div class="e001-video-actions">
+                <p><strong>用户提供的第三条外部生成结果</strong><span>H.264 视频 + AAC 双声道 · 24 fps · 8.52 MB</span></p>
+                <a href="./assets/e003-seedance-2-5-i2v-m13-safe-layout.mp4" target="_blank" rel="noreferrer">打开原始 MP4 ↗</a>
+              </div>
+            </article>
+
+            <aside class="panel e001-evidence" aria-labelledby="e003-evidence-title">
+              <header class="panel__header">
+                <div><span class="step">03</span><h2 id="e003-evidence-title">安全区与构图观察</h2></div>
+                <span class="panel__meta">RECORDED</span>
+              </header>
+              <div class="e001-evidence__body">
+                <div class="e001-status e001-status--warning"><span>BASELINE STATUS</span><strong>侧边安全通过 · 全身机位仍需优化</strong><p>平台无 9:16 选项，实际输出接近 3:4；持续推近裁掉中央人物。</p></div>
+                <dl class="e001-facts">
+                  <div><dt>模型</dt><dd>Seedance 2.5 <small>用户记录</small></dd></div>
+                  <div><dt>路线</dt><dd>I2V · M13 <small>安全区首帧</small></dd></div>
+                  <div><dt>实际画幅</dt><dd>560 × 750 <small>约 3:4</small></dd></div>
+                  <div><dt>时长</dt><dd>15.072 秒 <small>24 fps</small></dd></div>
+                </dl>
+                <ul class="e001-checks" aria-label="E003 基线检查结果">
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>侧边安全区</strong>六个库存人物完整显示头、肩、衣摆和鞋子；左右边界裁切得到改善。</p></li>
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>七套造型与消费</strong>顺序完整；左上 → 右上 → 左中 → 右中 → 左下 → 右下依次永久清空。</p></li>
+                  <li class="e001-check--partial"><span>PARTIAL</span><p><strong>M13 空间特效</strong>库存与中央服装同步切换，但缺少 E002 中明显的发光轮廓或光束汇入。</p></li>
+                  <li class="e001-check--partial"><span>PARTIAL</span><p><strong>换装时间</strong>平均绝对偏差约 0.49 秒；后两次分别约提前 1.05 秒和 1.0 秒。</p></li>
+                  <li class="e001-check--partial"><span>LIMIT</span><p><strong>平台画幅</strong>生成界面没有 9:16 选项；560×750 接近 3:4，属于当前平台输出边界，不是用户设置错误。</p></li>
+                  <li class="e001-check--fail"><span>FAIL</span><p><strong>全身机位</strong>持续推近后腿、脚和手臂逐步越界，最终接近上半身构图。</p></li>
+                  <li class="e001-check--partial"><span>LIMIT</span><p><strong>归因边界</strong>模型与首帧同时变化，不能把侧边改善或构图退化单独归因于其中一个变量。</p></li>
+                </ul>
+                <p class="e001-caveat">视频流没有旋转元数据；560×750 是真实输出尺寸。身份与动作结论来自关键帧视觉观察，音画卡点仍需完整人工听看。</p>
+              </div>
+            </aside>
+          </div>
+
+          <details class="e001-prompt">
+            <summary><span>查看 E003 完整生成提示词</span><small>Seedance 2.5 · I2V · 15 秒</small></summary>
+            <pre>15 秒15 秒换装舞蹈，继承首帧中的女性身份、全部 7 套造型、侧边位置、画面布局和摄影质感。中央主体保持固定正面全身机位，允许轻微呼吸式推近，使用M13 · 侧边激活 + 舞蹈峰值。在 2.0 秒、4.1 秒、6.3 秒、8.5 秒、10.8 秒、13.0 秒依次完成换装；激活顺序为左上 → 右上 → 左中 → 右中 → 左下 → 右下。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和旋转方向连续，衣摆、发丝或毛发保持重力与惯性。15 秒卡点舞曲，仅背景音乐。最终造型展示至 15.0 秒并完成收尾。固定正面机位，背景保持简洁，强调身份一致性。</pre>
+          </details>
         </div>
       </section>
 
@@ -510,17 +702,17 @@
 
         <div class="roadmap-summary" role="note">
           <span>CURRENT RESEARCH POSITION</span>
-          <strong>目标一已有 E001 / E002 双基线 · 目标二等待模型选型</strong>
-          <p>E002 通过首帧 I2V 实现 9:16 与 M13 侧边消费；下一步需要同模型单变量实验隔离首帧贡献。</p>
+          <strong>目标一已有三条真实基线 · 目标二默认演示已接入</strong>
+          <p>TEST C 默认展示人物、服装和预生成结果；上传自定义素材后可沿用本机接口，后续按需接入 CatVTON。</p>
         </div>
 
         <div class="roadmap-layout">
           <div class="roadmap-steps" role="tablist" aria-label="虚拟试衣五个研究目标">
             <button class="roadmap-step is-active" id="roadmap-goal-1" role="tab" aria-selected="true" aria-controls="roadmap-detail" data-roadmap-goal="0" type="button">
-              <span class="roadmap-step__number">01</span><span><small>E001 / E002 已回填</small><strong>提示词换装视频</strong><em>T2V 与首帧 I2V 双基线</em></span>
+              <span class="roadmap-step__number">01</span><span><small>E001–E003 已回填</small><strong>提示词换装视频</strong><em>T2V 与两条首帧 I2V 基线</em></span>
             </button>
             <button class="roadmap-step" id="roadmap-goal-2" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="1" type="button" tabindex="-1">
-              <span class="roadmap-step__number">02</span><span><small>下一阶段</small><strong>2D AI 虚拟试衣</strong><em>人物照 + 服装图 → 新试衣图</em></span>
+              <span class="roadmap-step__number">02</span><span><small>输入演示</small><strong>2D AI 虚拟试衣</strong><em>人物照 + 服装图 → 新试衣图</em></span>
             </button>
             <button class="roadmap-step" id="roadmap-goal-3" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="2" type="button" tabindex="-1">
               <span class="roadmap-step__number">03</span><span><small>规划中</small><strong>3D 参数化试衣间</strong><em>人体参数 + 3D 服装 + 动作</em></span>

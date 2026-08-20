@@ -205,10 +205,143 @@ Revision 5 截图只保存在浏览器工具临时证据目录，不进入产品
 
 浏览器截图和关键帧接触表属于临时证据，不进入产品提交；可复现结论保存在 E002 实验档案中。
 
+## Revision 8 · E002.1 首帧安全区候选
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Source diagnosis | E002 frame 0 | pass | 原始关键帧确认六个侧边人物贴近左右边界并被视频像素裁切；播放器 `contain` 不是根因 |
+| Generated asset | visual inspection | pass | 中央人物保持主视觉；六个侧边人物按原顺序完整显示头、肩、手臂、衣摆和鞋子 |
+| Standard input | file / hash | pass | 720×1280 PNG，1,364,552 bytes；SHA-256 `706537ADBCC57CDC87ED6646A05AD148B9D8C147D595C4F37EDE4D9254A5122C` |
+| Desktop | 1440×1000 / dark | pass | 候选图 258×459 完整展示；状态、唯一变量、下载和实验说明可见；`scrollWidth 1425 < 1440` |
+| Tablet | 1024×900 / light | pass | 图片 258×459、信息列 639px，无横向溢出；`scrollWidth 1009 < 1024` |
+| Mobile | 390×844 / dark | pass | 卡片单列，图片 278×494，操作纵向排列；`scrollWidth 375 < 390` |
+| Loading | fresh E001 session | pass | 候选图 `loading=lazy`；E002 panel 隐藏时 resource entries 中没有 E002.1 图片请求 |
+| Fallback | static image | pass | 图片返回 200 `image/png`、`Content-Length 1364552`；提供带 `download` 的直接链接 |
+| Runtime | browser / syntax / Git | pass | 浏览器 errors / console 为空；`node --check` 与 `git diff --check` 通过 |
+
+### Revision 8 visual evidence
+
+- Desktop dark：`C:\Users\yun68\.agent-browser\tmp\screenshots\e002-1-desktop-dark.png`
+- Mobile dark：`C:\Users\yun68\.agent-browser\tmp\screenshots\e002-1-mobile-dark.png`
+
+E002.1 视频尚未生成；本轮完成的是可下载首帧和单变量实验入口，不将候选图表述为视频效果已通过。
+
+## Revision 9 · E003 Seedance 2.5 安全区首帧视频
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Asset | MP4 provenance | pass | 项目文件 8,517,726 bytes；SHA-256 `85B308F0F6371F768AA63685FB4F069AA9FEE230C584559AFB283FEB2A41C72E` 与用户源文件一致 |
+| Media | ffprobe / audio | pass | 15.072s；560×750；H.264 24fps；AAC 32kHz 双声道；约 4.52Mbps；平均 -24.5dB、峰值 -1.5dB |
+| Safe layout | initial / planned frames | pass for current output | 六个侧边人物完整显示头、肩、衣摆和鞋子；E002 的左右边界裁切得到改善 |
+| Platform aspect | entire sequence | limit | 实际 560×750，接近 3:4；用户确认生成界面没有 9:16 选项，不视为设置错误 |
+| Full-body framing | entire sequence | fail | 持续推近使中央人物从全身逐步变为腿脚、手臂越界，最终接近上半身 |
+| Looks / state | eight planned frames | pass | 七套造型顺序完整；六个侧边库存按左上 → 右上 → 左中 → 右中 → 左下 → 右下清空且不复现 |
+| M13 visual | dense first two windows | partial | 库存消耗与中央换装同步，但没有 E002 中明显的侧边光束或发光轮廓汇入 |
+| Timing | six change windows | partial | 完成点约 2.1 / 4.1 / 6.0 / 8.0 / 9.75 / 12.0 秒；粗粒度 MAE 约 0.49 秒，后两次约提前 1 秒 |
+| Causal boundary | E002 / E003 | pass | 明确模型和首帧同时变化；不把侧边改善或构图退化单独归因于安全区布局或 Seedance 2.5 |
+| Desktop | 1440×1000 / dark / E003 | pass | 三标签、真实播放器、黄色综合状态、媒体事实与六项结论双栏清晰；`scrollWidth 1425 < 1440` |
+| Tablet | 1024×900 / light / E003 | pass | 三标签各约 314px；视频 524×702；`scrollWidth 1009 < 1024` |
+| Mobile | 390×844 / dark / E003 | pass | 标签单列；视频 345×462；最终帧裁切可见；`scrollWidth 375 < 390` |
+| Keyboard / playback | ArrowLeft / native player | pass | E003 元数据 15.072、560×750；原生播放时间推进；ArrowLeft 切换 E002、焦点同步并暂停 E003 |
+| Reduced motion | mobile / dark | pass | `prefers-reduced-motion=true`；tab animation 为 none，E001/E003 仍可切换 |
+| Lazy media | fresh E001 session | pass | E003 隐藏时 `poster=null`、`source src=null`、相关请求为 0；首次选择后才挂载 poster/source 并读取元数据 |
+| Fallback | static media | pass | MP4 返回 200 `video/mp4` 8,517,726B；poster 返回 200 `image/jpeg` 63,674B；文字回退和直接链接存在 |
+| Runtime | browser / syntax / Git | pass | 浏览器 errors / console 为空；`node --check` 与 `git diff --check` 通过 |
+
+### Revision 9 visual evidence
+
+- Desktop dark / E003：`C:\Users\yun68\.agent-browser\tmp\screenshots\e003-desktop-dark.png`
+- Mobile dark / E003 final crop：`C:\Users\yun68\.agent-browser\tmp\screenshots\e003-mobile-dark.png`
+- Planned-point contact sheet：`E:\0819_codex_project\.tmp\e003-frames\contact-sheet.png`
+- Transition windows：`E:\0819_codex_project\.tmp\e003-transitions\contact-sheet.png`
+- Timing focus：`E:\0819_codex_project\.tmp\e003-timing-focus\contact-sheet.png`
+- Activation focus：`E:\0819_codex_project\.tmp\e003-activation\contact-sheet.png`
+
+浏览器截图和关键帧接触表属于临时证据，不进入产品提交；可复现结论保存在 E003 实验档案中。
+
+## Revision 10 · TEST C 真实 2D VTON 输入与接口准备
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Model selection | official docs / local GPU | pass | CatVTON 官方记录 `bf16` 1024×768 约需 8GB；本机 RTX 4070 Laptop 为 8188 MiB；IDM-VTON 保留对照；两者均记录 CC BY-NC-SA 4.0 |
+| Empty state | no files / offline | pass | “开始真实试衣”禁用；结果区明确写明不会先放假结果 |
+| Input pair | local PNG fixtures | pass | 两个文件可选择、预览、显示尺寸/大小；人物 720×1280 触发比例/尺寸建议，服装 1774×887 通过尺寸检查 |
+| Privacy | before request | pass | Object URL 本地预览；界面显示“尚未发送”；源代码只在显式 submit 中创建 FormData |
+| Service gate | files ready / service unchecked | pass | 双输入存在后推理仍保持禁用；模拟 `/health` 返回 `status=ok` 后才解锁 |
+| Adapter contract | mocked localhost response | pass | `/health` JSON 与 `/api/v1/try-on` `image/png` 响应路径完成；结果图片和下载入口可见。这里只验证接口，不记为 E004 模型结果 |
+| Host guard | external URL | pass | `https://example.com` 被拒绝，界面显示“仅允许本机地址” |
+| Keyboard / semantics | experiment tabs | pass | TEST A 聚焦后连续 ArrowRight 到 TEST C，最终 `activeElement=experiment-c-tab`；无重复 ID、无失效 `aria-controls` |
+| Desktop | 1440×1000 / dark | pass | 三列输入、预览和推理层级清楚；`scrollWidth - clientWidth = 0` |
+| Tablet | 1024×900 / light | pass | 输入/预览双列、运行面板整行；主题稳定后无溢出，差值 0 |
+| Mobile | 390×844 / dark | pass | 三个实验标签和三个工作面板单列；预览、控件和输出均可达；无横向溢出，差值 0 |
+| Runtime | console / page / syntax | pass | 两次浏览器全流程 `errors=[]`；`node --check` 通过 |
+| Capability boundary | real model absent | pass | 页面、README 与 M3 记录均声明模型权重尚未安装；当前结果只来自接口桩，不声称完成真实 VTON |
+
+### Revision 10 visual evidence
+
+- Desktop dark：`E:\0819_codex_project\.tmp\vton-evidence\desktop-dark.png`
+- Tablet light：`E:\0819_codex_project\.tmp\vton-evidence\tablet-light.png`
+- Mobile dark：`E:\0819_codex_project\.tmp\vton-evidence\mobile-dark.png`
+
+截图与接口桩脚本位于 `.tmp`，仅作为本地验证证据，不进入产品提交。实际模型部署后的首张输出另建 E004，不能复用本轮接口桩的通过结论。
+
+## Revision 11 · TEST C 演示模式
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Status copy | default / TEST C / roadmap | pass | 顶栏为“目标二输入演示”；TEST C 标明“模型按需接入”；路线标明“输入演示已就绪” |
+| Empty state | model not installed | pass | 服务状态为“模型未安装”；结果区为“输入演示已就绪”；推理按钮禁用 |
+| Local input demo | two fixture files | pass | 人物图和服装图均可预览与检查；上传后推理按钮仍禁用，结果保持空态 |
+| Network boundary | no health/run click | pass | 完整输入演示期间对 `127.0.0.1:8000` 的请求计数为 0 |
+| Keyboard | A → B → C | pass | 连续 ArrowRight 后焦点为 `experiment-c-tab`，对应 panel 可见 |
+| Desktop | 1440×1000 / dark | pass | 演示、未安装和按需文案可见；三列无溢出，差值 0 |
+| Tablet | 1024×900 / light | pass | 状态文案无截断；无横向溢出，差值 0 |
+| Mobile | 390×844 / dark | pass | 上传、预览、模型状态和空结果单列可读；无横向溢出，差值 0 |
+| Runtime | browser / syntax / diff | pass | 浏览器 `errors=[]`；JavaScript 语法与 Git 空白检查通过 |
+
+### Revision 11 visual evidence
+
+- Desktop dark：`E:\0819_codex_project\.tmp\vton-demo-evidence\desktop-dark.png`
+- Mobile dark：`E:\0819_codex_project\.tmp\vton-demo-evidence\mobile-dark.png`
+
+模型下载不是本轮 `defer` 或 `blocked`：用户已经把它明确移出当前演示范围。未来提出真实试衣需求时，再新建部署与 E004 验收契约。
+
 ## Terminal audit
 
 - continue：无
 - defer：无
 - blocked：无
 
-所有契约内交付项均为 `pass`，本地网页演示范围关闭。公开 GitHub Pages 发布属于后续远端操作。
+Revision 11 演示范围均为 `pass`。CatVTON 安装、权重下载与 E004 已移出当前范围，后续按需重新启动；公开 GitHub Pages 发布仍属于后续远端操作。
+
+## Revision 12 · TEST C 内置默认演示
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Assets | local static files | pass | 人物 1024×1536 / 1,842,809B；服装 1254×1254 / 1,861,585B；结果 1024×1536 / 1,910,035B；三张素材人工检查通过 |
+| Default demo | fresh TEST C | pass | 人物、服装、结果默认可见；结果持续显示 `PRE-GENERATED DEMO · 非模型推理`；推理按钮禁用 |
+| Honest boundary | default result | pass | 结果说明明确“预生成”且“不代表 CatVTON 输出”；模型状态仍为“模型未安装” |
+| Custom input | upload one image | pass | 结果图和演示标签立即隐藏；结果区显示“等待真实试衣结果”；适配器请求数仍为 0 |
+| Restore | keyboard Enter | pass | 恢复内置人物、服装与结果，文件控件清空；恢复前后适配器请求数为 0 |
+| Future adapter | mocked localhost | pass | 两张自定义输入加载完成且 `/health` 在线后按钮解锁；`image/png` 返回后隐藏演示标签并显示下载入口；总请求 2 |
+| Keyboard | A → B → C / reset | pass | 方向键进入 C 后焦点为 `experiment-c-tab`；恢复按钮支持键盘 Enter |
+| Desktop | 1440×1000 / dark | pass | 三图输入到结果关系完整可读；横向溢出 0 |
+| Tablet | 1024×900 / light | pass | 默认演示与模型边界保持可读；横向溢出 0 |
+| Mobile | 390×844 / dark | pass | 三列顺序降为单列，三张图片完整显示；横向溢出 0 |
+| Runtime | browser / syntax / diff | pass | 浏览器 `errors=[]`；`node --check` 与 `git diff --check` 通过 |
+
+### Revision 12 visual evidence
+
+- Desktop dark：`E:\0819_codex_project\.tmp\vton-default-evidence\desktop-dark.png`
+- Tablet light：`E:\0819_codex_project\.tmp\vton-default-evidence\tablet-light.png`
+- Mobile dark：`E:\0819_codex_project\.tmp\vton-default-evidence\mobile-dark.png`
+
+截图与接口桩脚本位于 `.tmp`，不进入产品提交。默认结果只用于解释页面流程；未来真实模型输出必须另建 E004，并记录模型、权重、参数、输入、耗时和显存。
+
+## Terminal audit · Revision 12
+
+- continue：无
+- defer：无
+- blocked：无
+
+Revision 12 当前范围均为 `pass`。CatVTON 下载与真实 E004 仍按用户决定留待后续，不是本轮阻塞。

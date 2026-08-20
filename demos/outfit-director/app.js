@@ -209,33 +209,33 @@ const REAL_LOOKS = [
 const ROADMAP_GOALS = [
   {
     phase: "M0–M2",
-    status: "E001 / E002",
+    status: "E001–E003",
     tone: "current",
     title: "提示词生成换装视频",
-    summary: "两条真实结果已回填：E001 验证纯 T2V 的七套造型，E002 通过 Seedance 2.0 VIP 首帧 I2V 实现标准 9:16 和完整 M13 侧边消费。",
+    summary: "三条真实结果已回填：E001 验证纯 T2V，E002 建立 9:16 M13 基线，E003 验证安全区布局但暴露 Seedance 2.5 画幅和持续推近问题。",
     inputs: ["人物与服装要求", "参考图（I2V 可选）", "时长、节奏与转场"],
     capabilities: ["通用 + 女性专项规则编排", "T2V / I2V 提示词", "M1–M13 时间轴与负面约束"],
-    outputs: ["可复制的视频提示词", "E001 / E002 真实 MP4", "模型、参数与对照评估记录"],
-    steps: ["E001 T2V 已归档", "E002 I2V 已归档", "整体方案完成比较", "E003 隔离首帧变量"],
-    done: "M1 已完成并进入 M2：两条真实 MP4、提示词、媒体元数据和观察均已保存；下一步需要同模型单变量实验。",
-    dependency: "E002 同时改变模型、路线、画幅和提示词，不能单独归因；当前网页不调用生成 API。",
+    outputs: ["可复制的视频提示词", "E001 / E002 / E003 真实 MP4", "模型、参数与对照评估记录"],
+    steps: ["E001 T2V 已归档", "E002 I2V 已归档", "E003 Seedance 2.5 已归档", "同模型复现 E002.1"],
+    done: "M1 已完成并进入 M2：三条真实 MP4 已保存；E003 侧边安全通过，但画幅与全身机位失败，严格 E002.1 仍待同模型复现。",
+    dependency: "E003 同时改变模型和首帧布局，不能单独归因；当前网页不调用生成 API。",
     action: "prompt",
     actionLabel: "生成下一条对照提示词",
   },
   {
     phase: "M3–M4",
-    status: "下一阶段",
+    status: "默认演示",
     tone: "next",
     title: "基于全身照的 2D AI 虚拟试衣",
-    summary: "输入真实人物全身照与单件服装商品图，由专用虚拟试衣模型生成穿着该服装的新图片。",
+    summary: "TEST C 默认展示一组虚构人物、独立服装与预生成试衣结果；上传自定义素材后自动退出演示，并保留 CatVTON 本机接口供后续按需接入。",
     inputs: ["正面全身人物照", "平铺或模特服装图", "服装类别与遮挡信息"],
-    capabilities: ["人体解析与姿态估计", "服装分割 / 形变", "VTON 扩散模型推理"],
-    outputs: ["身份较稳定的试衣图", "服装保真对比", "失败案例与指标"],
-    steps: ["建立人物与服装样例集", "比较开源模型或托管 API", "接入预处理和推理", "建立身份与服装保真评估"],
-    done: "同一人物可切换多件真实服装，并以固定样例重复得到可评价结果。",
-    dependency: "需选择专用 VTON 模型、GPU 或托管 API，并处理真实图像隐私。",
-    action: "visual",
-    actionLabel: "查看当前 2D 视觉原型",
+    capabilities: ["浏览器端输入质量检查", "CatVTON 本地适配器协议", "人体解析 / 自动遮罩 / VTON 推理（待部署）"],
+    outputs: ["默认输入对与预生成结果", "自定义输入与本机服务状态", "模型连接后生成的真实试衣图"],
+    steps: ["内置三图演示已完成", "自定义输入状态已完成", "后续按需部署模型", "真实输出时再建立 E004"],
+    done: "当前演示目标已完成：默认可理解输入到结果，自定义上传后保持诚实空结果；真实 VTON 输出不在本阶段范围内。",
+    dependency: "CatVTON 暂不下载；后续需要真实结果时，再评估 CC BY-NC-SA 4.0、磁盘、CUDA 与真人照片隐私。",
+    action: "vton",
+    actionLabel: "进入真实 2D 试衣验证台",
   },
   {
     phase: "M5–M6",
@@ -341,6 +341,7 @@ const roadmapTabs = [...document.querySelectorAll(".roadmap-step")];
 const roadmapDetail = document.querySelector("#roadmap-detail");
 const promptWorkspace = document.querySelector("#workspace");
 const visualLab = document.querySelector("#visual-lab");
+const vtonLab = document.querySelector("#vton-lab");
 const wardrobeList = document.querySelector("#wardrobe-list");
 const realModelStage = document.querySelector("#real-model-stage");
 const realModelLayerA = document.querySelector("#real-model-layer-a");
@@ -356,6 +357,36 @@ const realLookProgress = document.querySelector("#real-look-progress");
 const proofLookName = document.querySelector("#proof-look-name");
 const proofLookDescription = document.querySelector("#proof-look-description");
 const realEffectSelect = document.querySelector("#real-effect-select");
+const vtonForm = document.querySelector("#vton-form");
+const vtonPersonInput = document.querySelector("#vton-person-input");
+const vtonGarmentInput = document.querySelector("#vton-garment-input");
+const vtonPersonLabel = document.querySelector("#vton-person-label");
+const vtonGarmentLabel = document.querySelector("#vton-garment-label");
+const vtonPersonPreview = document.querySelector("#vton-person-preview");
+const vtonGarmentPreview = document.querySelector("#vton-garment-preview");
+const vtonPersonMeta = document.querySelector("#vton-person-meta");
+const vtonGarmentMeta = document.querySelector("#vton-garment-meta");
+const vtonQualityList = document.querySelector("#vton-quality-list");
+const vtonPrivacyStatus = document.querySelector("#vton-privacy-status");
+const vtonEndpoint = document.querySelector("#vton-endpoint");
+const vtonHealthButton = document.querySelector("#vton-health-button");
+const vtonRunButton = document.querySelector("#vton-run-button");
+const vtonServiceState = document.querySelector("#vton-service-state");
+const vtonServiceTitle = document.querySelector("#vton-service-title");
+const vtonServiceDetail = document.querySelector("#vton-service-detail");
+const vtonOutput = document.querySelector("#vton-output");
+const vtonOutputEmpty = document.querySelector("#vton-output-empty");
+const vtonResultImage = document.querySelector("#vton-result-image");
+const vtonResultDownload = document.querySelector("#vton-result-download");
+const vtonResultBadge = document.querySelector("#vton-result-badge");
+const vtonResultNote = document.querySelector("#vton-result-note");
+const vtonDemoReset = document.querySelector("#vton-demo-reset");
+
+const VTON_DEMO = {
+  person: "./assets/vton-demo-person.png",
+  garment: "./assets/vton-demo-garment.png",
+  result: "./assets/vton-demo-result.png",
+};
 
 let activeTab = "video";
 let outputs = {};
@@ -368,6 +399,13 @@ let realEffectTimerId;
 let realVisibleLayer = "a";
 let realLookIndex = 0;
 let realPlaying = false;
+let vtonServiceOnline = false;
+let vtonRunning = false;
+let vtonResultUrl = "";
+const vtonInputs = {
+  person: null,
+  garment: null,
+};
 let state = {
   directorProfile: "general",
   subject: "woman",
@@ -1004,17 +1042,267 @@ function playRealSequence() {
   advance();
 }
 
+function formatFileSize(bytes) {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getVtonEndpoint() {
+  try {
+    const url = new URL(vtonEndpoint.value.trim());
+    if (!["127.0.0.1", "localhost"].includes(url.hostname)) throw new Error("仅允许本机地址");
+    if (!["http:", "https:"].includes(url.protocol)) throw new Error("地址协议不受支持");
+    return url.href.replace(/\/$/, "");
+  } catch (error) {
+    throw new Error(error.message === "仅允许本机地址" ? error.message : "请输入有效的 localhost 或 127.0.0.1 地址");
+  }
+}
+
+function setVtonServiceState(stateName, title, detail) {
+  vtonServiceState.dataset.state = stateName;
+  vtonServiceTitle.textContent = title;
+  vtonServiceDetail.textContent = detail;
+  vtonServiceOnline = stateName === "online";
+  updateVtonRunState();
+}
+
+function updateVtonRunState() {
+  const inputsReady = Boolean(vtonInputs.person?.file && vtonInputs.garment?.file);
+  vtonRunButton.disabled = !inputsReady || !vtonServiceOnline || vtonRunning;
+  vtonRunButton.textContent = vtonRunning ? "正在本机推理…" : "开始真实试衣";
+}
+
+function updateVtonQuality(kind, data) {
+  const row = vtonQualityList.querySelector(`[data-check="${kind}"]`);
+  if (!row) return;
+  row.classList.remove("is-pass", "is-warning");
+  const label = row.querySelector("span");
+  if (!data) {
+    label.textContent = kind === "person" ? "等待人物图" : "等待服装图";
+    return;
+  }
+
+  const isPerson = kind === "person";
+  const recommended = isPerson
+    ? data.width >= 768 && data.height >= 1024 && data.width / data.height >= .45 && data.width / data.height <= .9
+    : data.width >= 512 && data.height >= 512;
+  row.classList.add(recommended ? "is-pass" : "is-warning");
+  const noun = isPerson ? "人物图" : "服装图";
+  label.textContent = `${noun} ${data.width}×${data.height} · ${recommended ? "达到建议尺寸" : "可提交，但低于建议尺寸或比例"}`;
+}
+
+function clearVtonResult(message = "上传自己的两张图片并连接本机模型后，结果会显示在这里。") {
+  if (vtonResultUrl) URL.revokeObjectURL(vtonResultUrl);
+  vtonResultUrl = "";
+  vtonResultImage.removeAttribute("src");
+  vtonResultImage.hidden = true;
+  vtonResultImage.alt = "真实 2D 虚拟试衣结果";
+  vtonResultDownload.hidden = true;
+  vtonResultDownload.removeAttribute("href");
+  vtonResultBadge.hidden = true;
+  vtonOutput.dataset.state = "empty";
+  vtonOutputEmpty.hidden = false;
+  vtonOutputEmpty.querySelector("span").textContent = "WAITING FOR MODEL";
+  vtonOutputEmpty.querySelector("strong").textContent = "等待真实试衣结果";
+  vtonOutputEmpty.querySelector("p").textContent = message;
+  vtonResultNote.textContent = "当前没有模型输出；只有连接明确显示的本机适配器并主动开始推理，图片才会离开浏览器预览层。";
+}
+
+function setVtonDemoPreview(kind) {
+  const target = kind === "person" ? vtonPersonPreview : vtonGarmentPreview;
+  const meta = kind === "person" ? vtonPersonMeta : vtonGarmentMeta;
+  const label = kind === "person" ? vtonPersonLabel : vtonGarmentLabel;
+  const card = target.closest(".vton-preview-card");
+  const source = VTON_DEMO[kind];
+  const previous = vtonInputs[kind];
+  if (previous?.objectUrl) URL.revokeObjectURL(previous.objectUrl);
+
+  vtonInputs[kind] = { demo: true, source };
+  target.onload = () => {
+    const data = {
+      demo: true,
+      source,
+      width: target.naturalWidth,
+      height: target.naturalHeight,
+    };
+    vtonInputs[kind] = data;
+    meta.textContent = `${target.naturalWidth}×${target.naturalHeight} · 内置样例`;
+    updateVtonQuality(kind, data);
+    target.onload = null;
+    target.onerror = null;
+  };
+  target.onerror = () => {
+    target.hidden = true;
+    card.querySelector(".vton-preview-empty").hidden = false;
+    meta.textContent = "内置素材加载失败";
+    updateVtonQuality(kind, null);
+    target.onload = null;
+    target.onerror = null;
+  };
+  target.src = source;
+  target.hidden = false;
+  card.querySelector(".vton-preview-empty").hidden = true;
+  meta.textContent = "内置样例 · 加载中";
+  label.textContent = kind === "person" ? "内置虚构人物样例" : "内置绿松石夹克样例";
+}
+
+function showVtonBuiltInDemo() {
+  vtonPersonInput.value = "";
+  vtonGarmentInput.value = "";
+  setVtonDemoPreview("person");
+  setVtonDemoPreview("garment");
+
+  if (vtonResultUrl) URL.revokeObjectURL(vtonResultUrl);
+  vtonResultUrl = "";
+  vtonResultImage.src = VTON_DEMO.result;
+  vtonResultImage.alt = "预生成演示：虚构女性穿着绿松石工装夹克的全身效果";
+  vtonResultImage.hidden = false;
+  vtonResultDownload.hidden = true;
+  vtonResultDownload.removeAttribute("href");
+  vtonResultBadge.hidden = false;
+  vtonOutputEmpty.hidden = true;
+  vtonOutput.dataset.state = "demo";
+  vtonPrivacyStatus.textContent = "内置虚构样例 · 本地静态资源 · 未调用模型。";
+  vtonResultNote.textContent = "预生成试衣演示只用于说明“人物图 + 衣服图 → 结果图”的界面流程，不代表 CatVTON 输出。";
+  updateVtonRunState();
+}
+
+function loadVtonImage(file, kind) {
+  const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!file) return;
+  if (!acceptedTypes.includes(file.type)) {
+    showToast("仅支持 JPG、PNG 或 WebP 图片");
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("单张图片请控制在 10 MB 以内");
+    return;
+  }
+
+  const objectUrl = URL.createObjectURL(file);
+  const probe = new Image();
+  probe.onload = () => {
+    const target = kind === "person" ? vtonPersonPreview : vtonGarmentPreview;
+    const meta = kind === "person" ? vtonPersonMeta : vtonGarmentMeta;
+    const label = kind === "person" ? vtonPersonLabel : vtonGarmentLabel;
+    const card = target.closest(".vton-preview-card");
+    const previous = vtonInputs[kind];
+    if (previous?.objectUrl) URL.revokeObjectURL(previous.objectUrl);
+    vtonInputs[kind] = { file, objectUrl, width: probe.naturalWidth, height: probe.naturalHeight };
+    target.onload = null;
+    target.onerror = null;
+    target.src = objectUrl;
+    target.hidden = false;
+    card.querySelector(".vton-preview-empty").hidden = true;
+    meta.textContent = `${probe.naturalWidth}×${probe.naturalHeight} · ${formatFileSize(file.size)}`;
+    label.textContent = file.name;
+    updateVtonQuality(kind, vtonInputs[kind]);
+    vtonPrivacyStatus.textContent = "图片仅生成本地预览，尚未发送到任何服务。";
+    clearVtonResult("已退出预生成演示。请补齐两张自定义图片并连接本机模型，才会生成真实结果。");
+    updateVtonRunState();
+  };
+  probe.onerror = () => {
+    URL.revokeObjectURL(objectUrl);
+    showToast("图片无法读取，请换一张文件");
+  };
+  probe.src = objectUrl;
+}
+
+async function checkVtonHealth() {
+  let endpoint;
+  try {
+    endpoint = getVtonEndpoint();
+  } catch (error) {
+    setVtonServiceState("error", "地址不可用", error.message);
+    return;
+  }
+
+  setVtonServiceState("checking", "正在检测", `${endpoint}/health`);
+  vtonHealthButton.disabled = true;
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 4500);
+  try {
+    const response = await fetch(`${endpoint}/health`, { signal: controller.signal, cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    if (payload.status !== "ok" && payload.healthy !== true) throw new Error("健康响应格式不匹配");
+    const model = payload.model || "VTON adapter";
+    setVtonServiceState("online", "本机服务在线", `${model} · ${payload.device || "device unknown"}`);
+    showToast("本机 VTON 服务已连接");
+  } catch (error) {
+    const detail = error.name === "AbortError" ? "连接超时；请确认本机适配器已经启动。" : "未发现适配器；当前仍不会上传或生成图片。";
+    setVtonServiceState("error", "本机服务离线", detail);
+  } finally {
+    window.clearTimeout(timeout);
+    vtonHealthButton.disabled = false;
+  }
+}
+
+async function runVtonInference() {
+  if (!vtonInputs.person?.file || !vtonInputs.garment?.file || !vtonServiceOnline) return;
+  let endpoint;
+  try {
+    endpoint = getVtonEndpoint();
+  } catch (error) {
+    setVtonServiceState("error", "地址不可用", error.message);
+    return;
+  }
+
+  const body = new FormData();
+  body.append("person_image", vtonInputs.person.file);
+  body.append("garment_image", vtonInputs.garment.file);
+  body.append("category", vtonForm.elements.category.value);
+  body.append("mask_mode", "auto");
+  body.append("seed", "42");
+  vtonRunning = true;
+  updateVtonRunState();
+  vtonOutput.dataset.state = "loading";
+  vtonOutputEmpty.hidden = false;
+  vtonOutputEmpty.querySelector("strong").textContent = "本机模型正在推理";
+  vtonOutputEmpty.querySelector("p").textContent = "请保持页面打开；输入图片正在发送到当前显示的本机适配器。";
+  vtonPrivacyStatus.textContent = `图片已发送到本机适配器 ${endpoint}；前端不做持久化。`;
+
+  try {
+    const response = await fetch(`${endpoint}/api/v1/try-on`, { method: "POST", body });
+    if (!response.ok) throw new Error(`推理失败：HTTP ${response.status}`);
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.startsWith("image/")) throw new Error("适配器没有返回图片响应");
+    const result = await response.blob();
+    clearVtonResult();
+    vtonResultUrl = URL.createObjectURL(result);
+    vtonResultImage.src = vtonResultUrl;
+    vtonResultImage.alt = "本机模型返回的真实 2D 虚拟试衣结果";
+    vtonResultImage.hidden = false;
+    vtonResultDownload.href = vtonResultUrl;
+    vtonResultDownload.hidden = false;
+    vtonOutputEmpty.hidden = true;
+    vtonOutput.dataset.state = "success";
+    vtonResultNote.textContent = "本图由当前显示的本机适配器真实返回；模型、输入和结果应记录到独立实验档案。";
+    vtonPrivacyStatus.textContent = "真实结果已返回浏览器；前端未保存原图或结果。";
+    showToast("真实 2D 试衣结果已返回");
+  } catch (error) {
+    clearVtonResult(error.message || "推理失败，请检查本机适配器日志后重试。");
+    vtonOutput.dataset.state = "error";
+    vtonOutputEmpty.querySelector("strong").textContent = "真实推理未完成";
+    vtonPrivacyStatus.textContent = "本次请求未得到结果；请检查本机服务。";
+  } finally {
+    vtonRunning = false;
+    updateVtonRunState();
+  }
+}
+
 function switchExperiment(experiment) {
-  const showVisual = experiment === "visual";
-  promptWorkspace.hidden = showVisual;
-  visualLab.hidden = !showVisual;
+  const panes = { prompt: promptWorkspace, visual: visualLab, vton: vtonLab };
+  Object.entries(panes).forEach(([name, pane]) => {
+    pane.hidden = name !== experiment;
+  });
   experimentTabs.forEach((tab) => {
     const selected = tab.dataset.experiment === experiment;
     tab.classList.toggle("is-active", selected);
     tab.setAttribute("aria-selected", String(selected));
     tab.tabIndex = selected ? 0 : -1;
   });
-  if (showVisual) {
+  if (experiment === "visual") {
     ensureRealAsset();
     renderRealWardrobe();
   } else {
@@ -1025,7 +1313,23 @@ function switchExperiment(experiment) {
 function switchBaseline(targetId) {
   baselinePanes.forEach((pane) => {
     const selected = pane.id === targetId;
-    if (!selected) pane.querySelectorAll("video").forEach((video) => video.pause());
+    pane.querySelectorAll("video").forEach((video) => {
+      if (!selected) {
+        video.pause();
+        return;
+      }
+      let mediaAttached = false;
+      if (video.dataset.poster) {
+        video.poster = video.dataset.poster;
+        delete video.dataset.poster;
+      }
+      video.querySelectorAll("source[data-src]").forEach((source) => {
+        source.src = source.dataset.src;
+        delete source.dataset.src;
+        mediaAttached = true;
+      });
+      if (mediaAttached) video.load();
+    });
     pane.hidden = !selected;
   });
   baselineTabs.forEach((tab) => {
@@ -1110,6 +1414,20 @@ noteInput.addEventListener("input", () => {
 
 personUpload.addEventListener("change", handlePersonUpload);
 clothesUpload.addEventListener("change", handleClothesUpload);
+vtonPersonInput.addEventListener("change", () => loadVtonImage(vtonPersonInput.files?.[0], "person"));
+vtonGarmentInput.addEventListener("change", () => loadVtonImage(vtonGarmentInput.files?.[0], "garment"));
+vtonDemoReset.addEventListener("click", () => {
+  showVtonBuiltInDemo();
+  showToast("已恢复内置人物、服装与预生成结果");
+});
+vtonHealthButton.addEventListener("click", checkVtonHealth);
+vtonEndpoint.addEventListener("input", () => {
+  setVtonServiceState("offline", "地址已修改", "请重新检测本机适配器。");
+});
+vtonForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  runVtonInference();
+});
 
 playButton.addEventListener("click", playSequence);
 resetButton.addEventListener("click", resetStage);
@@ -1174,7 +1492,8 @@ roadmapDetail.addEventListener("click", (event) => {
   const action = event.target.closest("[data-roadmap-action]");
   if (!action) return;
   switchExperiment(action.dataset.roadmapAction);
-  const destination = action.dataset.roadmapAction === "visual" ? visualLab : promptWorkspace;
+  const destinations = { prompt: promptWorkspace, visual: visualLab, vton: vtonLab };
+  const destination = destinations[action.dataset.roadmapAction] || promptWorkspace;
   destination.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
 
@@ -1201,6 +1520,13 @@ themeToggle.addEventListener("click", () => {
   setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 });
 
+window.addEventListener("beforeunload", () => {
+  Object.values(vtonInputs).forEach((input) => {
+    if (input?.objectUrl) URL.revokeObjectURL(input.objectUrl);
+  });
+  if (vtonResultUrl) URL.revokeObjectURL(vtonResultUrl);
+});
+
 let savedTheme = "dark";
 try {
   savedTheme = localStorage.getItem("outfit-director-theme") || "dark";
@@ -1216,4 +1542,5 @@ realModelStage.dataset.effect = realEffectSelect.value;
 renderRealWardrobe();
 updateRealLookText(0);
 renderRoadmapGoal(0);
+showVtonBuiltInDemo();
 applyFormState();

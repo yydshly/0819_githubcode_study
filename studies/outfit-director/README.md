@@ -195,9 +195,9 @@
 
 已确认该项目的核心资产是领域编排规则，而非模型或程序代码。它将换装视频抽象成“主体身份锁定 + 首帧状态编码 + 侧边造型消费 + 连续时间轴 + 负面约束”的流程，适合作为本研究库中导演型 Skill 和生成视频提示词工程的第一个基准案例。
 
-已完成女性专项规则的静态 Web 适配、M1/M2/M8/M10 网页状态模拟，并回填两条真实视频。E001（MiniMax H3 / T2V / M13）表明七套造型与单主体可实现，但画幅、身份细节和 M13 空间因果不稳定；E002（Seedance 2.0 VIP / 首帧 I2V / M13）实现标准 9:16、稳定中心人物和六个侧边造型按序消费，更接近原 Skill 的状态母图机制。
+已完成女性专项规则的静态 Web 适配、M1/M2/M8/M10 网页状态模拟，并回填三条真实视频。E001（MiniMax H3 / T2V / M13）表明七套造型与单主体可实现，但画幅、身份细节和 M13 空间因果不稳定；E002（Seedance 2.0 VIP / 首帧 I2V / M13）实现标准 9:16、稳定中心人物和六个侧边造型按序消费；E003（Seedance 2.5 / I2V / M13 / 安全区首帧）改善侧边裁切，平台输出 560×750 接近 3:4，持续推近仍破坏全身机位。
 
-E002 同时改变模型、路线、画幅和提示词，只能作为整体方案对照，不能将改善单独归因于首帧或 Seedance。下一轮应使用同模型和同画幅做 T2V / I2V 单变量对照。
+E002 同时改变模型、路线、画幅和提示词；E003 同时改变模型和首帧布局，两条都只能作为整体方案对照。目标二已经启动：TEST C 默认提供虚构人物、独立服装与明确标注的预生成结果；上传自定义图片后会清除演示结果，并可连接 localhost VTON 适配器。CatVTON 被选为 8GB 本机第一候选，但模型权重尚未安装，E004 仍等待真实推理。
 
 ## 关联资源
 
@@ -205,6 +205,9 @@ E002 同时改变模型、路线、画幅和提示词，只能作为整体方案
 - [女性换装机制实验矩阵](experiments/female-transition-matrix.md)
 - [E001 · MiniMax H3 / T2V / M13 基线](experiments/e001-minimax-h3-m13.md)
 - [E002 · Seedance 2.0 VIP / I2V / M13 基线](experiments/e002-seedance-2-vip-i2v-m13.md)
+- [E002.1 · 首帧安全区优化](experiments/e002-1-first-frame-safe-layout.md)
+- [E003 · Seedance 2.5 / I2V / M13 / 安全区首帧](experiments/e003-seedance-2-5-i2v-m13-safe-layout.md)
+- [M3 · 2D VTON 模型选型与输入闭环](experiments/m3-vton-model-selection.md)
 - [虚拟试衣总体技术路线](../../docs/virtual-tryon-technology-roadmap.md)
 - [原项目 README](https://github.com/liyue-aigc/outfit-director/blob/main/README.md)
 - [核心 Skill](https://github.com/liyue-aigc/outfit-director/blob/main/skill/SKILL.md)

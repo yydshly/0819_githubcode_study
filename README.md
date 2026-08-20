@@ -8,9 +8,19 @@
 
 | 项目 | 原项目 | 研究仓库 | 演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- | --- |
-| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | 本仓库记录 | [交互能力实验室](demos/outfit-director/README.md) | 研究中 | 通用/女性专项导演、M1–M13、换装视频状态机 |
+| [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | [0819_githubcode_study](https://github.com/yydshly/0819_githubcode_study) | [在线演示](https://yydshly.github.io/0819_githubcode_study/) · [使用说明](demos/outfit-director/README.md) | 研究中 | M1–M13、换装视频基线、2D VTON 接入 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
+
+## 在线入口与关联关系
+
+- 研究主库：[yydshly/0819_githubcode_study](https://github.com/yydshly/0819_githubcode_study)
+- 第一个研究对象：[liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director)
+- 女性换装机制变体：[liyue-aigc/female-outfit-director](https://github.com/liyue-aigc/female-outfit-director)
+- GitHub Pages 演示：[Outfit Director 能力实验室](https://yydshly.github.io/0819_githubcode_study/)
+- 本库研究记录：[能力、原理、差异与实验结论](studies/outfit-director/README.md)
+
+在线演示由 `.github/workflows/deploy-outfit-director-pages.yml` 自动发布 `demos/outfit-director/`。页面中的 TEST A、TEST B、TEST C 分别对应提示词导演、预生成网页换装和可扩展的 2D VTON 验证台。
 
 ## 虚拟试衣总体技术路线
 
@@ -20,8 +30,8 @@
 
 | 目标 | 当前状态 | 核心闭环 |
 | --- | --- | --- |
-| 1. 提示词换装视频 | E001 / E002 双基线 | Outfit Director 编排 → T2V / I2V 外部模型 → 真实 MP4 对照评估 |
-| 2. 2D AI 虚拟试衣 | 下一阶段 | 人物全身照 + 服装图 → 专用 VTON 模型 → 试衣图 |
+| 1. 提示词换装视频 | E001–E003 三基线 | Outfit Director 编排 → T2V / I2V 外部模型 → 真实 MP4 对照评估 |
+| 2. 2D AI 虚拟试衣 | 默认演示 | TEST C 内置人物/服装/预生成结果；自定义输入与 CatVTON 接口按需接入 |
 | 3. 3D 参数化试衣间 | 规划中 | 人体参数 / 图片估计 → 参数化人体 + 3D 服装 + 动作 |
 | 4. 实时 AR 试衣镜 | 长期研究 | 摄像头跟踪 → 实时遮挡与服装渲染 |
 | 5. 尺码与穿搭智能 | 长期研究 | 人体、商品与反馈数据 → 可解释尺码和搭配建议 |
@@ -62,11 +72,16 @@
 - [x] 接入女性专项导演规则、M1–M12 和四种网页机制模拟
 - [x] 完成 E001：回填 MiniMax H3 / T2V / M13 首个真实视频基线
 - [x] 完成 E002：回填 Seedance 2.0 VIP / 首帧 I2V / 9:16 / M13 真实视频
-- [ ] 完成 E003：保持 Seedance 2.0 VIP、9:16 与提示词结构不变，改用 T2V 隔离首帧贡献
+- [x] 完成 E003：回填 Seedance 2.5 / I2V / M13 / 安全区首帧视频并记录多变量边界
+- [ ] 完成严格 E002.1：使用 Seedance 2.0 VIP 与 E002 参数，只替换安全区首帧
+- [ ] 完成 E003.1：保持 Seedance 2.5 和平台可用画幅，只修正禁止推近与全身安全区约束
 - [ ] 按 F001–F012 矩阵比较女性专项转场的外部模型服从度
-- [ ] 对目标二的开源 VTON 模型与托管 API 完成候选比较
+- [x] 完成目标二首轮选型：CatVTON 为 8GB 本机第一候选，IDM-VTON 为质量对照
+- [x] 建立 TEST C 双输入验证台与本机 VTON 适配器接口契约
+- [x] 接入 TEST C 默认三图演示；上传自定义素材后自动退出预生成结果
+- [ ] 后续出现真实试衣需求时再部署 CatVTON，并回填 E004
 - [ ] 关联第一个独立研究仓库
-- [ ] 关联第一个可访问的在线演示
+- [x] 配置第一个 GitHub Pages 在线演示与 README 关联入口
 
 ## 许可证说明
 

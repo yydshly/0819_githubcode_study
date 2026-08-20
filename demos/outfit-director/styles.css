@@ -1637,7 +1637,7 @@ footer a {
 /* Experiment navigation */
 .experiment-switcher {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 18px 0 16px;
   padding: 6px;
@@ -2541,7 +2541,7 @@ footer a {
 
 .baseline-tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 10px;
 }
@@ -2673,6 +2673,10 @@ footer a {
   aspect-ratio: 9 / 16;
 }
 
+.e001-video-frame--e003 video {
+  aspect-ratio: 56 / 75;
+}
+
 .e001-video-badge {
   position: absolute;
   top: 14px;
@@ -2763,6 +2767,11 @@ footer a {
 .e001-status p {
   margin-top: 6px;
   font-size: .6rem;
+}
+
+.e001-status--warning {
+  color: #17130a;
+  background: var(--gold);
 }
 
 .e001-facts {
@@ -2929,6 +2938,567 @@ footer a {
   white-space: pre-wrap;
 }
 
+.e002-next-frame {
+  display: grid;
+  grid-template-columns: minmax(190px, 260px) 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.e002-next-frame figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: #eeece8;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.e002-next-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+}
+
+.e002-next-frame figcaption {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 6px 8px;
+  color: #f4fff8;
+  background: rgba(9, 15, 12, .78);
+  border-radius: 6px;
+  font: 800 .43rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.e002-next-frame__status {
+  color: var(--accent);
+  font: 850 .5rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .08em;
+}
+
+.e002-next-frame h3 {
+  max-width: 760px;
+  margin: 14px 0 0;
+  font: 720 clamp(1.15rem, 2vw, 1.7rem)/1.08 Georgia, "Times New Roman", serif;
+}
+
+.e002-next-frame p {
+  max-width: 780px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: .65rem;
+}
+
+.e002-next-frame ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.e002-next-frame li {
+  padding: 8px 9px;
+  color: var(--faint);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: .53rem;
+}
+
+.e002-next-frame__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.e002-next-frame__actions .primary-button {
+  width: fit-content;
+  min-height: 38px;
+  padding: 10px 14px;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Real 2D VTON intake and adapter */
+.vton-lab {
+  padding: 16px 0 70px;
+}
+
+.vton-workspace {
+  display: grid;
+  grid-template-columns: minmax(260px, .82fr) minmax(420px, 1.25fr) minmax(300px, .93fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.vton-input-panel,
+.vton-preview-panel,
+.vton-run-panel {
+  min-width: 0;
+}
+
+.vton-upload-grid {
+  display: grid;
+  gap: 10px;
+  padding: 14px 14px 8px;
+}
+
+.vton-upload {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 11px;
+  min-height: 76px;
+  padding: 12px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px dashed var(--line-strong);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.vton-upload:hover,
+.vton-upload:focus-within {
+  background: var(--surface-3);
+  border-color: var(--accent);
+}
+
+.vton-upload input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.vton-upload__index {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 48px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 36%, transparent);
+  border-radius: 8px;
+  font: 900 .68rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.vton-upload strong,
+.vton-upload small {
+  display: block;
+}
+
+.vton-upload strong {
+  font-size: .76rem;
+}
+
+.vton-upload small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .63rem;
+  overflow-wrap: anywhere;
+}
+
+.vton-category {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 8px 14px 14px;
+  padding: 0;
+  border: 0;
+}
+
+.vton-category legend {
+  width: 100%;
+  margin-bottom: 8px;
+  color: var(--faint);
+  font: 800 .55rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .1em;
+}
+
+.vton-category label {
+  position: relative;
+  cursor: pointer;
+}
+
+.vton-category input {
+  position: absolute;
+  opacity: 0;
+}
+
+.vton-category label > span {
+  display: block;
+  min-height: 58px;
+  padding: 9px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.vton-category input:checked + span {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.vton-category input:focus-visible + span {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.vton-category strong,
+.vton-category small {
+  display: block;
+}
+
+.vton-category strong {
+  font-size: .66rem;
+}
+
+.vton-category small {
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: .52rem;
+}
+
+.vton-quality {
+  margin: 0 14px 14px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vton-quality > span {
+  color: var(--accent);
+  font: 900 .5rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .11em;
+}
+
+.vton-quality ul {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vton-quality li {
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  gap: 8px;
+  align-items: start;
+  color: var(--muted);
+  font-size: .62rem;
+}
+
+.vton-quality li i {
+  width: 7px;
+  height: 7px;
+  margin-top: 3px;
+  background: var(--faint);
+  border-radius: 50%;
+}
+
+.vton-quality li.is-pass i { background: var(--accent); }
+.vton-quality li.is-warning i { background: var(--warning, #e5ad67); }
+
+.vton-demo-controls {
+  display: grid;
+  gap: 10px;
+  margin: 0 14px 14px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: 10px;
+}
+
+.vton-demo-controls small,
+.vton-demo-controls strong {
+  display: block;
+}
+
+.vton-demo-controls small {
+  color: var(--accent);
+  font: 900 .5rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .1em;
+}
+
+.vton-demo-controls strong {
+  margin-top: 6px;
+  font-size: .67rem;
+}
+
+.vton-demo-controls button {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+}
+
+.vton-preview-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 10px;
+  padding: 14px;
+}
+
+.vton-preview-card {
+  min-width: 0;
+  margin: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.vton-preview-card > img,
+.vton-preview-empty {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+
+.vton-preview-card > img {
+  display: block;
+  object-fit: contain;
+  background: #101312;
+}
+
+.vton-preview-card > img[hidden] {
+  display: none;
+}
+
+.vton-preview-empty {
+  display: grid;
+  place-content: center;
+  gap: 7px;
+  padding: 18px;
+  text-align: center;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.vton-preview-empty[hidden] {
+  display: none;
+}
+
+.vton-preview-empty > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 4px;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  font: 900 .7rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.vton-preview-empty strong { font-size: .7rem; }
+.vton-preview-empty small { color: var(--muted); font-size: .56rem; }
+
+.vton-preview-card figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 10px;
+  border-top: 1px solid var(--line);
+}
+
+.vton-preview-card figcaption span {
+  color: var(--accent);
+  font: 900 .49rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .1em;
+}
+
+.vton-preview-card figcaption strong {
+  max-width: 72%;
+  color: var(--muted);
+  font-size: .55rem;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.vton-privacy {
+  margin: 0 14px 14px;
+  padding: 10px 11px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface-2));
+  border-left: 2px solid var(--accent);
+  font-size: .62rem;
+}
+
+.vton-privacy strong { color: var(--text); }
+
+.vton-model-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vton-model-card span,
+.vton-model-card strong,
+.vton-model-card small { display: block; }
+.vton-model-card span { color: var(--accent); font: 900 .49rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .1em; }
+.vton-model-card strong { margin-top: 7px; font-size: .76rem; }
+.vton-model-card small { margin-top: 4px; color: var(--muted); font-size: .56rem; }
+.vton-model-card a { flex: none; color: var(--text); font-size: .58rem; }
+
+.vton-endpoint {
+  display: block;
+  margin: 0 14px 12px;
+}
+
+.vton-endpoint span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--faint);
+  font: 800 .53rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .09em;
+}
+
+.vton-endpoint input {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 10px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font: 600 .64rem/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.vton-service-state {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 10px;
+  margin: 0 14px 12px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vton-service-state > i {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  background: var(--faint);
+  border-radius: 50%;
+}
+
+.vton-service-state[data-state="checking"] > i { background: var(--warning, #e5ad67); }
+.vton-service-state[data-state="online"] > i { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent); }
+.vton-service-state[data-state="error"] > i { background: var(--coral); }
+
+.vton-service-state small,
+.vton-service-state strong,
+.vton-service-state em { display: block; }
+.vton-service-state small { color: var(--faint); font: 800 .49rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .09em; }
+.vton-service-state strong { margin-top: 5px; font-size: .7rem; }
+.vton-service-state em { margin-top: 4px; color: var(--muted); font-size: .57rem; font-style: normal; }
+
+.vton-run-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 14px 14px;
+}
+
+.vton-run-actions button { justify-content: center; min-width: 0; }
+.vton-run-actions button:disabled { opacity: .42; cursor: not-allowed; }
+
+.vton-output {
+  position: relative;
+  margin: 0 14px 12px;
+  min-height: 190px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.vton-output__empty {
+  display: grid;
+  place-content: center;
+  min-height: 190px;
+  padding: 22px;
+  text-align: center;
+}
+
+.vton-output__empty > span { color: var(--accent); font: 900 .5rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .12em; }
+.vton-output__empty strong { margin-top: 9px; font-size: .72rem; }
+.vton-output__empty p { max-width: 290px; margin: 7px auto 0; color: var(--muted); font-size: .59rem; }
+.vton-output > img { display: block; width: 100%; max-height: 440px; object-fit: contain; background: #101312; }
+.vton-output > img[hidden] { display: none; }
+
+.vton-result-badge {
+  position: absolute;
+  z-index: 2;
+  top: 9px;
+  left: 9px;
+  max-width: calc(100% - 18px);
+  padding: 7px 9px;
+  color: #f7fbf7;
+  background: rgba(16, 19, 18, .86);
+  border: 1px solid rgba(247, 251, 247, .25);
+  border-radius: 999px;
+  font: 900 .48rem/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .08em;
+  backdrop-filter: blur(8px);
+}
+
+.vton-result-badge[hidden] {
+  display: none;
+}
+
+.vton-result-note {
+  margin: 0 14px 12px;
+  color: var(--muted);
+  font-size: .57rem;
+  line-height: 1.55;
+}
+
+.vton-result-download {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  padding: 7px 9px;
+  color: #101312;
+  background: var(--accent);
+  border-radius: 7px;
+  font-size: .58rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.vton-license-note {
+  margin: 0 14px 14px;
+  color: var(--faint);
+  font-size: .56rem;
+  line-height: 1.55;
+}
+
 @media (max-width: 1220px) {
   .workspace {
     grid-template-columns: minmax(250px, 0.7fr) minmax(460px, 1.3fr);
@@ -2977,6 +3547,14 @@ footer a {
 
   .visual-lab__workspace {
     grid-template-columns: minmax(250px, .72fr) minmax(430px, 1.28fr);
+  }
+
+  .vton-workspace {
+    grid-template-columns: minmax(280px, .78fr) minmax(430px, 1.22fr);
+  }
+
+  .vton-run-panel {
+    grid-column: 1 / -1;
   }
 
   .proof-panel {
@@ -3080,6 +3658,14 @@ footer a {
     grid-template-columns: 1fr;
   }
 
+  .vton-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .vton-run-panel {
+    grid-column: auto;
+  }
+
   .proof-panel {
     grid-column: auto;
   }
@@ -3109,6 +3695,20 @@ footer a {
 @media (max-width: 600px) {
   .topbar {
     min-height: 68px;
+  }
+
+  .e002-next-frame {
+    grid-template-columns: 1fr;
+  }
+
+  .e002-next-frame figure {
+    width: min(100%, 280px);
+    justify-self: center;
+  }
+
+  .e002-next-frame__actions {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .brand strong {
@@ -3315,6 +3915,28 @@ footer a {
     padding-bottom: 54px;
   }
 
+  .vton-lab {
+    padding-bottom: 54px;
+  }
+
+  .vton-preview-grid,
+  .vton-run-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .vton-category {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vton-category label:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .vton-model-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .e001-result {
     padding: 54px 0 60px;
   }
@@ -3373,6 +3995,15 @@ footer a {
   .e001-prompt summary small {
     width: 100%;
     margin-left: 0;
+  }
+
+  .e002-next-frame {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .e002-next-frame ul {
+    grid-template-columns: 1fr;
   }
 
   .visual-lab__heading > div {
