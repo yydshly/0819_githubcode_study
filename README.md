@@ -14,26 +14,118 @@
 | 项目 | 原项目 | 演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- |
 | [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/outfit-director/) · [说明](demos/outfit-director/README.md) | 研究中 | M1–M13、换装视频基线、2D VTON 接入 |
-| [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | [在线演示](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [说明](demos/punk-skill/README.md) | 已复现 / 可复用研究扩展 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
-| [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 展示型研究 | 仙侠场景路由、结构化提示词与目标效果 |
+| [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | [在线演示](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [说明](demos/punk-skill/README.md) | 已复现 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
+| [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
-## 子项目定位
+## 子项目说明
 
-### Outfit Director
+### Outfit Director：换装任务导演与虚拟试衣
 
-研究提示词换装导演、真实 T2V / I2V 视频基线及 2D 虚拟试衣接入。静态切换、概念动画或提示词本身不等于真实模型能力；每个阶段保留输入、依赖、真实输出、参数和验收记录。
+**作用**
 
-[查看完整虚拟试衣技术路线](docs/virtual-tryon-technology-roadmap.md)
+把人物、服装、视频模式和镜头要求编排为可检查的拼贴首帧、换装时间轴、视频提示词与负面约束，再交给外部图像、视频或 VTON 模型执行。它是任务导演，不是换装生成模型。
 
-### Punk Skill
+**研究内容**
 
-研究视觉 Prompt 的结构化编译与发布：从视觉风格选择、品牌约束和可靠文字层，到多平台变体及完整发布包导出。
+- 女性、男性、宠物及混合主体的规则路由和参数优先级。
+- K 卡点换装、D 换装舞蹈、M1–M13 机制与连续时间轴。
+- MiniMax、Seedance 等真实 T2V / I2V 视频基线和单变量实验边界。
+- TEST A 提示词导演、TEST B 预生成展示、TEST C 2D VTON 双输入验证台。
 
-### Xianxia Visual Director
+**使用场景**
 
-轻量展示垂直领域 Prompt Skill：把仙侠场景构想扩展为包含空间、尺度、镜头、色彩、光线和负面约束的提示词，再交给外部图片模型生成。当前阶段只展示代表场景与目标效果，不深入研究图像模型训练。
+- 时尚创作者规划多套造型换装短视频。
+- 电商团队验证虚拟试衣交互和素材生产流程。
+- 研究人员比较视频模型对身份、服装、镜头和时间轴的服从度。
+- Skill 工程研究者拆解领域规则如何成为 Agent 工作流。
+
+**后期可扩展**
+
+- 补齐严格视频对照实验和女性专项 F001–F012 评测矩阵。
+- 接入 CatVTON / IDM-VTON，记录真实参数、成本、时延和输出。
+- 继续扩展 3D 参数化人体、服装资产、动作驱动、实时 AR 与尺码推荐。
+
+**网页与文档**
+
+- [在线能力实验室](https://yydshly.github.io/0819_githubcode_study/outfit-director/)
+- [完整研究记录](studies/outfit-director/README.md) · [演示使用说明](demos/outfit-director/README.md)
+- [虚拟试衣总体技术路线](docs/virtual-tryon-technology-roadmap.md)
+- 上游：[outfit-director](https://github.com/liyue-aigc/outfit-director) · [female-outfit-director](https://github.com/liyue-aigc/female-outfit-director)
+
+### Punk Skill：视觉 Prompt 编译与完整发布包
+
+**作用**
+
+上游 `$punk-cover` / `$punk-avatar` 把文章、主题或主体描述编译为单一风格的视觉任务；本研究新增 `$punk-publish`，将图片与标题、正文、CTA、标签、Alt 文本和 manifest 组织成可检查的完整发布包。Skill 负责编排，外部图像模型负责生成。
+
+**研究内容**
+
+- `任务 Skill × 输出 Blueprint × STYLE 视觉原子` 的三层编译架构。
+- 24 个封面/海报风格和 5 个头像风格的路由与适用场景。
+- 无字底图与确定性文字层分离，降低生成式标题乱码风险。
+- 多平台文案、真实图片文件、依赖状态、哈希 manifest 与 ZIP 导出。
+- 上游 commit / Git tree 锁定和可重复 bootstrap 复用机制。
+
+**使用场景**
+
+- 将文章、研究结论和产品观点转换成社媒封面与配套文案。
+- 为播客、专栏、活动或品牌内容生成系列视觉资产。
+- 将人物、宠物或物品素材转换成头像、肖像或纪念卡任务。
+- 研究 Prompt 资产化、Skill 依赖发现和跨模型表现差异。
+
+**后期可扩展**
+
+- 增加品牌令牌、参考图检索和历史产物索引。
+- 建立多模型路由、失败回退、成本、时延和生成参数记录。
+- 接入 CMS / RSS、内容审核和发布队列；真实发布仍需显式授权。
+- 对比自由 Prompt、模板拼接与结构化编译的 OCR、语义和风格指标。
+
+**网页与文档**
+
+- [在线能力实验室](https://yydshly.github.io/0819_githubcode_study/punk-skill/)
+- [完整研究记录](studies/punk-skill/README.md) · [演示使用说明](demos/punk-skill/README.md)
+- [上游版本锁](studies/punk-skill/upstream-lock.json) · [`$punk-publish` Skill](studies/punk-skill/extensions/punk-publish/SKILL.md)
+- 上游：[adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill)
+
+> 上游当前未声明许可证。本库记录来源、固定版本和独立研究实现，不复制其完整 Skill、STYLE 或截图资产。
+
+### Xianxia Visual Director：仙侠场景提示词导演
+
+**作用**
+
+把简短的仙侠场景构想扩展为包含画幅、场景路由、镜头、尺度、空间层次、建筑、色彩、光线和负面约束的图片提示词，再交给外部图片模型生成。它是垂直领域提示词导演，不是图像模型。
+
+**研究内容**
+
+- 单体仙境、神域聚居地和东方苍穹巨构三类代表场景。
+- 尺度证据、五层空间、呼吸空间和东方建筑结构规则。
+- 参数锁定、场景路由、视觉规则注入和正负提示词输出链路。
+- 三张独立生成的目标效果示意图，以及 Skill 与底层模型的能力边界。
+
+**使用场景**
+
+- 仙侠小说、游戏世界观、影视概念设计和场景气氛图。
+- 天宫、仙城、天门、观星台等东方幻想建筑概念探索。
+- 比较图片模型对巨物尺度、空间层次和建筑约束的服从度。
+- 研究垂直领域知识如何组织为按场景路由的 Prompt Skill。
+
+**后期可扩展**
+
+- 增加秘境、宗门、洞府、战场、法阵和角色群像等场景路由。
+- 将镜头、天气、时间、文明密度和叙事事件改造成结构化参数。
+- 对比不同图片模型的比例、空间层次、材质和负面约束执行效果。
+- 上游许可证明确后，再评估版本锁、安装脚本和合法衍生方式。
+
+**网页与文档**
+
+- [在线场景展示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/)
+- [完整研究记录](studies/xianxia-visual-director/README.md) · [演示使用说明](demos/xianxia-visual-director/README.md)
+- [展示图生成记录](demos/xianxia-visual-director/docs/image-generation.md)
+- 上游：[liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director)
+
+> 上游当前未声明许可证。本子项目保持展示型研究范围，不在本库再分发其完整源码。
 
 ## 研究方式
 
