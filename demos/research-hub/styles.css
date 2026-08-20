@@ -16,6 +16,7 @@
   --srt: #e06a3d;
   --lineworld: #9ce5ff;
   --blobatar: #c7ff3d;
+  --dmp: #98e35f;
   font-family: Inter, "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 
@@ -80,6 +81,7 @@ h1 em { color: var(--gold); font-style: normal; }
 .project-card--srt .project-meta span:first-child { color: var(--srt); }
 .project-card--lineworld .project-meta span:first-child { color: var(--lineworld); }
 .project-card--blobatar .project-meta span:first-child { color: var(--blobatar); }
+.project-card--dmp .project-meta span:first-child { color: var(--dmp); }
 .project-content h3 { margin: 1.7rem 0 1rem; font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(1.8rem, 2.6vw, 2.8rem); font-weight: 500; line-height: 1.1; }
 .project-content > p { min-height: 5.8em; color: var(--muted); font-size: 0.88rem; line-height: 1.8; }
 .project-content ul { margin: 0 0 2rem; padding: 1.2rem 0 0; border-top: 1px solid var(--line); list-style: none; }

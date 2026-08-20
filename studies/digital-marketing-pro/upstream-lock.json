@@ -1,0 +1,26 @@
+{
+  "project": "digital-marketing-pro",
+  "repository": "https://github.com/indranilbanerjee/digital-marketing-pro.git",
+  "defaultBranch": "main",
+  "commit": "fa4ccd0a4afc1b902ef8de8d297b180aa148d46a",
+  "tree": "b22f4d20480a158a5e261f0adcf246ca0bf13dc1",
+  "commitDate": "2026-08-17T16:20:11+05:30",
+  "version": "3.31.1",
+  "license": "MIT",
+  "reviewedAt": "2026-08-20",
+  "localCheckout": "../../vendor-projects/digital-marketing-pro",
+  "demo": "../../demos/digital-marketing-pro",
+  "observedCounts": {
+    "skills": 163,
+    "agents": 24,
+    "pythonScripts": 93,
+    "topLevelCommands": 18,
+    "testFiles": 34,
+    "testMethods": 402,
+    "skillTiers": {
+      "scriptBacked": 108,
+      "qualityRouted": 12,
+      "structuredGuidance": 43
+    }
+  }
+}

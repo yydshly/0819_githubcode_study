@@ -23,6 +23,7 @@
 | [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
 | [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [在线演示](https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
 | [Blobatar](studies/blobatar/README.md) | [Alain00/blobatar](https://github.com/Alain00/blobatar) | [在线演示](https://yydshly.github.io/0819_githubcode_study/blobatar/) · [说明](demos/blobatar/README.md) | 已复现 | 确定性 SVG 头像、社区身份、多 Agent 角色与状态表达 |
+| [Digital Marketing Pro](studies/digital-marketing-pro/README.md) | [indranilbanerjee/digital-marketing-pro](https://github.com/indranilbanerjee/digital-marketing-pro) | [在线能力研究台](https://yydshly.github.io/0819_githubcode_study/digital-marketing-pro/) · [说明](demos/digital-marketing-pro/README.md) | 研究中 | 宏观营销拆解、163 个 Agent Skill、确定性脚本、状态门禁与执行边界 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -287,6 +288,42 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 - [上游版本锁](studies/blobatar/upstream-lock.json) · [MIT 许可证副本](demos/blobatar/UPSTREAM-LICENSE.md)
 - 上游：[Alain00/blobatar](https://github.com/Alain00/blobatar)
 
+### Digital Marketing Pro：从宏观营销问题到专业动作指导
+
+**核心描述**
+
+Digital Marketing Pro 不是基础模型或开箱即用的营销 SaaS，而是一套给 Claude、Codex、Cursor 等宿主 Agent 使用的营销工作系统。它先提供完整营销项目的宏观阶段和依赖，再为拆出的品牌、研究、内容、SEO/AEO、广告、CRM 与分析动作选择专业 Skill，配合确定性 Python 工具、状态文件、质量门禁和人工审批推进交付。
+
+**背景与意义**
+
+通用大模型虽然会写文案和提出策略，却容易跳过事实确认、重复使用不一致的方法、丢失跨会话状态，或在真实发布前缺少治理。这个项目把营销机构的 SOP 工程化，解决的是“怎样让 AI 按专业流程稳定办事”，而不是“怎样再训练一个营销模型”。用户仍是最终决策者，宿主模型负责理解与推理，仓库承担营销项目总监式的流程拆解和作业规范。
+
+**核心能力**
+
+- 163 个 Skill 定义触发条件、输入、步骤、产物、检查和交接关系。
+- 24 份角色规范区分战略、品牌、内容、搜索、媒体和分析等岗位视角。
+- 93 个 Python 脚本负责评分、计算、验证、状态、checkpoint 和连接器请求。
+- 完整 engagement 把宏观问题拆成阶段；专业 Skill 再指导每个动作如何完成。
+- 品牌状态、质量门禁和人工批准维持跨阶段一致性并控制高风险动作。
+- 可选连接器在授权后连接 CMS、CRM、广告、邮件和分析平台；默认不会自动执行真实操作。
+
+**扩展方向**
+
+- 把 Skill 前置条件和交接关系建设成可观察的任务图与总控编排器。
+- 建立真实请求的 Skill 路由评测、冲突检测、上下文成本和消融基线。
+- 增强品牌知识的来源追踪、租户隔离、版本管理和过期策略。
+- 将本地审批升级为企业身份、RBAC、双人复核、预算上限和不可篡改审计。
+- 建立受控连接器 manifest、短时授权、幂等执行、差异预览和回滚机制。
+- 用真实 A/B 实验衡量完成时间、错误率、返工、品牌一致性、转化和收入，而不把软件测试等同于营销效果。
+- 复用“总流程 → 专业 Skill → 工具 → 状态 → 审批”结构，迁移到产品、投资、内容与企业咨询 Agent。
+
+**网页与文档**
+
+- [在线能力研究台](https://yydshly.github.io/0819_githubcode_study/digital-marketing-pro/)
+- [完整研究记录](studies/digital-marketing-pro/README.md) · [演示说明](demos/digital-marketing-pro/README.md)
+- [浏览器与上游测试验收](demos/digital-marketing-pro/docs/validation.md) · [上游版本锁](studies/digital-marketing-pro/upstream-lock.json)
+- 上游：[indranilbanerjee/digital-marketing-pro](https://github.com/indranilbanerjee/digital-marketing-pro)
+
 ## 研究方式
 
 每个项目尽量保留完整研究链路：
@@ -314,6 +351,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 ├── bigpeng-hot-gzh/              # 公众号选题与标题规则实验台
 ├── srt-whiteboard-animation/     # OpenCV 白板动画交互研究页
 ├── blobatar/                     # 程序化头像与视觉身份研究台
+├── digital-marketing-pro/        # 营销 Agent 能力研究台
 └── studies/                      # 对应研究记录
 ```
 
@@ -334,7 +372,8 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 │   ├── lineworld-night-hunt/      # 白兔追踪、追逐、扑击与选择原型
 │   ├── srt-whiteboard-animation/
 │   ├── bigpeng-hot-gzh/
-│   └── blobatar/
+│   ├── blobatar/
+│   └── digital-marketing-pro/
 └── studies/
     ├── outfit-director/
     ├── punk-skill/
@@ -343,7 +382,8 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
     ├── lineworld/
     ├── srt-whiteboard-animation/
     ├── bigpeng-hot-gzh/
-    └── blobatar/
+    ├── blobatar/
+    └── digital-marketing-pro/
 ```
 
 ## 近期计划
@@ -359,6 +399,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 - [x] 复现 BigPeng Hot GZH，明确“大模型理解 + Skill 规则选择 + 用户决策”的能力边界
 - [x] 复现 SRT Whiteboard Animation，验证墨迹坐标、累计遮罩和黑白/彩色两阶段渲染
 - [x] 复现 Blobatar，建立社区与多 Agent 程序化视觉身份研究台
+- [x] 安装并验证 Digital Marketing Pro，建立宏观拆解、专业 Skill 和执行边界研究台
 - [ ] 在出现真实需求时继续 CatVTON、严格视频对照或图片模型服从度实验
 
 ## 许可证说明

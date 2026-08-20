@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Digital Marketing Pro 中文能力研究台：通过真实营销任务理解 163 个 Agent Skills、确定性脚本、质量门禁与外部连接器的能力边界。"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Digital Marketing Pro｜能力研究台</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workbench">跳到能力工作台</a>
+
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="返回 0819 GitHub Code Study 研究总入口">
+        <span class="brand-mark" aria-hidden="true">DM</span>
+        <span>
+          <strong>DMP CAPABILITY LAB</strong>
+          <small>0819 · RESEARCH SUBPROJECT</small>
+        </span>
+      </a>
+      <nav aria-label="页面导航">
+        <a href="#workbench">任务演示</a>
+        <a href="#capabilities">能力地图</a>
+        <a href="#research">研究判断</a>
+        <a href="../../studies/digital-marketing-pro/README.md">研究记录</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="切换深浅主题" aria-pressed="false">
+        <span aria-hidden="true">◐</span><span class="theme-label">深色</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">OPEN-SOURCE AGENT WORKFLOW · v3.31.1 LOCKED</p>
+          <h1 id="page-title">它不是营销模型。<br /><em>它让模型按营销 SOP 工作。</em></h1>
+          <p class="hero-lede">
+            Digital Marketing Pro 把品牌策略、内容、SEO、广告、CRM 与分析流程封装为 Skill、角色规范、Python 工具、质量门禁和可选连接器。宿主模型负责理解与生成，仓库负责把过程变得可重复、可恢复、可检查。
+          </p>
+          <div class="hero-actions">
+            <a class="button button--primary" href="#workbench">用一个任务理解它 <span>↓</span></a>
+            <a class="button button--ghost" href="https://github.com/indranilbanerjee/digital-marketing-pro">查看上游仓库 <span>↗</span></a>
+          </div>
+        </div>
+
+        <aside class="hero-system" aria-label="Digital Marketing Pro 系统构成">
+          <div class="system-head">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span>LOCKED RESEARCH SNAPSHOT</span>
+            <strong>2026-08-20</strong>
+          </div>
+          <div class="system-core">
+            <span>HOST MODEL</span>
+            <strong>理解 · 研究 · 生成</strong>
+            <small>Claude / Codex / Cursor 等</small>
+          </div>
+          <div class="system-bus" aria-hidden="true"><span></span><i></i><span></span></div>
+          <div class="system-modules">
+            <div><b>163</b><span>Skills<br />流程定义</span></div>
+            <div><b>93</b><span>Python<br />确定性工具</span></div>
+            <div><b>24</b><span>Agents<br />角色规范</span></div>
+          </div>
+          <p><strong>关键边界：</strong>没有宿主模型，它只是知识与代码资产；没有真实数据连接，它不能知道你的业务事实。</p>
+        </aside>
+      </section>
+
+      <section class="answer-strip" aria-label="项目定义">
+        <span>最短答案</span>
+        <p><strong>ChatGPT / Codex 是营销人员，</strong>这个仓库是营销机构的 SOP、模板、计算器、质检表和连接器说明书。</p>
+      </section>
+
+      <section class="workbench section" id="workbench" aria-labelledby="workbench-title">
+        <header class="section-heading">
+          <div>
+            <span>01 / TASK-TO-CAPABILITY WORKBENCH</span>
+            <h2 id="workbench-title">选择一个真实任务，看它会调动什么</h2>
+          </div>
+          <p>这是能力映射演示，不调用模型、账户或营销 API。重点是看清每一步由谁负责，以及哪里必须有人做决定。</p>
+        </header>
+
+        <div class="workbench-shell">
+          <aside class="scenario-rail" aria-label="任务场景">
+            <p>任务场景</p>
+            <div class="scenario-list" role="list">
+              <button type="button" class="scenario-button is-active" data-scenario="engagement" aria-pressed="true">
+                <span>01</span><strong>新品牌全案</strong><small>从建档到年度计划</small>
+              </button>
+              <button type="button" class="scenario-button" data-scenario="content" aria-pressed="false">
+                <span>02</span><strong>内容上线</strong><small>从选题到发布门禁</small>
+              </button>
+              <button type="button" class="scenario-button" data-scenario="search" aria-pressed="false">
+                <span>03</span><strong>SEO / AEO</strong><small>搜索与 AI 可见性</small>
+              </button>
+              <button type="button" class="scenario-button" data-scenario="campaign" aria-pressed="false">
+                <span>04</span><strong>广告投放</strong><small>计划、审批与连接器</small>
+              </button>
+              <button type="button" class="scenario-button" data-scenario="report" aria-pressed="false">
+                <span>05</span><strong>经营复盘</strong><small>数据、异常与建议</small>
+              </button>
+            </div>
+          </aside>
+
+          <div class="scenario-stage">
+            <div class="task-input">
+              <label for="task-brief">你的需求</label>
+              <textarea id="task-brief" rows="3">我们刚签下一家 B2B SaaS 客户，请建立品牌档案并制定未来 12 个月的完整营销策略。</textarea>
+              <div>
+                <span><i aria-hidden="true"></i> 演示模式 · 不发送数据</span>
+                <button class="map-button" type="button">生成能力映射 <b aria-hidden="true">→</b></button>
+              </div>
+            </div>
+
+            <div class="mapping-status" role="status" aria-live="polite">
+              <span class="status-index">MAP 01</span>
+              <div><strong id="scenario-title">新品牌全案</strong><small id="scenario-summary">固定 12 阶段推进，建立可复用的品牌与项目状态</small></div>
+              <span class="status-badge">已映射</span>
+            </div>
+
+            <div class="pipeline" aria-label="能力处理链">
+              <div class="pipeline-track" id="pipeline-track"></div>
+            </div>
+
+            <div class="mapping-output">
+              <article>
+                <span>系统交付</span>
+                <ul id="deliverables-list"></ul>
+              </article>
+              <article class="mapping-output--human">
+                <span>必须由人决定</span>
+                <ul id="decisions-list"></ul>
+              </article>
+              <article class="mapping-output--boundary">
+                <span>不会自动保证</span>
+                <ul id="boundaries-list"></ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mechanism section" aria-labelledby="mechanism-title">
+        <header class="section-heading section-heading--compact">
+          <div>
+            <span>02 / OPERATING PRINCIPLE</span>
+            <h2 id="mechanism-title">能力来自四层协作，不来自一个“万能 Agent”</h2>
+          </div>
+        </header>
+
+        <div class="mechanism-grid">
+          <article>
+            <span class="mechanism-no">01</span>
+            <div class="mechanism-icon">SKILL</div>
+            <h3>流程层</h3>
+            <p><code>SKILL.md</code> 定义何时触发、读取什么、按什么顺序做、输出什么，以及下一步交给谁。</p>
+            <small>开放式工作由宿主模型解释</small>
+          </article>
+          <article>
+            <span class="mechanism-no">02</span>
+            <div class="mechanism-icon">PY</div>
+            <h3>确定性层</h3>
+            <p>Python 负责 ROI、样本量、关键词聚类、品牌语气评分、状态保存、审计等适合程序化的任务。</p>
+            <small>结果更容易复现与测试</small>
+          </article>
+          <article>
+            <span class="mechanism-no">03</span>
+            <div class="mechanism-icon">STATE</div>
+            <h3>记忆与门禁层</h3>
+            <p>品牌 profile、项目文件、checkpoint、质量 scorecard 和审批记录让长流程能暂停、恢复与回查。</p>
+            <small>本地文件状态，不是企业数据库</small>
+          </article>
+          <article>
+            <span class="mechanism-no">04</span>
+            <div class="mechanism-icon">MCP</div>
+            <h3>外部执行层</h3>
+            <p>配置 MCP / HTTP 后可准备或执行 CRM、邮件、广告、CMS 操作；写操作需要明确批准。</p>
+            <small>连接器默认不是全部可用</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="capabilities section" id="capabilities" aria-labelledby="capabilities-title">
+        <header class="section-heading">
+          <div>
+            <span>03 / CAPABILITY ATLAS</span>
+            <h2 id="capabilities-title">163 个 Skill，主要落在这些工作域</h2>
+          </div>
+          <p>卡片列出代表能力，不把每个 Skill 都误写成独立产品。用筛选器查看不同工作域。</p>
+        </header>
+
+        <div class="filter-row" role="toolbar" aria-label="筛选能力域">
+          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">全部</button>
+          <button type="button" class="filter-button" data-filter="strategy" aria-pressed="false">策略与品牌</button>
+          <button type="button" class="filter-button" data-filter="content" aria-pressed="false">内容与增长</button>
+          <button type="button" class="filter-button" data-filter="search" aria-pressed="false">SEO / AEO</button>
+          <button type="button" class="filter-button" data-filter="operations" aria-pressed="false">投放与运营</button>
+          <button type="button" class="filter-button" data-filter="measurement" aria-pressed="false">分析与质检</button>
+          <span class="filter-count" aria-live="polite"><b>12</b> 个代表能力</span>
+        </div>
+
+        <div class="capability-grid">
+          <article class="capability-card" data-domain="strategy">
+            <div><span>STRATEGY</span><i class="tier tier--m">M</i></div><h3>12 阶段营销咨询</h3>
+            <p>从 Stone vs Opinion 采集到四份核心文档、客户验证、增长计划和渠道展开。</p>
+            <small>engagement-workflow · four-core-documents</small>
+          </article>
+          <article class="capability-card" data-domain="strategy">
+            <div><span>BRAND</span><i class="tier tier--e">E</i></div><h3>多品牌上下文</h3>
+            <p>保存语气、受众、地区、竞品、审批与项目历史，并在品牌之间显式切换。</p>
+            <small>brand-setup · switch-brand · agency-dashboard</small>
+          </article>
+          <article class="capability-card" data-domain="content">
+            <div><span>CONTENT</span><i class="tier tier--e">E</i></div><h3>内容生产管线</h3>
+            <p>研究、提纲、写作、事实检查、品牌语气、SEO 清单和发布前审计。</p>
+            <small>content-engine · content-repurpose · check</small>
+          </article>
+          <article class="capability-card" data-domain="content">
+            <div><span>GROWTH</span><i class="tier tier--g">G</i></div><h3>漏斗与生命周期</h3>
+            <p>规划获客、激活、留存、再营销和自动化旅程，连接目标、渠道与指标。</p>
+            <small>funnel-architect · journey-design · churn-risk</small>
+          </article>
+          <article class="capability-card" data-domain="search">
+            <div><span>SEARCH</span><i class="tier tier--e">E</i></div><h3>SEO 技术与内容审计</h3>
+            <p>覆盖页面、技术、图片、本地、hreflang、重定向、站点地图和内容衰减。</p>
+            <small>seo-audit · tech-seo-audit · page-seo-analysis</small>
+          </article>
+          <article class="capability-card" data-domain="search">
+            <div><span>AI SEARCH</span><i class="tier tier--e">E</i></div><h3>AEO / GEO 可见性</h3>
+            <p>面向 ChatGPT、Perplexity、Google AI Mode、AI Overviews、Gemini、Copilot 的检查框架。</p>
+            <small>aeo-audit · geo-monitor · entity-audit</small>
+          </article>
+          <article class="capability-card" data-domain="operations">
+            <div><span>PAID MEDIA</span><i class="tier tier--e">E</i></div><h3>预算与媒介计划</h3>
+            <p>建立渠道预算、节奏、创意测试、健康度和 ROI 模型，并为平台操作准备请求。</p>
+            <small>media-plan · budget-optimizer · launch-ad-campaign</small>
+          </article>
+          <article class="capability-card" data-domain="operations">
+            <div><span>CRM / SEND</span><i class="tier tier--e">E</i></div><h3>CRM 与发送动作</h3>
+            <p>在连接器就绪后准备同步客户、发送邮件/SMS、通知团队或排期社媒等动作。</p>
+            <small>crm-sync · send-email-campaign · schedule-social</small>
+          </article>
+          <article class="capability-card" data-domain="operations">
+            <div><span>AGENCY OPS</span><i class="tier tier--g">G</i></div><h3>团队与客户运营</h3>
+            <p>客户入驻、提案、团队分工、QBR、SOP 库和多品牌执行状态视图。</p>
+            <small>client-onboarding · team-assign · qbr-plan</small>
+          </article>
+          <article class="capability-card" data-domain="measurement">
+            <div><span>ANALYTICS</span><i class="tier tier--e">E</i></div><h3>归因与经营分析</h3>
+            <p>分析 ROI、归因、cohort、异常、漏斗和假设情景；结论质量取决于输入数据。</p>
+            <small>attribution-model · cohort-analysis · what-if</small>
+          </article>
+          <article class="capability-card" data-domain="measurement">
+            <div><span>QUALITY</span><i class="tier tier--m">M</i></div><h3>发布前质量门禁</h3>
+            <p>检查声明、证据、语气、结构、可读性、占位符与部分内容溯源要求。</p>
+            <small>verify-claims · validate-output · c2pa-metadata</small>
+          </article>
+          <article class="capability-card" data-domain="measurement">
+            <div><span>EXPERIMENT</span><i class="tier tier--e">E</i></div><h3>实验设计与统计</h3>
+            <p>生成 A/B 假设、样本量、MDE、停止规则和显著性判断，辅助而非替代实验设计。</p>
+            <small>ab-test-plan · significance-tester.py</small>
+          </article>
+        </div>
+
+        <div class="tier-legend">
+          <span><i class="tier tier--e">E</i><strong>108</strong> 脚本支撑型</span>
+          <span><i class="tier tier--m">M</i><strong>12</strong> 质量流程型</span>
+          <span><i class="tier tier--g">G</i><strong>43</strong> 结构化指导型</span>
+          <small>分级来自锁定版本的 <code>skills-index.json</code>；E 不等于自动完成所有外部动作。</small>
+        </div>
+      </section>
+
+      <section class="boundary section" aria-labelledby="boundary-title">
+        <header class="section-heading section-heading--compact">
+          <div>
+            <span>04 / HONEST CAPABILITY BOUNDARY</span>
+            <h2 id="boundary-title">能交付工作过程，不等于能保证商业结果</h2>
+          </div>
+        </header>
+        <div class="boundary-table" role="table" aria-label="能力与边界对照">
+          <div class="boundary-row boundary-row--head" role="row"><span role="columnheader">它可以</span><span role="columnheader">但不能据此声称</span></div>
+          <div class="boundary-row" role="row"><span role="cell">生成结构一致的营销研究、策略与文案文件</span><span role="cell">策略一定正确，或优于资深营销专家</span></div>
+          <div class="boundary-row" role="row"><span role="cell">用脚本计算、评分、保存状态并运行质量检查</span><span role="cell">402 个测试证明能提升收入、排名或转化</span></div>
+          <div class="boundary-row" role="row"><span role="cell">为 CRM、广告、邮件与 CMS 准备连接器动作</span><span role="cell">未配置权限、密钥和审批也能自动执行</span></div>
+          <div class="boundary-row" role="row"><span role="cell">记录本地审批和执行日志</span><span role="cell">具备企业 RBAC、不可抵赖审计或法律认证</span></div>
+          <div class="boundary-row" role="row"><span role="cell">提供 EU AI Act / C2PA 相关流程与检查</span><span role="cell">已经通过监管机构或法律专业人士认证</span></div>
+        </div>
+      </section>
+
+      <section class="research section" id="research" aria-labelledby="research-title">
+        <header class="section-heading">
+          <div>
+            <span>05 / RESEARCH VERDICT</span>
+            <h2 id="research-title">研究价值取决于你问的是什么</h2>
+          </div>
+          <div class="perspective-switch" role="group" aria-label="研究视角">
+            <button type="button" class="perspective-button is-active" data-perspective="engineering" aria-pressed="true">Agent 工程</button>
+            <button type="button" class="perspective-button" data-perspective="effectiveness" aria-pressed="false">营销效果</button>
+          </div>
+        </header>
+
+        <div class="verdict-panel">
+          <div class="verdict-score">
+            <span>RESEARCH VALUE</span>
+            <strong id="verdict-score">8.2</strong><small>/ 10</small>
+            <div class="score-bar"><i id="score-fill"></i></div>
+          </div>
+          <div class="verdict-copy">
+            <p class="verdict-label" id="verdict-label">适合作为大规模 Skill 系统的工程样本</p>
+            <h3 id="verdict-title">它把“专业 SOP 如何变成 Agent 系统”展示得非常完整。</h3>
+            <p id="verdict-description">Skill 路由、角色契约、确定性脚本、品牌状态、长任务恢复、质量门禁和外部执行边界都能从源码中直接研究。</p>
+          </div>
+          <ul class="verdict-points" id="verdict-points"></ul>
+        </div>
+
+        <div class="experiment-grid">
+          <article><span>EXP 01</span><h3>路由实验</h3><p>比较 163 个 Skill 的命中率、冲突率、误路由成本与描述长度。</p></article>
+          <article><span>EXP 02</span><h3>消融实验</h3><p>分别移除品牌上下文、Python 工具和质量门禁，比较事实错误与人工修改量。</p></article>
+          <article><span>EXP 03</span><h3>人机盲评</h3><p>让营销专家盲评通用 Prompt、DMP 流程与人工方案的完整度、可执行性和风险。</p></article>
+          <article><span>EXP 04</span><h3>生产安全</h3><p>验证审批、断点恢复、连接器失败和错误数据输入是否会导致误发或误投。</p></article>
+        </div>
+      </section>
+
+      <section class="evidence section" aria-labelledby="evidence-title">
+        <div>
+          <span>06 / EVIDENCE SNAPSHOT</span>
+          <h2 id="evidence-title">本页基于锁定源码，不依赖实时宣传数字</h2>
+        </div>
+        <dl>
+          <div><dt>上游版本</dt><dd>v3.31.1</dd></div>
+          <div><dt>Commit</dt><dd><code>fa4ccd0a4afc…</code></dd></div>
+          <div><dt>许可证</dt><dd>MIT</dd></div>
+          <div><dt>测试方法</dt><dd>402</dd></div>
+          <div><dt>研究日期</dt><dd>2026-08-20</dd></div>
+        </dl>
+        <div class="evidence-links">
+          <a href="../../studies/digital-marketing-pro/README.md">完整研究记录 <span>→</span></a>
+          <a href="../../studies/digital-marketing-pro/upstream-lock.json">上游版本锁 <span>→</span></a>
+          <a href="https://github.com/indranilbanerjee/digital-marketing-pro/tree/fa4ccd0a4afc1b902ef8de8d297b180aa148d46a">锁定源码 <span>↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>DMP CAPABILITY LAB</strong><p>研究展示，不连接真实营销账户，不代表上游作者背书。</p></div>
+      <nav aria-label="页脚导航"><a href="#workbench">任务演示</a><a href="#research">研究判断</a><a href="../">研究总入口</a></nav>
+    </footer>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # 研究总入口
 
-GitHub Pages 根页面，用于统一引导八个研究子项目：
+GitHub Pages 根页面，用于统一引导九个研究子项目：
 
 - [Outfit Director](../outfit-director/README.md)
 - [Punk Skill](../punk-skill/README.md)
@@ -10,6 +10,7 @@ GitHub Pages 根页面，用于统一引导八个研究子项目：
 - [SRT Whiteboard Animation](../srt-whiteboard-animation/README.md)
 - [Lineworld / 线境：月夜追迹](../lineworld-night-hunt/README.md)
 - [Blobatar](../blobatar/README.md)
+- [Digital Marketing Pro](../digital-marketing-pro/README.md)
 
 Snakey Locomotion 当前为“已归档 / 按需复用”：演示继续在线部署，专项研究暂停；恢复条件和扩展入口见 [`studies/snakey-locomotion/ARCHIVE.md`](../../studies/snakey-locomotion/ARCHIVE.md)。
 
@@ -32,6 +33,7 @@ Snakey Locomotion 当前为“已归档 / 按需复用”：演示继续在线�
 | `/srt-whiteboard-animation/` | SRT Whiteboard Animation 驱动研究页 |
 | `/lineworld-night-hunt/` | Lineworld 程序化线稿动物叙事游戏原型 |
 | `/blobatar/` | Blobatar 程序化身份研究台 |
+| `/digital-marketing-pro/` | Digital Marketing Pro 能力研究台 |
 | `/studies/` | 各项目研究记录 |
 
 入口页无后端、无实时 API、无构建依赖。项目图片直接复用各研究演示内已经注明来源的资产。
