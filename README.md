@@ -4,9 +4,11 @@
 
 本仓库不替代上游项目：这里维护入口、研究结论和演示；需要独立开发、部署或保留完整历史的内容，会放在单独仓库中。
 
-## 在线总入口
+## 入口导航
 
-- [研究总入口](https://yydshly.github.io/0819_githubcode_study/)：统一浏览全部子项目
+- [README 项目索引](#项目索引)：在当前页面查看全部子项目及研究状态
+- [在线研究门户](https://yydshly.github.io/0819_githubcode_study/index.html)：进入 GitHub Pages 图形化总入口
+- [门户源码与运行说明](demos/research-hub/README.md)：查看本地启动、页面职责和部署路径
 - [GitHub 主库](https://github.com/yydshly/0819_githubcode_study)
 
 ## 项目索引
