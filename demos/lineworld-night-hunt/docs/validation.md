@@ -2,6 +2,15 @@
 
 验收日期：2026-08-20。
 
+## 生产环境验收（2026-08-21）
+
+- 部署提交：[`e2870ef`](https://github.com/yydshly/0819_githubcode_study/commit/e2870ef3efb380a3c856f39eef2553920f972de5)
+- Actions运行：[`32390160907`](https://github.com/yydshly/0819_githubcode_study/actions/runs/32390160907)，构建与部署成功。
+- 线上地址：<https://yydshly.github.io/0819_githubcode_study/lineworld-night-hunt/>
+- 研究门户已出现“线境：月夜追迹”卡片，并能进入线上游戏。
+- 桌面和390×844手机视口均加载1个Canvas，中文教学、HUD和Q嗅闻输入正常，无横向溢出。
+- 页面错误为空；控制台只有上游已知的`THREE.Clock`弃用提醒。
+
 ## 测试矩阵
 
 | 场景 | 环境 | 操作 | 结果 |
