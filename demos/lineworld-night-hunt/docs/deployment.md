@@ -25,7 +25,7 @@ GitHub Actions工作流`.github/workflows/deploy-outfit-director-pages.yml`在`m
 cd demos\lineworld-night-hunt
 npm ci
 npm run test:ai
-npx tsc --noEmit
+npm run typecheck
 npm run build
 ```
 

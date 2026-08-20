@@ -63,7 +63,7 @@ jobs:
         run: |
           npm ci --prefix demos/lineworld-night-hunt
           npm run test:ai --prefix demos/lineworld-night-hunt
-          npx tsc --noEmit -p demos/lineworld-night-hunt/tsconfig.json
+          npm run typecheck --prefix demos/lineworld-night-hunt
           npm run build --prefix demos/lineworld-night-hunt
 
       - name: Assemble research labs site

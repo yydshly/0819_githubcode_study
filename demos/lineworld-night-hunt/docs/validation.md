@@ -7,7 +7,7 @@
 | 场景 | 环境 | 操作 | 结果 |
 | --- | --- | --- | --- |
 | AI、关卡与任务图回归 | Node.js 22 Type Stripping | `npm run test:ai` | 14/14通过 |
-| 类型检查 | TypeScript strict | `npx tsc --noEmit` | 通过 |
+| 类型检查 | TypeScript strict | `npm run typecheck` | 通过 |
 | 生产构建 | Vite 6.4.3 | `npm run build` | 通过；641.96 kB / gzip 170.23 kB，存在大Chunk提醒 |
 | 首次教学 | Chromium / WebGL2 | 打开`?tutorial=1` | 世界目标、移动、嗅闻、追逐、扑击、吠叫和挖掘均有中文说明 |
 | 教学关闭与重开 | Chromium / WebGL2 | 点击“开始追踪”，再点“玩法说明” | 当前目标持续可见，完整教学可以重开 |
