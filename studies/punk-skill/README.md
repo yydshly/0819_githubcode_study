@@ -60,13 +60,19 @@ Punk-Skill 把设计师积累的视觉提示词重构为可由 AI Agent 执行�
 
 ## 本地获取与原生复现
 
-上游源码保存在根目录已忽略的 `vendor-projects/`，避免在许可证未明确时通过本仓库重新分发。
+上游源码保存在根目录已忽略的 `vendor-projects/`，避免在许可证未明确时通过本仓库重新分发。仓库中的 `upstream-lock.json` 固定提交与 Git tree；bootstrap 脚本负责获取、校验原始两个 Skills 和全部 29 个风格目录。
 
 ```powershell
-git clone --depth 1 https://github.com/adrianpunk/Punk-Skill.git vendor-projects/Punk-Skill
-node vendor-projects/Punk-Skill/scripts/validate-punk-cover.mjs
-node vendor-projects/Punk-Skill/scripts/validate-punk-avatar.mjs
+python studies/punk-skill/extensions/punk-publish/scripts/bootstrap_upstream.py fetch --run-checks
 ```
+
+后续只做只读复核时运行：
+
+```powershell
+python studies/punk-skill/extensions/punk-publish/scripts/bootstrap_upstream.py verify --run-checks
+```
+
+成功输出会给出 `$punk-cover` 与 `$punk-avatar` 的绝对入口路径。Agent 应从完整上游检出加载它们，以保持两个 Skill 对仓库级 `styles/` 的相对路径有效。
 
 2026-08-20 本机结果：
 
@@ -227,12 +233,14 @@ Additional context and traits to preserve:
 | 路径 | 职责 |
 | --- | --- |
 | `vendor-projects/Punk-Skill/` | 本地忽略的上游研究检出 |
+| `studies/punk-skill/upstream-lock.json` | 上游仓库、提交、Git tree、Skill 入口、样式数量与许可边界锁定 |
 | `demos/punk-skill/index.html` | 能力、场景、上游样例与扩展实验界面 |
 | `demos/punk-skill/data/scenarios.js` | 独立构造的场景输入、语义字段和扩展规则 |
 | `demos/punk-skill/data/upstream-styles.js` | 29 个上游样例的名称、说明、适用场景、视觉语言和远程来源 |
 | `demos/punk-skill/app.js` | 场景切换、Prompt 摘要编译、manifest 与主题交互 |
 | `demos/punk-skill/assets/` | 本研究预生成样例图，不含上游图片副本 |
 | `studies/punk-skill/extensions/punk-publish/` | 可校验的完整发布包研究 Skill、schema、平台规则和打包脚本 |
+| `studies/punk-skill/extensions/punk-publish/scripts/bootstrap_upstream.py` | 获取或只读校验固定上游版本并返回原始 Skill 入口 |
 | `studies/punk-skill/punk-publish-extension.md` | 扩展边界、真实调用与产物说明 |
 | `studies/punk-skill/evaluation-protocol.md` | 单图与完整发布包的 A/B 评测预注册草案 |
 | `studies/punk-skill/design-contract.md` | 范围、视觉与验收契约 |

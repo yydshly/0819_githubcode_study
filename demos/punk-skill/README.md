@@ -22,7 +22,7 @@ python -m http.server 4174 --directory demos/punk-skill
 
 页面第一段正文提供一个可以离开网页执行的调用指令构造器：
 
-1. 分别复制上游视觉 Skills 安装指令和本地 `$punk-publish` 发现指令；
+1. 运行页面给出的固定版本 bootstrap，获取并校验上游 `$punk-cover` / `$punk-avatar`，再加载本地 `$punk-publish`；
 2. 选择 `$punk-cover` 或 `$punk-avatar`；
 3. 填入文章、主体描述或照片补充信息；
 4. 默认选择“小红书完整发布包”，也可退回“视觉素材 / 仅 Prompt”；
@@ -31,6 +31,14 @@ python -m http.server 4174 --directory demos/punk-skill
 7. 导出包含真实 `cover.png`、文案、底图、调用 brief 和哈希 manifest 的 ZIP；Provider 没有返回图片时，Agent 文件系统包仍必须将视觉依赖标为缺失。
 
 页面只负责构造和解释指令，不在后台模拟已经执行 Agent。真正的内容理解、Prompt 写入和图像生成发生在支持该 Skill 与图像工具的 Agent 中。
+
+仓库内可重复准备命令：
+
+```powershell
+python studies/punk-skill/extensions/punk-publish/scripts/bootstrap_upstream.py fetch --run-checks
+```
+
+该命令读取研究锁文件，不会随上游 `main` 漂移；已有检出不是目标仓库或存在未提交修改时会停止，不会静默覆盖。
 
 ### 01 · 完整发布包工作台
 
@@ -102,6 +110,7 @@ python -m http.server 4174 --directory demos/punk-skill
 
 - [完整研究记录](../../studies/punk-skill/README.md)
 - [`$punk-publish` 扩展说明](../../studies/punk-skill/punk-publish-extension.md)
+- [固定上游版本与复用方法](../../studies/punk-skill/extensions/punk-publish/references/upstream-reuse.md)
 - [单图与发布包评测协议](../../studies/punk-skill/evaluation-protocol.md)
 - [设计契约](../../studies/punk-skill/design-contract.md)
 - [浏览器验收](docs/validation.md)

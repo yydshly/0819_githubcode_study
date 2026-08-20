@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "name": "Punk-Skill",
+  "repository": "https://github.com/adrianpunk/Punk-Skill.git",
+  "default_branch": "main",
+  "commit": "d62d99863ad860895425ef44bd81b5e680576b0d",
+  "tree": "a43b6393ad459127a7a4bddb18bad5ebcd54bd5a",
+  "skills": [
+    {
+      "name": "punk-cover",
+      "entrypoint": "skills/punk-cover/SKILL.md"
+    },
+    {
+      "name": "punk-avatar",
+      "entrypoint": "skills/punk-avatar/SKILL.md"
+    }
+  ],
+  "required_paths": [
+    "skills/punk-cover/SKILL.md",
+    "skills/punk-cover/references/style-catalog.md",
+    "skills/punk-cover/references/cover-prompt-blueprint.md",
+    "skills/punk-avatar/SKILL.md",
+    "skills/punk-avatar/references/style-catalog.md",
+    "skills/punk-avatar/references/avatar-prompt-blueprint.md",
+    "scripts/validate-punk-cover.mjs",
+    "scripts/validate-punk-avatar.mjs",
+    "styles"
+  ],
+  "expected_style_directories": 29,
+  "license": {
+    "spdx_id": null,
+    "checked_at": "2026-08-20",
+    "issue": "https://github.com/adrianpunk/Punk-Skill/issues/6",
+    "redistribution_policy": "Reference and fetch the pinned upstream commit; do not vendor upstream Skill, style, or screenshot contents into this repository until a license permits redistribution."
+  }
+}

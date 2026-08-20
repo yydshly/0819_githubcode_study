@@ -9,7 +9,7 @@ Turn one source item into a reviewable publication folder. Treat the image as on
 
 ## Dependency Discovery
 
-Before starting, verify that this Skill itself is loaded and whether `$punk-cover` is discoverable in the current Agent environment. When setup is missing, read [references/installation.md](references/installation.md) and report the exact missing path or dependency. Do not emit a `$punk-publish` or `$punk-cover` invocation that the current environment cannot resolve without also providing its setup instruction.
+Before starting, verify that this Skill itself is loaded and whether `$punk-cover` is discoverable in the current Agent environment. When setup is missing, read [references/installation.md](references/installation.md) and report the exact missing path or dependency. For a reproducible local checkout or a version mismatch, read [references/upstream-reuse.md](references/upstream-reuse.md) and use the pinned bootstrap instead of silently following upstream `main`. Do not emit a `$punk-publish` or `$punk-cover` invocation that the current environment cannot resolve without also providing its setup instruction.
 
 `$punk-cover` is an optional visual dependency, not a reason to discard the copy task. If it is missing, complete the text package and mark the visual subtask `dependency-missing`.
 
@@ -20,6 +20,7 @@ Before starting, verify that this Skill itself is loaded and whether `$punk-cove
 - Use `$punk-cover` for the visual subtask when it is available. If it is unavailable, still deliver copy, alt text, a visual brief, and a manifest that marks the visual dependency as missing.
 - Keep model-rendered artwork and deterministic typography separate: `artwork.png` is the no-text visual; `cover.png` is the final composition with exact title text.
 - Use one visual style per cover. Do not silently blend several Punk styles.
+- Treat `studies/punk-skill/upstream-lock.json` as the reproducibility authority for the studied upstream version. Do not copy upstream Skill or style bodies into this repository while its license remains undeclared.
 
 ## Workflow
 
@@ -52,6 +53,7 @@ Before handing off, verify:
 - all manifest paths exist or are explicitly listed as missing;
 - no wording implies that the package has been posted.
 - the handoff names whether `$punk-cover` was discovered, missing, or deliberately skipped.
+- when reproducibility is claimed, the upstream checkout matches the locked commit and tree.
 
 ## Typical Invocation
 

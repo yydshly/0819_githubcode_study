@@ -79,7 +79,7 @@
         <div class="install-strip">
           <div class="install-strip__intro"><span>STEP 0 · 两个能力来源</span><strong>先让 Agent 同时发现视觉 Skill 与发布 Skill</strong><small>上游仓库不包含 `$punk-publish`。两项都完成后，默认发布包指令才可真实运行。</small></div>
           <div class="install-strip__actions">
-            <article><span>01 / UPSTREAM</span><strong>$punk-cover + $punk-avatar</strong><pre id="install-command">请安装这个仓库里的全部 Skills：https://github.com/adrianpunk/Punk-Skill</pre><button id="copy-install" type="button">复制上游安装指令</button></article>
+            <article><span>01 / UPSTREAM · PINNED</span><strong>$punk-cover + $punk-avatar</strong><pre id="install-command">python studies/punk-skill/extensions/punk-publish/scripts/bootstrap_upstream.py fetch --run-checks</pre><button id="copy-install" type="button">复制固定版准备命令</button></article>
             <article><span>02 / RESEARCH EXTENSION</span><strong>$punk-publish</strong><pre id="install-extension-command">请加载当前工作区的本地 Skill：studies/punk-skill/extensions/punk-publish/。确认可以调用 $punk-publish；如需生成视觉，再确认 $punk-cover 已安装。</pre><button id="copy-install-extension" type="button">复制扩展发现指令</button></article>
           </div>
           <p id="install-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
