@@ -127,7 +127,7 @@ demos/outfit-director/
 所有资源均使用相对路径，由主库工作流把本目录直接发布为 GitHub Pages 站点：
 
 ```text
-https://yydshly.github.io/0819_githubcode_study/
+https://yydshly.github.io/0819_githubcode_study/outfit-director/
 ```
 
 对应研究主库为 [`yydshly/0819_githubcode_study`](https://github.com/yydshly/0819_githubcode_study)，上游能力来源与研究边界仍以本 README 和研究档案为准。

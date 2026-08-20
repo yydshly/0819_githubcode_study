@@ -5,10 +5,13 @@ on:
     branches:
       - main
     paths:
+      - "demos/research-hub/**"
       - "demos/outfit-director/**"
       - "demos/punk-skill/**"
+      - "demos/xianxia-visual-director/**"
       - "studies/outfit-director/**"
       - "studies/punk-skill/**"
+      - "studies/xianxia-visual-director/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
   workflow_dispatch:
 
@@ -36,15 +39,22 @@ jobs:
 
       - name: Assemble research labs site
         run: |
+          mkdir -p _site/outfit-director
           mkdir -p _site/punk-skill
+          mkdir -p _site/xianxia-visual-director
           mkdir -p _site/studies/outfit-director
           mkdir -p _site/studies/punk-skill
-          cp -a demos/outfit-director/. _site/
+          mkdir -p _site/studies/xianxia-visual-director
+          cp -a demos/research-hub/. _site/
+          cp -a demos/outfit-director/. _site/outfit-director/
           cp -a demos/punk-skill/. _site/punk-skill/
+          cp -a demos/xianxia-visual-director/. _site/xianxia-visual-director/
           cp -a studies/outfit-director/. _site/studies/outfit-director/
           cp -a studies/punk-skill/. _site/studies/punk-skill/
-          sed -i 's#../../studies/outfit-director/#./studies/outfit-director/#g' _site/index.html
+          cp -a studies/xianxia-visual-director/. _site/studies/xianxia-visual-director/
+          sed -i 's#../../studies/outfit-director/#../studies/outfit-director/#g' _site/outfit-director/index.html
           sed -i 's#../../studies/punk-skill/#../studies/punk-skill/#g' _site/punk-skill/index.html
+          sed -i 's#../../studies/xianxia-visual-director/#../studies/xianxia-visual-director/#g' _site/xianxia-visual-director/index.html
           touch _site/.nojekyll
 
       - name: Upload static research labs

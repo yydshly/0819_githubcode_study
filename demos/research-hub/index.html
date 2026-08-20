@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="0819 GitHub Code Study：开源项目研究、能力复现与场景演示总入口。" />
+    <meta name="color-scheme" content="dark" />
+    <title>0819 GitHub Code Study｜研究总入口</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#projects">跳到子项目入口</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="0819 GitHub Code Study 总入口">
+        <span class="brand-mark" aria-hidden="true">08</span>
+        <span><strong>GITHUB CODE STUDY</strong><small>RESEARCH LAB INDEX</small></span>
+      </a>
+      <nav aria-label="页面导航">
+        <a href="#projects">子项目</a>
+        <a href="#method">研究方式</a>
+        <a href="https://github.com/yydshly/0819_githubcode_study">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">0819 · OPEN-SOURCE RESEARCH ATLAS</p>
+          <h1 id="page-title">从代码阅读，<br /><em>走到可验证的演示。</em></h1>
+          <p class="hero-lede">
+            一个长期维护的开源项目研究索引。每个子项目都区分上游能力、研究扩展与真实产物，并提供可以直接进入的场景化演示。
+          </p>
+          <a class="primary-link" href="#projects">选择一个研究项目 <span>↓</span></a>
+        </div>
+
+        <aside class="hero-index" aria-label="研究索引概览">
+          <span class="index-number">03</span>
+          <div>
+            <strong>已登记子项目</strong>
+            <p>生成视频 · 视觉发布 · 仙侠场景</p>
+          </div>
+          <dl>
+            <div><dt>01</dt><dd>能力边界</dd></div>
+            <div><dt>02</dt><dd>可运行演示</dd></div>
+            <div><dt>03</dt><dd>复现证据</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="projects" id="projects" aria-labelledby="projects-title">
+        <header class="section-heading">
+          <div>
+            <span>01 / PROJECT DIRECTORY</span>
+            <h2 id="projects-title">子项目演示入口</h2>
+          </div>
+          <p>先看项目解决什么，再进入对应能力实验室。三个入口互相独立，共用同一套“事实、边界、证据”研究标准。</p>
+        </header>
+
+        <div class="project-grid">
+          <article class="project-card project-card--outfit">
+            <a class="project-visual" href="./outfit-director/" aria-label="进入 Outfit Director 能力实验室">
+              <img src="./outfit-director/assets/e003-seedance-2-5-i2v-m13-safe-layout-poster.jpg" alt="Outfit Director 换装视频实验画面" />
+              <span>LAB 01</span>
+            </a>
+            <div class="project-content">
+              <div class="project-meta"><span>研究中</span><span>VIDEO / VTON</span></div>
+              <h3>Outfit Director</h3>
+              <p>从换装提示词导演出发，对照真实视频基线，并继续探索 2D 虚拟试衣的可接入路径。</p>
+              <ul>
+                <li>M1–M13 转场机制</li>
+                <li>T2V / I2V 真实视频</li>
+                <li>2D VTON 验证台</li>
+              </ul>
+              <a class="card-link" href="./outfit-director/">进入能力实验室 <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="project-card project-card--punk">
+            <a class="project-visual" href="./punk-skill/" aria-label="进入 Punk Skill 能力实验室">
+              <img src="./punk-skill/assets/extension-brand-podcast.webp" alt="Punk Skill 品牌发布包实验封面" />
+              <span>LAB 02</span>
+            </a>
+            <div class="project-content">
+              <div class="project-meta"><span>已复现 / 扩展</span><span>PROMPT / PUBLISH</span></div>
+              <h3>Punk Skill</h3>
+              <p>研究视觉 Prompt 编译，并把单张图片扩展为包含文案、可靠文字层和清单的完整发布包。</p>
+              <ul>
+                <li>29 种视觉风格</li>
+                <li>封面与头像工作流</li>
+                <li>可检查发布包导出</li>
+              </ul>
+              <a class="card-link" href="./punk-skill/">进入能力实验室 <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="project-card project-card--xianxia">
+            <a class="project-visual" href="./xianxia-visual-director/" aria-label="进入 Xianxia Visual Director 场景展示">
+              <img src="./xianxia-visual-director/assets/inhabited-celestial-city.png" alt="Xianxia Visual Director 神域聚居地示意图" />
+              <span>LAB 03</span>
+            </a>
+            <div class="project-content">
+              <div class="project-meta"><span>展示型研究</span><span>SCENE / IMAGE</span></div>
+              <h3>Xianxia Visual Director</h3>
+              <p>说明仙侠场景 Skill 如何锁定空间、镜头和色彩，生成结构化提示词并交给外部图片模型。</p>
+              <ul>
+                <li>单体仙境</li>
+                <li>神域聚居地</li>
+                <li>东方苍穹巨构</li>
+              </ul>
+              <a class="card-link" href="./xianxia-visual-director/">查看场景目标效果 <span>↗</span></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <div class="method-intro">
+          <span>02 / HOW TO READ</span>
+          <h2 id="method-title">每个项目都按同一条路径阅读</h2>
+        </div>
+        <ol>
+          <li><span>01</span><strong>确认上游</strong><p>记录来源、版本与许可证，不把公开仓库误认为任意授权。</p></li>
+          <li><span>02</span><strong>说明原理</strong><p>用最短链路解释输入、核心编排与真实输出。</p></li>
+          <li><span>03</span><strong>展示场景</strong><p>选择代表用例，让读者看到能力对应的目标效果。</p></li>
+          <li><span>04</span><strong>保留边界</strong><p>区分提示词、预生成素材、真实模型和研究扩展。</p></li>
+        </ol>
+      </section>
+
+      <section class="repository-note">
+        <div>
+          <span>REPOSITORY</span>
+          <h2>研究记录、演示和上游检出各自独立。</h2>
+        </div>
+        <p>主仓库保存索引、研究笔记和可发布演示；许可证未明确的上游源码只保存在本地忽略目录，不随研究仓库再分发。</p>
+        <a href="https://github.com/yydshly/0819_githubcode_study">查看 GitHub 仓库 ↗</a>
+      </section>
+    </main>
+
+    <footer>
+      <p>0819 GitHub Code Study</p>
+      <div><a href="#projects">子项目入口</a><a href="https://github.com/yydshly/0819_githubcode_study">Source</a></div>
+    </footer>
+  </body>
+</html>
