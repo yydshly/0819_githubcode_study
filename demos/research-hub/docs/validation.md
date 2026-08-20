@@ -37,3 +37,18 @@ Outfit 页面中的一张长图采用懒加载，未滚动到对应位置时自�
 ## 结论
 
 总入口、四项目和 Snakey 归档状态已通过本地与远端验收。实现与归档提交 `f027a41c347051028347c1434175fd9a98e614af` 已推送 `main`，GitHub Actions 运行 [`32358286573`](https://github.com/yydshly/0819_githubcode_study/actions/runs/32358286573) 成功。生产环境真实浏览器确认四张卡片、Snakey 归档状态、WebGL Canvas、“交互场”切换、390px 无溢出和归档文档 HTTP 200；控制台与页面错误为 0。
+
+## Revision 3：SRT Whiteboard Animation Pages 接入
+
+| 检查 | 生产结果 |
+| --- | --- |
+| GitHub Actions | [运行 32383473996](https://github.com/yydshly/0819_githubcode_study/actions/runs/32383473996) 成功 |
+| 总入口 | 6 张项目卡片，计数 `06`，SRT 卡片与 1080px 时间线图加载成功 |
+| SRT 路径 | `https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/`，标题和 4 个案例正确 |
+| 视频 | 默认视频元数据 8.6 秒、无媒体错误；牛顿第三定律 MP4 Range 返回 206 与 `bytes 0-99/1142911` |
+| 返回与研究链接 | 返回入口为 `../`；研究记录为 `../studies/srt-whiteboard-animation/README.md` |
+| 桌面 1440px | 总入口与 SRT 页面横向溢出均为 0，SRT 主链接焦点轮廓为 `solid` |
+| 手机 390px | 总入口 6 张卡片单列，SRT 页面 4 个案例可达，横向溢出均为 0 |
+| 错误面 | `consoleErrors`、`pageErrors`、`requestFailures` 均为空 |
+
+本地发布候选使用与工作流一致的目录结构组装，并通过支持 Range 的静态服务器复验；生产环境随后使用 bundled Chromium 重复相同主旅程，观察结果一致。Revision 3 判定为 `pass`。

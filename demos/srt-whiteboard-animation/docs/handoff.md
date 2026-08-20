@@ -2,7 +2,7 @@
 
 ## 当前项目与阶段
 
-这是 `geeklee/srt-whiteboard-animation` 的独立静态研究页。Revision 3 已完成前端精修流程 Stage 0–9，四案例演示、物理原理成片与驱动链路交付范围关闭。
+这是 `geeklee/srt-whiteboard-animation` 的独立静态研究页。Revision 4 已完成前端精修流程 Stage 0–9，四案例演示、物理原理成片、驱动链路与 GitHub Pages 入口交付范围关闭。
 
 ## 已完成
 
@@ -44,3 +44,11 @@
 ## 后续会话入口
 
 如以后增加真实在线渲染，第一步应重新定义后端授权、任务队列、文件上传与成本边界，而不是直接把当前配置模拟器改名为生成器。新增案例时，复制 `cases/<case>/` 的五类工件结构，并在 `app.js` 的 `caseLibrary` 中登记；继续保持“真实证据”和“交互解释”分离。
+
+## Revision 4 远端发布
+
+- 在线演示：<https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/>
+- 研究主入口：<https://yydshly.github.io/0819_githubcode_study/>
+- Pages 工作流已组装 SRT 演示和对应研究记录，并修正返回入口与研究记录的相对路径。
+- 根 README 与主入口卡片均已关联真实在线地址。
+- Actions 运行 `32383473996` 成功；生产浏览器验证 4 案例、MP4 Range、键盘、1440px 与 390px、零错误路径均通过。
