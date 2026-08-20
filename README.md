@@ -19,6 +19,7 @@
 | [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | [在线演示](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [说明](demos/punk-skill/README.md) | 已复现 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
 | [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
 | [Snakey Locomotion](studies/snakey-locomotion/README.md) | [muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion) | [在线演示](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/) · [说明](demos/snakey-locomotion/README.md) | 已归档 | Three.js 草地环境、长体运动与环境反馈参考 |
+| [Lineworld](studies/lineworld/README.md) | [muratkamci/Lineworld](https://github.com/muratkamci/Lineworld) | [在线体验](https://yydshly.github.io/0819_githubcode_study/lineworld-night-hunt/) · [说明](demos/lineworld-night-hunt/README.md) | 已完成 | Three.js程序化线稿角色、动物AI、数据关卡、中文任务图与跨局叙事 |
 | [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
 | [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [在线演示](https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
 
@@ -170,6 +171,37 @@
 - [上游版本锁](studies/snakey-locomotion/upstream-lock.json) · [MIT 许可证说明](demos/snakey-locomotion/UPSTREAM-LICENSE.md)
 - 上游：[muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion)
 
+### Lineworld：Three.js 程序化线稿世界与叙事交互
+
+**作用**
+
+上游使用纯 Three.js、TypeScript 和 Web Audio 构建线稿森林探索作品：世界随灯笼范围逐笔绘制，狗通过步行、奔跑、跳跃、嗅闻、挖掘和吠叫与环境交互，记忆事件会改变世界色相。项目不依赖外部 3D 模型、纹理或音频样本。
+
+**研究内容**
+
+- `drawRange` 驱动的线稿显隐协议和确定性 Chunk 流式世界。
+- 程序化线段资产、loft 线框角色、duty-cycle 步态与轻量动物状态机。
+- Shader 草地、气味路径、雾与灯笼范围构成的感知型玩法。
+- 一次输入连接角色、音频、粒子、AI、世界与叙事的事件编排方式。
+- 从作品源码抽取 `LineRevealController`、`ProceduralLineAsset`、`ChunkProvider` 与程序化音频工具的边界。
+
+**后期可扩展**
+
+- 增加存档、任务/章节、碰撞、导航、内容包和数据驱动时间线。
+- 增加 Worker 生成、LOD、对象池、代码分割、移动端控制和质量档位。
+- 增加 glTF 转线稿输入、天气/昼夜和自动镜头/视频导出，但保持线稿主风格。
+
+**当前衍生验证**
+
+`线境：月夜追迹 v0.3.1` 已将随机氛围兔子升级为具有警觉、逃跑、闪避、回洞和终止状态的目标实体，并加入动态气味、狗扑击、捕获/放生、数据化碰撞关卡和localStorage关系存档。放生后白兔会在下一局以引路者身份返回；捕猎、选择、结果和引路流程由稳定ID的中文任务图驱动。当前版本解除玩家任务区硬边界，并加入首次教学、阶段目标和可重开玩法说明。
+
+**源码与文档**
+
+- [在线体验](https://yydshly.github.io/0819_githubcode_study/lineworld-night-hunt/) · [完整研究记录](studies/lineworld/README.md) · [Night Hunt可玩原型](demos/lineworld-night-hunt/README.md)
+- [技术原理](studies/lineworld/technical-principles.md) · [浏览器验收](demos/lineworld-night-hunt/docs/validation.md) · [部署说明](demos/lineworld-night-hunt/docs/deployment.md)
+- [上游版本锁](studies/lineworld/upstream-lock.json) · 本地独立检出：`vendor-projects/Lineworld`
+- 上游：[muratkamci/Lineworld](https://github.com/muratkamci/Lineworld) · [原作在线体验](https://lineworld.murat.works)
+
 ### BigPeng Hot GZH：模糊想法到可发布主题
 
 **作用**
@@ -250,6 +282,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 ├── punk-skill/                   # Punk Skill 演示
 ├── xianxia-visual-director/      # 仙侠场景与目标效果
 ├── snakey-locomotion/            # Three.js 程序化场景研究台
+├── lineworld-night-hunt/         # 程序化线稿动物叙事游戏原型
 ├── bigpeng-hot-gzh/              # 公众号选题与标题规则实验台
 ├── srt-whiteboard-animation/     # OpenCV 白板动画交互研究页
 └── studies/                      # 对应研究记录
@@ -268,6 +301,8 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 │   ├── punk-skill/
 │   ├── xianxia-visual-director/
 │   ├── snakey-locomotion/
+│   ├── lineworld/                 # 上游本地运行证据与截图
+│   ├── lineworld-night-hunt/      # 白兔追踪、追逐、扑击与选择原型
 │   ├── srt-whiteboard-animation/
 │   └── bigpeng-hot-gzh/
 └── studies/
@@ -275,6 +310,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
     ├── punk-skill/
     ├── xianxia-visual-director/
     ├── snakey-locomotion/
+    ├── lineworld/
     ├── srt-whiteboard-animation/
     └── bigpeng-hot-gzh/
 ```

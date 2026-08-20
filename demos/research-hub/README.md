@@ -1,6 +1,6 @@
 # 研究总入口
 
-GitHub Pages 根页面，用于统一引导六个研究子项目：
+GitHub Pages 根页面，用于统一引导七个研究子项目：
 
 - [Outfit Director](../outfit-director/README.md)
 - [Punk Skill](../punk-skill/README.md)
@@ -8,6 +8,7 @@ GitHub Pages 根页面，用于统一引导六个研究子项目：
 - [Snakey Locomotion](../snakey-locomotion/README.md)
 - [BigPeng Hot GZH](../bigpeng-hot-gzh/README.md)
 - [SRT Whiteboard Animation](../srt-whiteboard-animation/README.md)
+- [Lineworld / 线境：月夜追迹](../lineworld-night-hunt/README.md)
 
 Snakey Locomotion 当前为“已归档 / 按需复用”：演示继续在线部署，专项研究暂停；恢复条件和扩展入口见 [`studies/snakey-locomotion/ARCHIVE.md`](../../studies/snakey-locomotion/ARCHIVE.md)。
 
@@ -28,6 +29,7 @@ Snakey Locomotion 当前为“已归档 / 按需复用”：演示继续在线�
 | `/snakey-locomotion/` | Snakey Locomotion Three.js 研究展厅 |
 | `/bigpeng-hot-gzh/` | BigPeng Hot GZH 规则实验台 |
 | `/srt-whiteboard-animation/` | SRT Whiteboard Animation 驱动研究页 |
+| `/lineworld-night-hunt/` | Lineworld 程序化线稿动物叙事游戏原型 |
 | `/studies/` | 各项目研究记录 |
 
 入口页无后端、无实时 API、无构建依赖。项目图片直接复用各研究演示内已经注明来源的资产。

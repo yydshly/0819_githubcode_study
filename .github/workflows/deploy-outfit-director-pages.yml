@@ -10,12 +10,14 @@ on:
       - "demos/punk-skill/**"
       - "demos/xianxia-visual-director/**"
       - "demos/snakey-locomotion/**"
+      - "demos/lineworld-night-hunt/**"
       - "demos/bigpeng-hot-gzh/**"
       - "demos/srt-whiteboard-animation/**"
       - "studies/outfit-director/**"
       - "studies/punk-skill/**"
       - "studies/xianxia-visual-director/**"
       - "studies/snakey-locomotion/**"
+      - "studies/lineworld/**"
       - "studies/bigpeng-hot-gzh/**"
       - "studies/srt-whiteboard-animation/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
@@ -48,12 +50,21 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: demos/snakey-locomotion/package-lock.json
+          cache-dependency-path: |
+            demos/snakey-locomotion/package-lock.json
+            demos/lineworld-night-hunt/package-lock.json
 
       - name: Build Snakey Locomotion research lab
         run: |
           npm ci --prefix demos/snakey-locomotion
           npm run build --prefix demos/snakey-locomotion
+
+      - name: Verify and build Lineworld Night Hunt
+        run: |
+          npm ci --prefix demos/lineworld-night-hunt
+          npm run test:ai --prefix demos/lineworld-night-hunt
+          npx tsc --noEmit -p demos/lineworld-night-hunt/tsconfig.json
+          npm run build --prefix demos/lineworld-night-hunt
 
       - name: Assemble research labs site
         run: |
@@ -61,12 +72,14 @@ jobs:
           mkdir -p _site/punk-skill
           mkdir -p _site/xianxia-visual-director
           mkdir -p _site/snakey-locomotion
+          mkdir -p _site/lineworld-night-hunt
           mkdir -p _site/bigpeng-hot-gzh
           mkdir -p _site/srt-whiteboard-animation
           mkdir -p _site/studies/outfit-director
           mkdir -p _site/studies/punk-skill
           mkdir -p _site/studies/xianxia-visual-director
           mkdir -p _site/studies/snakey-locomotion
+          mkdir -p _site/studies/lineworld
           mkdir -p _site/studies/bigpeng-hot-gzh
           mkdir -p _site/studies/srt-whiteboard-animation
           cp -a demos/research-hub/. _site/
@@ -74,12 +87,14 @@ jobs:
           cp -a demos/punk-skill/. _site/punk-skill/
           cp -a demos/xianxia-visual-director/. _site/xianxia-visual-director/
           cp -a demos/snakey-locomotion/dist/. _site/snakey-locomotion/
+          cp -a demos/lineworld-night-hunt/dist/. _site/lineworld-night-hunt/
           cp -a demos/bigpeng-hot-gzh/. _site/bigpeng-hot-gzh/
           cp -a demos/srt-whiteboard-animation/. _site/srt-whiteboard-animation/
           cp -a studies/outfit-director/. _site/studies/outfit-director/
           cp -a studies/punk-skill/. _site/studies/punk-skill/
           cp -a studies/xianxia-visual-director/. _site/studies/xianxia-visual-director/
           cp -a studies/snakey-locomotion/. _site/studies/snakey-locomotion/
+          cp -a studies/lineworld/. _site/studies/lineworld/
           cp -a studies/bigpeng-hot-gzh/. _site/studies/bigpeng-hot-gzh/
           cp -a studies/srt-whiteboard-animation/. _site/studies/srt-whiteboard-animation/
           sed -i 's#../../studies/outfit-director/#../studies/outfit-director/#g' _site/outfit-director/index.html
