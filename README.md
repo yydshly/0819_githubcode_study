@@ -9,6 +9,7 @@
 | 项目 | 原项目 | 研究仓库 | 演示 | 状态 | 研究重点 |
 | --- | --- | --- | --- | --- | --- |
 | [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | [0819_githubcode_study](https://github.com/yydshly/0819_githubcode_study) | [在线演示](https://yydshly.github.io/0819_githubcode_study/) · [使用说明](demos/outfit-director/README.md) | 研究中 | M1–M13、换装视频基线、2D VTON 接入 |
+| [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | 本主库研究实现 | [在线能力实验室](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [使用说明](demos/punk-skill/README.md) | 已复现 / 可复用研究扩展 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -19,8 +20,11 @@
 - 女性换装机制变体：[liyue-aigc/female-outfit-director](https://github.com/liyue-aigc/female-outfit-director)
 - GitHub Pages 演示：[Outfit Director 能力实验室](https://yydshly.github.io/0819_githubcode_study/)
 - 本库研究记录：[能力、原理、差异与实验结论](studies/outfit-director/README.md)
+- 第二个研究对象：[Punk Skill 视觉 Prompt 编译能力](studies/punk-skill/README.md)
+- Punk Skill 在线演示：[完整发布包能力实验室](https://yydshly.github.io/0819_githubcode_study/punk-skill/)
+- Punk Skill 运行说明：[能力、边界与本地启动](demos/punk-skill/README.md)
 
-在线演示由 `.github/workflows/deploy-outfit-director-pages.yml` 自动发布 `demos/outfit-director/`。页面中的 TEST A、TEST B、TEST C 分别对应提示词导演、预生成网页换装和可扩展的 2D VTON 验证台。
+在线演示由 `.github/workflows/deploy-outfit-director-pages.yml` 统一组装并发布：Outfit Director 保持在 Pages 根路径，Punk Skill 位于 `/punk-skill/`，对应研究文档位于 `/studies/punk-skill/`。Outfit 页面中的 TEST A、TEST B、TEST C 分别对应提示词导演、预生成网页换装和可扩展的 2D VTON 验证台。
 
 ## 虚拟试衣总体技术路线
 
@@ -60,7 +64,9 @@
 │   ├── research-template.md                 # 单个项目的研究记录模板
 │   └── virtual-tryon-technology-roadmap.md  # 虚拟试衣长期技术路线
 └── studies/
-    └── README.md               # 本仓库内研究笔记的组织说明
+    ├── README.md               # 本仓库内研究笔记的组织说明
+    ├── outfit-director/        # 换装导演与虚拟试衣研究
+    └── punk-skill/             # 视觉 Prompt Skill 研究
 ```
 
 ## 近期计划
@@ -82,6 +88,9 @@
 - [ ] 后续出现真实试衣需求时再部署 CatVTON，并回填 E004
 - [ ] 关联第一个独立研究仓库
 - [x] 配置第一个 GitHub Pages 在线演示与 README 关联入口
+- [x] 获取并固定 Punk-Skill 上游研究版本
+- [x] 建立 Punk-Skill 场景化能力实验室
+- [x] 展示品牌令牌、可靠文字层、多平台变体与模型适配扩展
 
 ## 许可证说明
 

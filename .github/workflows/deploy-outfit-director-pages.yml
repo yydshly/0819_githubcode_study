@@ -1,11 +1,15 @@
-name: Deploy Outfit Director demo
+name: Deploy research labs
 
 on:
   push:
     branches:
       - main
+      - agent/add-outfit-director-study
     paths:
       - "demos/outfit-director/**"
+      - "demos/punk-skill/**"
+      - "studies/outfit-director/**"
+      - "studies/punk-skill/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
   workflow_dispatch:
 
@@ -31,10 +35,23 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload static demo
+      - name: Assemble research labs site
+        run: |
+          mkdir -p _site/punk-skill
+          mkdir -p _site/studies/outfit-director
+          mkdir -p _site/studies/punk-skill
+          cp -a demos/outfit-director/. _site/
+          cp -a demos/punk-skill/. _site/punk-skill/
+          cp -a studies/outfit-director/. _site/studies/outfit-director/
+          cp -a studies/punk-skill/. _site/studies/punk-skill/
+          sed -i 's#../../studies/outfit-director/#./studies/outfit-director/#g' _site/index.html
+          sed -i 's#../../studies/punk-skill/#../studies/punk-skill/#g' _site/punk-skill/index.html
+          touch _site/.nojekyll
+
+      - name: Upload static research labs
         uses: actions/upload-pages-artifact@v4
         with:
-          path: demos/outfit-director
+          path: _site
 
       - name: Deploy GitHub Pages
         id: deployment

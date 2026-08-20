@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Punk Skill 能力实验室：构造可直接交给 Agent 的封面与头像调用指令，理解内容、路由风格、编译提示词并调用外部图像工具。" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Punk Skill｜能力实验室</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
+    <script src="./data/upstream-styles.js?v=3" defer></script>
+    <script src="./data/scenarios.js?v=3" defer></script>
+    <script src="./data/publication-presets.js?v=1" defer></script>
+    <script src="./package-export.js?v=1" defer></script>
+    <script src="./app.js?v=5" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#scenario-lab">跳到场景实验室</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Punk Skill 能力实验室首页">
+        <span class="brand__mark" aria-hidden="true">PS</span>
+        <span><strong>PUNK SKILL</strong><small>CAPABILITY LAB · 02</small></span>
+      </a>
+      <nav class="topbar__actions" aria-label="页面导航">
+        <span class="status-pill"><i aria-hidden="true"></i>上游校验通过</span>
+        <a href="#real-use">真实怎么用</a>
+        <a href="#publish-package">完整发布包</a>
+        <a href="#principle">原理</a>
+        <a href="#use-case-map">使用场景</a>
+        <a href="#upstream-gallery">原生样例</a>
+        <a href="#extension-lab">扩展实验</a>
+        <a href="../../studies/punk-skill/README.md">研究档案</a>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题"><span id="theme-icon" aria-hidden="true">☼</span></button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__copy">
+          <p class="eyebrow"><span>AGENT SKILL / VISUAL PROMPT COMPILER</span><span>UPSTREAM d62d998</span></p>
+          <h1 id="page-title">图片只是素材，<br /><em>发布包才是结果。</em></h1>
+          <p class="hero__lead">上游 <code>$punk-cover</code> / <code>$punk-avatar</code> 负责把内容编成视觉；本研究新增 <code>$punk-publish</code>，把封面、正文、标签、Alt 文本和产物清单编排成可检查的发布草稿。</p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#real-use">照着做一次</a>
+            <a class="button button--quiet" href="#scenario-lab">查看场景实验</a>
+          </div>
+        </div>
+        <dl class="hero__metrics" aria-label="Punk Skill 核心数据">
+          <div><dt>02+1</dt><dd>上游 Skills + 研究扩展</dd></div>
+          <div><dt>24</dt><dd>封面 / 海报风格</dd></div>
+          <div><dt>05</dt><dd>头像风格</dd></div>
+          <div><dt>08</dt><dd>实用场景演示</dd></div>
+        </dl>
+        <aside class="truth-note" role="note">
+          <strong>能力边界</strong>
+          <span>本实验室离线演示 Skill 的编排逻辑；样例图由本研究预生成，不是网页实时推理，也不代表上游仓库内置图像模型。</span>
+        </aside>
+      </section>
+
+      <section class="real-use-section" id="real-use" aria-labelledby="real-use-title">
+        <header class="section-heading">
+          <div><span class="section-index">00</span><h2 id="real-use-title">现实中怎么用：生成一套发布草稿</h2></div>
+          <p>默认交付不再是一张孤立图片，而是一套可编辑、可复查的内容包。网页构造真实 Agent 指令，并用规则化样例展示执行后应该拿到什么。</p>
+        </header>
+
+        <div class="runtime-map runtime-map--five" aria-label="现实使用中的五个角色">
+          <article><span>你</span><strong>给内容与目标</strong><small>文章、照片、平台、比例</small></article>
+          <b aria-hidden="true">→</b>
+          <article><span>$punk-publish</span><strong>编排发布内容</strong><small>标题、正文、CTA、标签、Alt</small></article>
+          <b aria-hidden="true">→</b>
+          <article><span>$punk-cover</span><strong>编译视觉任务</strong><small>选一个风格，保存完整 Prompt</small></article>
+          <b aria-hidden="true">→</b>
+          <article><span>图像 Provider</span><strong>生成无字底图</strong><small>image_gen / 其他宿主工具</small></article>
+          <b aria-hidden="true">→</b>
+          <article><span>发布包</span><strong>组合并留下证据</strong><small>文案 + 封面 + Prompt + manifest</small></article>
+        </div>
+
+        <div class="install-strip">
+          <div class="install-strip__intro"><span>STEP 0 · 两个能力来源</span><strong>先让 Agent 同时发现视觉 Skill 与发布 Skill</strong><small>上游仓库不包含 `$punk-publish`。两项都完成后，默认发布包指令才可真实运行。</small></div>
+          <div class="install-strip__actions">
+            <article><span>01 / UPSTREAM</span><strong>$punk-cover + $punk-avatar</strong><pre id="install-command">请安装这个仓库里的全部 Skills：https://github.com/adrianpunk/Punk-Skill</pre><button id="copy-install" type="button">复制上游安装指令</button></article>
+            <article><span>02 / RESEARCH EXTENSION</span><strong>$punk-publish</strong><pre id="install-extension-command">请加载当前工作区的本地 Skill：studies/punk-skill/extensions/punk-publish/。确认可以调用 $punk-publish；如需生成视觉，再确认 $punk-cover 已安装。</pre><button id="copy-install-extension" type="button">复制扩展发现指令</button></article>
+          </div>
+          <p id="install-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="real-use-layout">
+          <form class="use-builder panel" id="use-builder" aria-labelledby="use-builder-title">
+            <header class="panel__header"><div><span class="step">STEP 1—3</span><h3 id="use-builder-title">填写这次真实任务</h3></div><span class="panel__meta">LOCAL BUILDER</span></header>
+            <div class="use-mode-switch" role="group" aria-label="选择 Skill">
+              <button type="button" class="is-active" data-use-mode="cover" aria-pressed="true"><strong>$punk-cover</strong><small>文章 → 封面</small></button>
+              <button type="button" data-use-mode="avatar" aria-pressed="false"><strong>$punk-avatar</strong><small>照片/描述 → 头像</small></button>
+            </div>
+            <div class="use-form-grid">
+              <label class="use-field use-field--wide"><span id="use-source-label">粘贴文章、笔记或主题</span><textarea id="use-source" rows="7">AI Agent 正在从单点编码助手变成软件交付参与者。它会读取上下文、调用工具并验证结果，研发流程正在从“人操作工具”转向“人与自主系统共同编排”。</textarea><small id="use-source-hint">长文可以直接粘贴；Skill 会提炼，不会把全文塞进图片。</small></label>
+              <label class="use-field" id="use-platform-field"><span>发布渠道 / 比例</span><select id="use-platform"><option value="wechat">微信公众号 · 2.35:1</option><option value="xiaohongshu" selected>小红书 · 3:4</option><option value="x">X / Twitter · 5:2</option><option value="custom">通用横版 · 16:9</option></select></label>
+              <label class="use-field" id="use-input-mode-field" hidden><span>头像输入方式</span><select id="use-input-mode"><option value="description">文字描述</option><option value="photo">随消息附上照片</option></select></label>
+              <label class="use-field"><span>选择一个风格</span><select id="use-style"></select></label>
+              <label class="use-field"><span>项目名 / 输出目录</span><input id="use-slug" value="ai-agent-rnd" pattern="[a-z0-9-]+" aria-describedby="slug-hint" /><small id="slug-hint">建议使用小写英文、数字和连字符。</small></label>
+              <fieldset class="use-field use-field--wide output-choice"><legend>本次要什么结果</legend><label class="output-choice__recommended"><input type="radio" name="use-output" value="package" checked />完整发布包 <small>推荐</small></label><label><input type="radio" name="use-output" value="image" />视觉素材 + Prompt</label><label><input type="radio" name="use-output" value="prompt" />只生成 Prompt</label></fieldset>
+            </div>
+          </form>
+
+          <aside class="use-result panel" aria-labelledby="use-result-title">
+            <header class="panel__header"><div><span class="step">STEP 4</span><h3 id="use-result-title">复制给 Agent</h3></div><span class="panel__meta">READY TO PASTE</span></header>
+            <div class="use-command-block">
+              <pre id="use-command" tabindex="0"></pre>
+              <button id="copy-use-command" type="button">复制这条调用指令</button>
+              <p id="use-command-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+            </div>
+            <div class="artifact-contract">
+              <p class="field-label">真实执行后，应该得到</p>
+              <dl>
+                <div><dt>必有</dt><dd><code id="use-prompt-path"></code><small>可检查、可修改、可再次生成</small></dd></div>
+                <div id="use-image-artifact"><dt>有图像工具时</dt><dd><code id="use-image-path"></code><small>只有 Provider 明确返回文件时才存在</small></dd></div>
+              </dl>
+            </div>
+            <p class="reality-note"><strong>真实边界：</strong>这里的“复制”只是把任务交给 Agent；真正的内容理解、文件写入和图像生成发生在 Agent 会话中。研究扩展只准备草稿，不登录或发布到任何账号。</p>
+          </aside>
+        </div>
+
+        <section class="publish-package" id="publish-package" aria-labelledby="publish-package-title">
+          <header class="publish-package__header">
+            <div><span>RESEARCH EXTENSION / $punk-publish</span><h3 id="publish-package-title">执行完成后，你拿到的不是一张图</h3></div>
+            <p><strong>本研究新增，不是上游原生能力。</strong> 下方是小红书发布包的规则化演示：正文在图片外，封面内的精确标题由可靠文字层渲染。</p>
+          </header>
+
+          <div class="package-presets" id="package-presets" role="tablist" aria-label="选择完整发布场景"></div>
+
+          <div class="publish-package__grid">
+            <article class="package-copy panel" aria-labelledby="package-copy-title">
+              <header class="panel__header"><div><span class="step">01 / COPY</span><h4 id="package-copy-title">编辑发布文案</h4></div><span class="panel__meta">EDITABLE DRAFT</span></header>
+              <div class="package-copy__fields">
+                <label><span>标题 / 封面主文案</span><input id="package-title" value="AI Agent 不是更快的按钮" /></label>
+                <label><span>正文</span><textarea id="package-post" rows="10"></textarea></label>
+                <label><span>摘要</span><textarea id="package-summary" rows="3"></textarea></label>
+                <label><span>行动引导 CTA</span><input id="package-cta" /></label>
+                <label><span>话题标签</span><input id="package-hashtags" /></label>
+                <label><span>Alt 文本 / 无障碍描述</span><textarea id="package-alt" rows="4"></textarea></label>
+              </div>
+              <div class="package-copy__actions">
+                <button id="copy-package-post" type="button">复制正文 + 标签</button>
+                <button id="copy-package-alt" type="button">复制 Alt 文本</button>
+                <button id="reset-package-copy" type="button">按来源重新生成演示稿</button>
+              </div>
+              <p id="package-copy-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+            </article>
+
+            <article class="package-visual panel" aria-labelledby="package-visual-title">
+              <header class="panel__header"><div><span class="step">02 / VISUAL</span><h4 id="package-visual-title">无字底图 + 可靠文字层</h4></div><span class="panel__meta">3:4 COVER</span></header>
+              <div class="package-visual__switch" role="group" aria-label="封面预览方式">
+                <button type="button" data-package-view="cover" class="is-active" aria-pressed="true">最终封面</button>
+                <button type="button" data-package-view="artwork" aria-pressed="false">只看无字底图</button>
+              </div>
+              <div class="package-cover" id="package-cover">
+                <img id="package-cover-image" src="./assets/scenario-xiaohongshu-productivity.webp" alt="黑红复古拼贴风格的 AI 与工作流程视觉底图" />
+                <div class="package-cover__copy">
+                  <small id="package-cover-kicker">AI × SOFTWARE DELIVERY</small>
+                  <strong id="package-cover-title">AI Agent 不是更快的按钮</strong>
+                  <span id="package-cover-subtitle">从操作工具，到编排任务闭环</span>
+                </div>
+                <i>RESEARCH DRAFT</i>
+              </div>
+              <p class="package-visual__note"><strong>为什么分两层：</strong>模型生成气氛与构图，标题由 HTML / 设计工具确定性排版，避免错字；发布时再导出为最终 <code>cover.png</code>。</p>
+            </article>
+
+            <article class="package-files panel" aria-labelledby="package-files-title">
+              <header class="panel__header"><div><span class="step">03 / PACKAGE</span><h4 id="package-files-title">文件与追溯清单</h4></div><span class="panel__meta">DRAFT · NOT PUBLISHED</span></header>
+              <div class="package-files__tree" id="package-file-tree" aria-label="预期发布包文件"></div>
+              <div class="package-manifest">
+                <div><span>manifest.json</span><button id="copy-package-manifest" type="button">复制清单</button></div>
+                <pre id="package-manifest" tabindex="0"></pre>
+              </div>
+              <p id="package-manifest-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+              <p class="package-files__note">网页展示的是<strong>预期目录</strong>；真实 Agent 只有在 Provider 返回文件后，才应把 <code>artwork.png</code> 和 <code>cover.png</code> 记为已存在。</p>
+            </article>
+          </div>
+
+          <div class="package-delivery">
+            <article class="package-quality panel" aria-labelledby="package-quality-title">
+              <header class="panel__header"><div><span class="step">04 / QA</span><h4 id="package-quality-title">发布前质量检查</h4></div><span class="panel__meta" id="package-quality-summary">—</span></header>
+              <ul id="package-quality" aria-live="polite"></ul>
+              <p>这是结构与一致性检查，不替代事实核查、医学/法律审核或平台合规判断。</p>
+            </article>
+            <article class="package-export panel" aria-labelledby="package-export-title">
+              <header class="panel__header"><div><span class="step">05 / EXPORT</span><h4 id="package-export-title">导出真实发布包</h4></div><span class="panel__meta">PNG + ZIP</span></header>
+              <div class="package-export__body"><strong>浏览器会真正生成文件</strong><p>用 Canvas 合成准确文字的 <code>cover.png</code>，保存当前研究底图、6 个文案文件、调用 brief、文字规范，并为每个实际字节计算 SHA-256 后写入 manifest。</p><button id="export-package" type="button">导出 ZIP 发布包</button><span id="package-export-status" role="status" aria-live="polite">尚未导出</span></div>
+              <p class="package-export__boundary">导出仍是草稿，不会连接或写入小红书账号。真实 Agent 运行后，应以 Provider 返回的 artwork 和完整编译 Prompt 替换研究演示资产。</p>
+            </article>
+          </div>
+
+          <article class="publication-preview" aria-labelledby="publication-preview-title">
+            <div class="publication-preview__cover" aria-hidden="true"><img id="publication-preview-image" src="./assets/scenario-xiaohongshu-productivity.webp" alt="" /><span id="publication-preview-cover-title">AI Agent 不是更快的按钮</span></div>
+            <div class="publication-preview__copy"><small>04 / PLATFORM PREVIEW</small><h4 id="publication-preview-title">读者最终看到的是“封面 + 文案”</h4><strong id="publication-preview-title-text"></strong><p id="publication-preview-post"></p><p id="publication-preview-tags" class="publication-preview__tags"></p><span>演示状态：草稿，尚未发布</span></div>
+          </article>
+        </section>
+
+        <div class="conversation-demo" aria-labelledby="conversation-title">
+          <header><span>STEP 5 · 看懂一次完整执行</span><h3 id="conversation-title">这条指令发出去以后，会发生什么？</h3></header>
+          <ol>
+            <li><b>01</b><div><small>YOU → AGENT</small><strong id="conversation-user">发送文章、渠道、比例和风格</strong><p>如果漏掉平台或风格，Skill 会先提问，不会贸然生成。</p></div></li>
+            <li><b>02</b><div><small>PUNK SKILL</small><strong id="conversation-skill">提炼标题、摘要、主体、受众、情绪和隐喻</strong><p>读取一个风格的 META 与 STYLE，再融合进封面或头像蓝图。</p></div></li>
+            <li><b>03</b><div><small>FILESYSTEM</small><strong>先保存完整 Prompt</strong><p><code id="conversation-prompt-path"></code></p></div></li>
+            <li><b>04</b><div><small>IMAGE PROVIDER</small><strong id="conversation-provider">用保存的 Prompt 生成一张图</strong><p>Provider 才是“画家”；Punk Skill 是导演和说明书。</p></div></li>
+            <li><b>05</b><div><small>YOU</small><strong>检查标题、裁切和语义，再发布或重生成</strong><p>真正生产中应保留 Prompt、Provider、模型版本、成本和产物文件。</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="pipeline-section" id="principle" aria-labelledby="pipeline-title">
+        <header class="section-heading">
+          <div><span class="section-index">01</span><h2 id="pipeline-title">原理：内容如何变成视觉</h2></div>
+          <p>真正可复用的不是某张图，而是把任务结构、风格知识和输出蓝图编译成完整生成指令的过程。</p>
+        </header>
+        <ol class="pipeline">
+          <li><span>01</span><strong>理解内容</strong><p>提取标题、摘要、主体、受众、情绪与隐喻。</p><small>LLM REASONING</small></li>
+          <li><span>02</span><strong>路由风格</strong><p>按输出类型和主题，从 META 目录推荐候选风格。</p><small>STYLE META</small></li>
+          <li><span>03</span><strong>编译提示词</strong><p>将一个 STYLE 原子融合进 Cover / Avatar 蓝图。</p><small>PROMPT BLUEPRINT</small></li>
+          <li><span>04</span><strong>外部生成</strong><p>保存 Prompt，再调用宿主提供的图像生成工具。</p><small>IMAGE PROVIDER</small></li>
+        </ol>
+        <div class="principle-anatomy" aria-label="Punk Skill 提示词编译公式">
+          <article><small>任务结构</small><strong>标题 · 摘要 · 受众 · 比例</strong><p>由 Agent 理解输入，不是关键词匹配。</p></article>
+          <span aria-hidden="true">＋</span>
+          <article><small>风格元数据</small><strong>META.md</strong><p>定义何时用、输入类型和输出形状。</p></article>
+          <span aria-hidden="true">＋</span>
+          <article><small>风格原子</small><strong>STYLE.md</strong><p>只提供构图、材质、色彩和图文关系。</p></article>
+          <span aria-hidden="true">→</span>
+          <article class="principle-anatomy__result"><small>融合编译</small><strong>一个完整 Prompt</strong><p>不是尾部拼接；风格约束被融入封面或头像蓝图。</p></article>
+        </div>
+        <aside class="principle-boundary"><strong>它是什么</strong><span>面向 Agent 的视觉任务说明书、风格路由器与 Prompt 编译器。</span><strong>它不是什么</strong><span>图像模型、训练框架、实时排版引擎或自动质量保证系统。</span></aside>
+      </section>
+
+      <section class="use-case-section" id="use-case-map" aria-labelledby="use-case-title">
+        <header class="section-heading">
+          <div><span class="section-index">02</span><h2 id="use-case-title">使用场景地图</h2></div>
+          <p>先看任务要解决什么，再选输出比例和风格。风格不是审美贴纸，而是对信息目标的适配。</p>
+        </header>
+        <div class="use-case-grid">
+          <article><span>01 / CONTENT</span><h3>内容发布</h3><p>把文章、线程或知识清单压缩成首图。</p><dl><dt>典型交付</dt><dd>公众号、小红书、X 头图</dd><dt>优先判断</dt><dd>标题钩子、平台比例、缩略图识别</dd></dl><a href="#scenario-lab">演示 01–03 ↓</a></article>
+          <article><span>02 / BUSINESS</span><h3>商业沟通</h3><p>让投资判断、产品集成和组织变化可视化。</p><dl><dt>典型交付</dt><dd>投资备忘录、发布横幅、咨询报告</dd><dt>优先判断</dt><dd>可信度、关系结构、品牌安全区</dd></dl><a href="#scenario-lab">演示 05、07 ↓</a></article>
+          <article><span>03 / RESEARCH</span><h3>科研与教育</h3><p>把机制、对象和关系转译成阅读入口。</p><dl><dt>典型交付</dt><dd>论文解读、医学科普、课程封面</dd><dt>优先判断</dt><dd>准确边界、对象关系、非奇观化</dd></dl><a href="#scenario-lab">演示 06 ↓</a></article>
+          <article><span>04 / IDENTITY</span><h3>人物、宠物与文化 IP</h3><p>提取可识别特征，形成头像、纪念卡或活动主视觉。</p><dl><dt>典型交付</dt><dd>宠物头像、城市展览、社交形象</dd><dt>优先判断</dt><dd>身份锚点、缩放识别、确定性文字层</dd></dl><a href="#scenario-lab">演示 04、08 ↓</a></article>
+        </div>
+      </section>
+
+      <section class="lab-section" id="scenario-lab" aria-labelledby="scenario-title">
+        <header class="section-heading">
+          <div><span class="section-index">03</span><h2 id="scenario-title">八个实用场景演示</h2></div>
+          <p>切换预设，观察任务为什么匹配某种风格，以及比例、语义字段、输出约束如何随交付物变化。</p>
+        </header>
+
+        <div class="scenario-tabs" id="scenario-tabs" role="tablist" aria-label="选择使用场景"></div>
+
+        <dl class="scenario-fit" aria-label="当前场景适配说明">
+          <div><dt>使用目标</dt><dd id="scenario-goal"></dd></div>
+          <div><dt>为什么适合</dt><dd id="scenario-fit"></dd></div>
+          <div><dt>适配动作</dt><dd id="scenario-adaptation"></dd></div>
+          <div><dt>交付物</dt><dd id="scenario-deliverable"></dd></div>
+        </dl>
+
+        <div class="workbench">
+          <aside class="panel source-panel" aria-labelledby="source-title">
+            <header class="panel__header"><div><span class="step">INPUT</span><h3 id="source-title">原始输入</h3></div><span id="source-platform" class="panel__meta">—</span></header>
+            <textarea id="source-text" readonly aria-label="当前场景的原始输入"></textarea>
+            <dl class="extraction-grid">
+              <div><dt>摘要</dt><dd id="field-summary"></dd></div>
+              <div><dt>视觉主体</dt><dd id="field-subject"></dd></div>
+              <div><dt>情绪</dt><dd id="field-mood"></dd></div>
+              <div><dt>隐喻</dt><dd id="field-metaphor"></dd></div>
+              <div><dt>受众</dt><dd id="field-audience"></dd></div>
+            </dl>
+            <p class="simulation-note"><span>DETERMINISTIC DEMO</span>这些字段是预先研究整理的场景样本；浏览器没有运行 LLM。</p>
+          </aside>
+
+          <article class="preview-stage" aria-labelledby="preview-title">
+            <header class="preview-stage__top">
+              <div><span class="live-dot" aria-hidden="true"></span><strong id="preview-title">COMPILED PREVIEW</strong></div>
+              <span id="preview-ratio">—</span>
+            </header>
+            <div class="cover-frame" id="cover-frame">
+              <img id="preview-image" src="./assets/scenario-wechat-ai-agents.webp" alt="" />
+              <div class="cover-copy">
+                <small id="preview-kicker"></small>
+                <h3 id="preview-visual-title"></h3>
+                <p id="preview-subtitle"></p>
+              </div>
+              <span class="research-badge">RESEARCH PRE-GENERATED</span>
+            </div>
+            <p class="preview-caption"><strong>可靠文字层演示：</strong>图像底图无字，标题由网页精确渲染；这是本研究扩展，不是上游原生行为。</p>
+          </article>
+
+          <aside class="panel compiler-panel" aria-labelledby="compiler-title">
+            <header class="panel__header"><div><span class="step">COMPILE</span><h3 id="compiler-title">风格与提示词</h3></div><span class="panel__meta">ONE STYLE</span></header>
+            <div class="style-recommendations">
+              <p class="field-label">推荐风格 <small>样例图固定为首选；切换只查看重编译文本</small></p>
+              <div id="style-options" class="style-options"></div>
+              <p id="style-reason" class="style-reason"></p>
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-block__header"><span id="prompt-style-id">—</span><button id="copy-prompt" type="button">复制 Prompt</button></div>
+              <pre id="prompt-output" tabindex="0"></pre>
+              <p id="copy-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+            </div>
+            <div class="boundary-list"><p class="field-label">当前证据边界</p><ul id="boundary-list"></ul></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="upstream-section" id="upstream-gallery" aria-labelledby="upstream-title">
+        <header class="section-heading">
+          <div><span class="section-index">04</span><h2 id="upstream-title">上游全部 29 个自带样例</h2></div>
+          <p>24 个封面 / 海报风格与 5 个头像风格全部列出。每张图下方包含风格说明、适用场景和视觉语言。</p>
+        </header>
+        <div class="license-banner" role="note"><strong>LICENSE PENDING</strong><span>上游当前未声明许可证。本项目只做研究引用，不将上游提示词和样例图片作为本仓库资产再分发。</span><a href="https://github.com/adrianpunk/Punk-Skill/issues/6">许可证 Issue ↗</a></div>
+        <div class="gallery-toolbar">
+          <div class="gallery-filters" aria-label="按上游样例类型筛选">
+            <button type="button" class="is-active" data-gallery-filter="all" aria-pressed="true">全部 <span>29</span></button>
+            <button type="button" data-gallery-filter="cover" aria-pressed="false">封面 / 海报 <span>24</span></button>
+            <button type="button" data-gallery-filter="avatar" aria-pressed="false">头像 <span>05</span></button>
+          </div>
+          <label class="gallery-search"><span>搜索风格或场景</span><input id="gallery-search" type="search" placeholder="例如：科研、城市、宠物" autocomplete="off" /></label>
+          <output id="gallery-count" aria-live="polite">29 / 29</output>
+        </div>
+        <div class="upstream-grid" id="upstream-grid"></div>
+        <p class="gallery-empty" id="gallery-empty" hidden>没有匹配的风格，请换一个关键词。</p>
+        <a class="catalog-link" href="https://github.com/adrianpunk/Punk-Skill#punk-cover">查看上游全部 29 种风格与使用方式 <span>↗</span></a>
+      </section>
+
+      <section class="extension-section" id="extension-lab" aria-labelledby="extension-title">
+        <header class="section-heading">
+          <div><span class="section-index">05</span><h2 id="extension-title">从风格库扩展为生产系统</h2></div>
+          <p>以“人 × Agent 共创”播客封面为例，把一次性 Prompt 扩展成可复用的品牌视觉编译器。</p>
+        </header>
+        <div class="extension-layout">
+          <div class="comparison-stage">
+            <article class="comparison-card comparison-card--base">
+              <header><span>BASELINE</span><strong>原生 Punk 工作流</strong></header>
+              <div class="comparison-visual baseline-visual"><span>STYLE ATOM</span><strong>内容 + 一个风格<br />→ 单张生成图</strong></div>
+              <ul><li>自然语言风格约束</li><li>标题由图像模型尝试生成</li><li>每个平台独立重新描述</li></ul>
+            </article>
+            <span class="comparison-arrow" aria-hidden="true">→</span>
+            <article class="comparison-card comparison-card--extended">
+              <header><span>EXTENDED</span><strong>品牌系统编译器</strong></header>
+              <div class="brand-cover">
+                <img src="./assets/extension-brand-podcast.webp" alt="纸雕与透明计算格栅连接的人与 Agent 共创品牌封面研究样例" />
+                <div><small>HUMAN × AGENT / S01 E01</small><strong>人 × Agent<br />共创时代</strong><span>RESEARCH PODCAST</span></div>
+              </div>
+              <ul><li>结构化品牌令牌与安全区</li><li>无字底图 + 确定性文字层</li><li>从同一规格编译多平台变体</li></ul>
+            </article>
+          </div>
+
+          <aside class="panel extension-controls" aria-labelledby="extension-controls-title">
+            <header class="panel__header"><div><span class="step">EXTEND</span><h3 id="extension-controls-title">选择扩展模块</h3></div><span class="panel__meta" id="extension-count">4 / 4</span></header>
+            <div id="extension-options" class="extension-options"></div>
+            <div class="manifest-block">
+              <div><span>COMPILED MANIFEST</span><button id="copy-manifest" type="button">复制</button></div>
+              <pre id="extension-manifest" tabindex="0"></pre>
+              <p id="manifest-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="evidence-section" aria-labelledby="evidence-title">
+        <header class="section-heading">
+          <div><span class="section-index">06</span><h2 id="evidence-title">研究判断与下一步</h2></div>
+          <p>目前适合研究 Prompt 工程和创意 Agent 工作流，不应被包装成新的图像生成算法。</p>
+        </header>
+        <div class="evidence-grid">
+          <article><span class="grade grade--high">8 / 10</span><h3>工程实践价值</h3><p>任务蓝图与风格原子分离，适合扩展为团队视觉知识库。</p></article>
+          <article><span class="grade grade--medium">7 / 10</span><h3>Agent / HCI 价值</h3><p>确认门、风格推荐和结构化输出可以形成可测的人机协作流程。</p></article>
+          <article><span class="grade grade--low">2 / 10</span><h3>算法创新</h3><p>没有训练、推理或新模型；核心贡献属于 Prompt 与工作流设计。</p></article>
+          <article class="evidence-card--wide"><span class="grade">PROTOCOL</span><h3>单图 vs 完整发布包</h3><p>已形成 5 类任务、30 个来源、A/B 配对的预注册草案；主要测量达到可审核草稿的时间、必需资产遗漏率、人工编辑量、OCR、语义和事实边界。协议尚未执行，不虚构实验结果。</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>PUNK SKILL · CAPABILITY LAB</strong><p>研究实现，不隶属于上游项目。上游来源与研究边界见研究档案。</p></div>
+      <div><a href="../../studies/punk-skill/README.md">研究档案</a><a href="./README.md">运行说明</a><a href="https://github.com/adrianpunk/Punk-Skill">上游仓库 ↗</a></div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Punk Publish"
+  short_description: "Compile complete platform-ready publication packages"
+  default_prompt: "Use $punk-publish to turn this source into a Xiaohongshu publication package."
