@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "name": "bigpeng-hot-gzh",
+  "repository": "https://github.com/BigPengSays/bigpeng-hot-gzh.git",
+  "default_branch": "main",
+  "commit": "8967879bbd59bfacfeb2d66214f095dc92b6f6bc",
+  "checked_at": "2026-08-20",
+  "skill": {
+    "name": "bigpeng-hot-gzh",
+    "entrypoint": "SKILL.md"
+  },
+  "required_paths": [
+    "SKILL.md",
+    "references/title-formulas.md",
+    "references/topic-templates.md",
+    "references/title-corpus.md",
+    "references/qa-checklist.md",
+    "examples/prompts.md"
+  ],
+  "license": {
+    "spdx_id": "MIT",
+    "file": "LICENSE"
+  },
+  "local_checkout": "vendor-projects/bigpeng-hot-gzh"
+}

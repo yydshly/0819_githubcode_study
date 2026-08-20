@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="bigpeng-hot-gzh 公众号选题与标题 Skill 的可交互能力实验台"
+    />
+    <title>BigPeng Hot GZH · 能力实验台</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#lab">跳到能力实验</a>
+    <header class="site-header">
+      <a class="brand" href="../research-hub/" aria-label="返回 GitHub 代码研究总入口">
+        <span class="brand-mark">0819</span>
+        <span>GitHub Code Study</span>
+      </a>
+      <nav aria-label="页面导航">
+        <a href="#lab">实验台</a>
+        <a href="#mechanism">原理</a>
+        <a href="#boundary">边界</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深浅主题">
+          <span aria-hidden="true">◐</span><span class="theme-label">深色</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">RESEARCH LAB 05 / AGENT SKILL</p>
+          <h1 id="page-title">公众号选题<br /><em>与标题</em>实验台</h1>
+          <p class="hero-lead">
+            把用户的模糊想法沉淀为可进入写作与发布流程的明确选题：大模型负责理解，Skill 依据经验规则负责路由、生成、检查和推荐。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#lab">开始演示 <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="../../studies/bigpeng-hot-gzh/README.md">阅读研究记录</a>
+          </div>
+        </div>
+        <aside class="hero-proof" aria-label="能力概览">
+          <div class="proof-grid">
+            <div><strong>07</strong><span>标题公式</span></div>
+            <div><strong>08</strong><span>选题模板</span></div>
+            <div><strong>02</strong><span>任务路由</span></div>
+            <div><strong>00</strong><span>内置爬虫</span></div>
+          </div>
+          <div class="truth-note">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div><strong>定位提醒</strong><p>这是规则型 Agent Skill，不是热点爬虫或爆款预测器。</p></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="lab-section" id="lab" aria-labelledby="lab-title">
+        <header class="section-heading">
+          <div><span>01 / CAPABILITY LAB</span><h2 id="lab-title">跑一次真实能力形状</h2></div>
+          <p>浏览器用显式槽位复现上游规则；语义理解和自由生成仍需宿主大模型。</p>
+        </header>
+
+        <div class="lab-shell">
+          <div class="control-panel">
+            <div class="panel-kicker"><span>INPUT CONSOLE</span><span id="route-code">PATH A</span></div>
+            <div class="route-tabs" role="tablist" aria-label="选择任务路径">
+              <button id="tab-a" type="button" role="tab" aria-selected="true" aria-controls="route-panel" data-route="a">
+                <span>A</span><strong>已有选题</strong><small>只出标题</small>
+              </button>
+              <button id="tab-b" type="button" role="tab" aria-selected="false" aria-controls="route-panel" data-route="b" tabindex="-1">
+                <span>B</span><strong>只有关键词</strong><small>先选题后标题</small>
+              </button>
+            </div>
+
+            <form id="generator-form" novalidate>
+              <div id="route-panel" role="tabpanel" aria-labelledby="tab-a">
+                <fieldset>
+                  <legend>演示预设</legend>
+                  <div class="preset-row" id="preset-row"></div>
+                </fieldset>
+
+                <label class="field field-wide" for="source-input">
+                  <span id="source-label">草稿 / 明确主题</span>
+                  <textarea id="source-input" rows="4" required></textarea>
+                  <small id="source-help">真实 Skill 会从这里抽取槽位；Demo 用下方显式字段保证可复现。</small>
+                </label>
+
+                <div class="field-grid">
+                  <label class="field" for="audience-input"><span>目标身份</span><input id="audience-input" required /></label>
+                  <label class="field" for="object-input"><span id="object-label">对象 / 任务</span><input id="object-input" required /></label>
+                  <label class="field" for="count-input"><span>可兑现数字</span><input id="count-input" type="number" min="2" max="99" required /></label>
+                  <label class="field" for="outcome-input"><span>可感知结果</span><input id="outcome-input" required /></label>
+                </div>
+
+                <label class="field field-wide" for="evidence-input">
+                  <span>正文可提供的证据</span>
+                  <input id="evidence-input" required />
+                </label>
+                <label class="field field-wide route-a-only" for="comparison-input">
+                  <span>可对比的旧做法</span>
+                  <input id="comparison-input" />
+                </label>
+
+                <p class="form-error" id="form-error" role="alert" hidden></p>
+                <button class="generate-button" type="submit">
+                  <span id="generate-label">生成 6 条候选标题</span><span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </form>
+
+            <div class="agent-command">
+              <div><span>REAL AGENT HANDOFF</span><strong>真实 Skill 调用指令</strong></div>
+              <p>复制后交给已安装 `bigpeng-hot-gzh` 的 Codex / Claude Code / Cursor。</p>
+              <pre id="agent-command"></pre>
+              <button class="copy-button" type="button" data-copy-target="agent-command">复制 Agent 指令</button>
+            </div>
+          </div>
+
+          <div class="result-panel" aria-live="polite" aria-atomic="false">
+            <div class="result-topbar">
+              <div><span class="result-route" id="result-route">PATH A</span><span id="result-summary">已有选题 → 6 条候选</span></div>
+              <button class="copy-button copy-button--quiet" type="button" data-copy-target="results-text">复制全部结果</button>
+            </div>
+            <div class="understanding-card">
+              <span id="understanding-label">选题理解</span>
+              <p id="understanding-text"></p>
+            </div>
+            <div id="results" class="results-list"></div>
+            <div class="winner-card" id="winner-card">
+              <span>首选</span>
+              <strong id="winner-title"></strong>
+              <p id="winner-reason"></p>
+            </div>
+            <textarea id="results-text" class="visually-hidden" tabindex="-1" aria-hidden="true"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="mechanism-section" id="mechanism" aria-labelledby="mechanism-title">
+        <header class="section-heading section-heading--compact">
+          <div><span>02 / MECHANISM</span><h2 id="mechanism-title">模糊想法如何沉淀为可发布主题</h2></div>
+        </header>
+        <ol class="pipeline" aria-label="Skill 处理流程">
+          <li><span>01</span><strong>用户提供想法</strong><p>可以是关键词、一句话想法，也可以是已有草稿。</p></li>
+          <li><span>02</span><strong>大模型明确</strong><p>理解意图，抽取读者、对象、数字、结果、冲突和证据。</p></li>
+          <li><span>03</span><strong>Skill 规则驱动</strong><p>路由 A/B，再用 7 种标题公式和 8 种选题模板约束生成。</p></li>
+          <li><span>04</span><strong>按规则质检</strong><p>查长度、虚假数字、同义改写和正文兑现承诺，再提出首选。</p></li>
+          <li><span>05</span><strong>用户确认沉淀</strong><p>用户选择最终主题与标题；推荐代表规则匹配，不代表点击率预测。</p></li>
+        </ol>
+      </section>
+
+      <section class="boundary-section" id="boundary" aria-labelledby="boundary-title">
+        <header class="section-heading">
+          <div><span>03 / EVIDENCE BOUNDARY</span><h2 id="boundary-title">哪些是库的能力，哪些需要外部系统</h2></div>
+          <p>能力演示最容易失真的地方，是把宿主模型或 Web Search 的能力也算在 Skill 身上。</p>
+        </header>
+        <div class="boundary-grid">
+          <article class="boundary-card boundary-card--native">
+            <span>UPSTREAM / NATIVE</span><h3>上游 Skill 提供</h3>
+            <ul><li>A/B 任务路由</li><li>7 种标题公式</li><li>8 种选题模板</li><li>QA 与 Markdown 输出规范</li></ul>
+          </article>
+          <article class="boundary-card boundary-card--host">
+            <span>HOST / REQUIRED</span><h3>宿主 Agent 提供</h3>
+            <ul><li>理解任意草稿</li><li>根据上下文补齐槽位</li><li>生成自然且不重复的中文</li><li>执行发出前自检</li></ul>
+          </article>
+          <article class="boundary-card boundary-card--external">
+            <span>EXTERNAL / OPTIONAL</span><h3>外部数据与系统</h3>
+            <ul><li>空输入时的当前热点</li><li>公众号曝光与点击数据</li><li>A/B 测试与效果归因</li><li>正文、配图、CMS 发布</li></ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="research-section" aria-labelledby="research-title">
+        <div>
+          <p class="eyebrow">04 / RESEARCH VALUE</p>
+          <h2 id="research-title">值得研究的不是“爆款公式”，<br />而是经验如何变成可执行 Skill。</h2>
+        </div>
+        <div class="research-notes">
+          <p><strong>已确认：</strong>规则清晰、边界明确、结果容易人工审核，适合内容策划工作流。</p>
+          <p><strong>尚未证明：</strong>没有阅读量标签、负样本、基线或线上 A/B 试验，不能宣称提升点击率。</p>
+          <a href="../../studies/bigpeng-hot-gzh/README.md#研究价值与下一步">查看建议实验 →</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>BigPeng Hot GZH</strong><span>上游 commit `8967879` · MIT · 研究日期 2026-08-20</span></div>
+      <div><a href="https://github.com/BigPengSays/bigpeng-hot-gzh">Upstream GitHub</a><a href="../../studies/bigpeng-hot-gzh/README.md">Study Notes</a></div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>已复制</div>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -19,6 +19,7 @@
 | [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | [在线演示](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [说明](demos/punk-skill/README.md) | 已复现 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
 | [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
 | [Snakey Locomotion](studies/snakey-locomotion/README.md) | [muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion) | [在线演示](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/) · [说明](demos/snakey-locomotion/README.md) | 已归档 | Three.js 草地环境、长体运动与环境反馈参考 |
+| [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -168,6 +169,34 @@
 - [上游版本锁](studies/snakey-locomotion/upstream-lock.json) · [MIT 许可证说明](demos/snakey-locomotion/UPSTREAM-LICENSE.md)
 - 上游：[muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion)
 
+### BigPeng Hot GZH：模糊想法到可发布主题
+
+**作用**
+
+帮助用户把模糊想法沉淀为可进入写作与发布流程的明确选题和候选标题。这里的“可发布主题”是清楚的写作任务，不等于已经生成正文、配图或公众号草稿。
+
+**实现原理**
+
+这是规则驱动的 Skill：用户先提供模糊想法，宿主大模型理解意图并明确对象、读者、数字、结果和证据等关键槽位；Skill 再依据 8 种选题模板、7 种标题公式、任务路由、禁用项和兑现要求生成、检查与推荐候选；最终选择仍由用户完成。
+
+```text
+模糊想法 → 大模型明确意图与槽位 → Skill 按规则生成和质检 → 用户确认 → 选题、标题与正文兑现要求
+```
+
+**关键边界**
+
+- Skill 沉淀的是个人/团队的内容运营经验和检查标准，不是训练后的预测模型。
+- 它不爬取公众号、不自动获得实时热点，也没有证据证明能够预测点击率或“爆款”。
+- 浏览器 Demo 是可重复的规则复现；理解任意自然语言的能力来自宿主大模型，热点数据来自外部搜索或数据源。
+- 上游采用 MIT 许可证；本研究锁定提交 `8967879bbd59bfacfeb2d66214f095dc92b6f6bc`。
+
+**网页与文档**
+
+- [在线规则实验台](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/)
+- [完整研究记录](studies/bigpeng-hot-gzh/README.md) · [演示使用说明](demos/bigpeng-hot-gzh/README.md)
+- [浏览器验收](demos/bigpeng-hot-gzh/docs/validation.md) · [部署说明](demos/bigpeng-hot-gzh/docs/deployment.md)
+- 上游：[BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh)
+
 ## 研究方式
 
 每个项目尽量保留完整研究链路：
@@ -191,6 +220,7 @@
 ├── punk-skill/                   # Punk Skill 演示
 ├── xianxia-visual-director/      # 仙侠场景与目标效果
 ├── snakey-locomotion/            # Three.js 程序化场景研究台
+├── bigpeng-hot-gzh/              # 公众号选题与标题规则实验台
 └── studies/                      # 对应研究记录
 ```
 
@@ -206,12 +236,14 @@
 │   ├── outfit-director/
 │   ├── punk-skill/
 │   ├── xianxia-visual-director/
-│   └── snakey-locomotion/
+│   ├── snakey-locomotion/
+│   └── bigpeng-hot-gzh/
 └── studies/
     ├── outfit-director/
     ├── punk-skill/
     ├── xianxia-visual-director/
-    └── snakey-locomotion/
+    ├── snakey-locomotion/
+    └── bigpeng-hot-gzh/
 ```
 
 ## 近期计划
@@ -221,9 +253,10 @@
 - [x] 落地虚拟试衣总体技术路线、真实视频基线与 TEST C 验证台
 - [x] 获取 Punk Skill 上游版本并建立场景化能力实验室
 - [x] 登记 Xianxia Visual Director，展示仙侠场景提示词与目标效果
-- [x] 建立总体入口，引导四个子项目演示
+- [x] 建立总体入口，引导五个子项目演示
 - [x] 建立 Snakey Locomotion WebGL 研究台，拆解轨迹、曲面与交互场
 - [x] 归档 Snakey Locomotion，保留在线演示、复用地图与恢复条件
+- [x] 复现 BigPeng Hot GZH，明确“大模型理解 + Skill 规则选择 + 用户决策”的能力边界
 - [ ] 在出现真实需求时继续 CatVTON、严格视频对照或图片模型服从度实验
 
 ## 许可证说明
