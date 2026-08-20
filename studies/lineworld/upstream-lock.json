@@ -1,0 +1,11 @@
+{
+  "project": "Lineworld",
+  "repository": "https://github.com/muratkamci/Lineworld.git",
+  "commit": "2c0334295c2330e725087c0b21e19d7997a91e08",
+  "commitDate": "2026-08-10T14:35:49+03:00",
+  "license": "MIT",
+  "licenseHolder": "Copyright (c) 2026 Murat Kamci",
+  "reviewedAt": "2026-08-20",
+  "localCheckout": "../../vendor-projects/Lineworld",
+  "demoEvidence": "../../demos/lineworld"
+}

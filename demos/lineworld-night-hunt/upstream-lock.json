@@ -1,0 +1,9 @@
+{
+  "project": "Lineworld: Night Hunt",
+  "upstream": "https://github.com/muratkamci/Lineworld.git",
+  "upstreamCommit": "2c0334295c2330e725087c0b21e19d7997a91e08",
+  "upstreamLicense": "MIT",
+  "upstreamLicenseHolder": "Copyright (c) 2026 Murat Kamci",
+  "derivedAt": "2026-08-20",
+  "localUpstreamCheckout": "../../vendor-projects/Lineworld"
+}

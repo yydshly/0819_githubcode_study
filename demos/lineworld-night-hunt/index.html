@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>线境：月夜追迹</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+    canvas { display: block; }
+    #hint {
+      position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+      color: rgba(255,255,255,.75); background: rgba(0,0,0,.72); padding: 7px 14px;
+      font: 400 10px/1 -apple-system, system-ui, sans-serif;
+      letter-spacing: .08em; white-space: nowrap; pointer-events: none;
+    }
+    #bar {
+      position: fixed; left: 50%; bottom: 50px; transform: translateX(-50%);
+      width: 170px; height: 2px; background: rgba(255,255,255,.12); pointer-events: none;
+    }
+    #fill { height: 100%; width: 65%; background: rgba(255,255,255,.85); transition: width .3s ease; }
+    #fill.low { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { opacity: .9 } 50% { opacity: .25 } }
+    #memoryline {
+      position: fixed; left: 50%; bottom: 112px; transform: translateX(-50%);
+      color: #fff; background: rgba(170,45,34,.85); padding: 8px 18px;
+      font: italic 400 15px/1.4 Georgia, 'Times New Roman', serif;
+      letter-spacing: .1em; white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity 1.4s ease;
+    }
+    #memento {
+      position: fixed; top: 20px; right: 24px;
+      color: rgba(255,255,255,.7); font: 400 14px/1 -apple-system, system-ui, sans-serif;
+      letter-spacing: .14em; pointer-events: none;
+    }
+    #shader-error {
+      position: fixed; top: 10px; left: 10px; color: #f66;
+      font: 12px monospace; display: none;
+    }
+    #hunt-status {
+      position: fixed; top: 20px; left: 24px;
+      color: rgba(255,224,185,.92); font: 500 11px/1.2 -apple-system, system-ui, sans-serif;
+      letter-spacing: .18em; pointer-events: none; text-shadow: 0 0 16px #000;
+    }
+    #hunt-meta {
+      position: fixed; top: 42px; left: 24px;
+      color: rgba(255,255,255,.42); font: 400 9px/1.2 -apple-system, system-ui, sans-serif;
+      letter-spacing: .12em; pointer-events: none;
+    }
+    #hunt-objective {
+      position: fixed; top: 64px; left: 24px; width: min(330px, calc(100vw - 48px));
+      padding: 10px 12px; border-left: 2px solid rgba(255,194,141,.65);
+      background: rgba(0,0,0,.58); color: rgba(255,255,255,.76);
+      font: 400 12px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      pointer-events: none; text-shadow: 0 0 14px #000;
+    }
+    #hunt-objective-label {
+      display: block; margin-bottom: 3px; color: #ffc28d;
+      font-size: 9px; letter-spacing: .18em;
+    }
+    #tutorial-open {
+      position: fixed; top: 48px; right: 20px; z-index: 12;
+      border: 1px solid rgba(255,255,255,.28); background: rgba(0,0,0,.65); color: rgba(255,255,255,.8);
+      padding: 7px 10px; font: 500 10px/1 -apple-system, system-ui, sans-serif;
+      letter-spacing: .08em; cursor: pointer;
+    }
+    #tutorial-panel {
+      position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+      padding: 20px; box-sizing: border-box; background: rgba(0,0,0,.76);
+      opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease;
+    }
+    #tutorial-panel.visible { opacity: 1; visibility: visible; }
+    #tutorial-card {
+      width: min(560px, calc(100vw - 40px)); max-height: calc(100vh - 40px); overflow: auto;
+      box-sizing: border-box; padding: 30px; border: 1px solid rgba(255,194,141,.4);
+      background: rgba(8,6,5,.97); color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    #tutorial-card h1 { margin: 0 0 10px; font-size: 22px; letter-spacing: .12em; }
+    #tutorial-card .intro { margin: 0 0 22px; color: rgba(255,255,255,.72); font: 400 14px/1.7 Georgia, serif; }
+    #tutorial-steps { display: grid; gap: 12px; margin-bottom: 22px; }
+    .tutorial-step { display: grid; grid-template-columns: 78px 1fr; gap: 14px; align-items: start; }
+    .tutorial-key { color: #ffc28d; font: 600 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .tutorial-copy strong { display: block; margin-bottom: 2px; font-size: 13px; }
+    .tutorial-copy span { color: rgba(255,255,255,.62); font-size: 12px; line-height: 1.55; }
+    #tutorial-close {
+      display: block; margin: 0 auto; border: 1px solid rgba(255,255,255,.38); background: transparent;
+      color: #fff; padding: 11px 22px; font: 600 11px/1 -apple-system, system-ui, sans-serif;
+      letter-spacing: .12em; cursor: pointer;
+    }
+    #hunt-panel {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      background: rgba(0,0,0,.62); opacity: 0; visibility: hidden;
+      transition: opacity .35s ease, visibility .35s ease; z-index: 20;
+    }
+    #hunt-panel.visible { opacity: 1; visibility: visible; }
+    #hunt-card {
+      width: min(430px, calc(100vw - 40px)); padding: 30px 30px 26px;
+      border: 1px solid rgba(255,214,173,.3); background: rgba(8,6,5,.92);
+      box-shadow: 0 0 80px rgba(255,105,55,.12); text-align: center;
+      color: #fff; font-family: Georgia, 'Times New Roman', serif;
+    }
+    #hunt-panel-title { margin: 0 0 12px; font: 500 16px/1.2 -apple-system, system-ui, sans-serif; letter-spacing: .22em; }
+    #hunt-panel-text { min-height: 44px; margin: 0 auto 24px; color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.55; }
+    #hunt-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    #hunt-actions button {
+      border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff;
+      padding: 10px 16px; font: 500 10px/1 -apple-system, system-ui, sans-serif;
+      letter-spacing: .14em; cursor: pointer;
+    }
+    #hunt-actions button:hover, #hunt-actions button:focus-visible {
+      border-color: #ffc28d; color: #ffc28d; outline: none; box-shadow: 0 0 0 2px rgba(255,194,141,.2);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #fill, #memoryline, #hunt-panel, #tutorial-panel { transition: none; }
+      #fill.low { animation: none; }
+    }
+    @media (max-width: 600px) {
+      #hint {
+        width: calc(100vw - 28px); bottom: 8px; padding: 6px 8px;
+        white-space: normal; text-align: center; line-height: 1.55;
+      }
+      #bar { bottom: 58px; }
+      #hunt-status { left: 18px; right: 18px; letter-spacing: .1em; }
+      #hunt-meta { left: 18px; right: 18px; letter-spacing: .06em; }
+      #hunt-objective { left: 18px; top: 62px; width: min(310px, calc(100vw - 36px)); }
+      #tutorial-open { top: auto; right: 10px; bottom: 62px; }
+      #tutorial-card { padding: 24px 20px; }
+      .tutorial-step { grid-template-columns: 64px 1fr; gap: 10px; }
+      #hunt-card { padding: 26px 22px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="hint">WASD · 移动　SHIFT · 奔跑　空格 · 跳跃 / 扑击　Q · 嗅闻　E · 挖掘　F · 吠叫</div>
+  <div id="hunt-status">按住 Q · 寻找气味</div>
+  <div id="hunt-meta">带走 0 · 放生 0 · 逃脱 0</div>
+  <div id="hunt-objective"><span id="hunt-objective-label">当前目标</span><span id="hunt-objective-text">按住 Q 嗅闻，让气味轨迹显现；沿着发光轨迹寻找白兔。</span></div>
+  <button id="tutorial-open" type="button" aria-haspopup="dialog">玩法说明</button>
+  <div id="memento">✦ 0</div>
+  <div id="memoryline"></div>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="shader-error">着色器错误——请检查控制台</div>
+  <div id="hunt-panel" role="dialog" aria-modal="true" aria-labelledby="hunt-panel-title">
+    <div id="hunt-card">
+      <h1 id="hunt-panel-title">白兔</h1>
+      <p id="hunt-panel-text"></p>
+      <div id="hunt-actions">
+        <button id="hunt-take" type="button">带走 · 恢复灯火</button>
+        <button id="hunt-release" type="button">放生 · 保留记忆</button>
+        <button id="hunt-retry" type="button" hidden>再次追踪</button>
+      </div>
+    </div>
+  </div>
+  <div id="tutorial-panel" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+    <div id="tutorial-card">
+      <h1 id="tutorial-title">月夜追迹</h1>
+      <p class="intro">你是一只在无尽线稿森林中寻找失踪主人的狗。白兔身上缠着主人的围巾碎片——循着气味找到它，并决定如何对待它。</p>
+      <div id="tutorial-steps">
+        <div class="tutorial-step"><div class="tutorial-key">WASD</div><div class="tutorial-copy"><strong>探索森林</strong><span>移动；按住 Shift 奔跑。鼠标拖动旋转视角，滚轮调整距离。</span></div></div>
+        <div class="tutorial-step"><div class="tutorial-key">按住 Q</div><div class="tutorial-copy"><strong>嗅闻气味</strong><span>让白兔留下的发光轨迹显现。你的第一个目标就是沿轨迹找到它。</span></div></div>
+        <div class="tutorial-step"><div class="tutorial-key">Shift + 空格</div><div class="tutorial-copy"><strong>追逐与扑击</strong><span>白兔逃跑后按住 Shift 追赶；足够接近且面向它时，按空格扑击。</span></div></div>
+        <div class="tutorial-step"><div class="tutorial-key">F / E</div><div class="tutorial-copy"><strong>回应世界</strong><span>F 吠叫会惊动动物并唤醒记忆；E 可以在气味终点挖掘。</span></div></div>
+      </div>
+      <button id="tutorial-close" type="button">开始追踪</button>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

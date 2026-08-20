@@ -1,0 +1,20 @@
+{
+  "name": "lineworld-night-hunt",
+  "private": true,
+  "version": "0.3.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:ai": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "three": "^0.185.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0",
+    "@types/three": "^0.185.0"
+  }
+}
