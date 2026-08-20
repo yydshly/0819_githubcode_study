@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Blobatar 确定性 SVG 头像生成研究台：能力、原理、使用场景和扩展方向。" />
+    <title>Blobatar · 程序化身份研究台</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23c7ff3d'/%3E%3Crect x='27' y='29' width='14' height='38' rx='7'/%3E%3Crect x='59' y='29' width='14' height='38' rx='7'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./blobatar-motion.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#lab">跳到能力工作台</a>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="回到顶部">
+        <span class="mark" aria-hidden="true"></span>
+        <span>Blobatar / Research 07</span>
+      </a>
+      <nav aria-label="页面导航">
+        <a href="#identity">身份模型</a>
+        <a href="#lab">能力</a>
+        <a href="#mechanism">原理</a>
+        <a href="#scenarios">场景</a>
+        <a href="#extensions">扩展</a>
+      </nav>
+      <a class="source-link" href="https://github.com/Alain00/blobatar" target="_blank" rel="noreferrer">上游源码 ↗</a>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span>核心定义</span> 轻量级程序化身份标识组件</p>
+          <h1 id="hero-title">一个字符串，<br /><em>一个稳定角色。</em></h1>
+          <p class="hero-deck">
+            本质是头像，用来回答“这是谁”。Blobatar 把社区用户、Agent、团队或仓库的 ID 映射成稳定 SVG；同一个 seed 在同一主版本里得到同一张脸。
+          </p>
+          <div class="hero-facts" aria-label="核心指标">
+            <div><strong>10</strong><span>种几何轮廓</span></div>
+            <div><strong>14</strong><span>种可组合表情</span></div>
+            <div><strong>0</strong><span>运行时依赖</span></div>
+            <div><strong>2.2.0</strong><span>本研究固定版本</span></div>
+          </div>
+        </div>
+        <div class="hero-stage" aria-label="实时 Blobatar 预览">
+          <div class="stage-grid" aria-hidden="true"></div>
+          <div id="heroAvatar" class="hero-avatar"></div>
+          <div class="stage-caption">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span id="heroIdentity">agent.researcher@lab</span>
+            <span id="heroShape">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="identity" class="section identity-section" aria-labelledby="identity-title">
+        <div class="section-heading identity-heading">
+          <p class="section-number">00 / Identity Model</p>
+          <div>
+            <h2 id="identity-title">头像是视觉身份证，<br />不是人物肖像。</h2>
+            <p>当系统同时出现很多没有真人照片的身份时，它用极低成本让用户快速分清“是谁”；在多 Agent 场景里，再用表情、动效和文字说明“正在做什么”。</p>
+          </div>
+        </div>
+
+        <div class="identity-formula" aria-label="程序化身份表达公式">
+          <article><span>01 / WHO</span><strong>头像外观</strong><p>稳定回答“是谁”</p><code>seed → identity</code></article>
+          <div class="formula-sign" aria-hidden="true">+</div>
+          <article><span>02 / STATE</span><strong>表情与动效</strong><p>直观提示当前状态</p><code>expression → status</code></article>
+          <div class="formula-sign" aria-hidden="true">+</div>
+          <article><span>03 / MEANING</span><strong>文字标签</strong><p>提供准确、可访问语义</p><code>label → meaning</code></article>
+        </div>
+
+        <div class="protocol-lab">
+          <header class="protocol-header">
+            <div>
+              <p class="test-label">Identity Protocol Lab</p>
+              <h3>两个主场景，同一套身份逻辑</h3>
+            </div>
+            <div class="protocol-tabs" role="tablist" aria-label="身份应用场景">
+              <button id="communityTab" type="button" role="tab" aria-selected="true" aria-controls="communityProtocol" data-protocol="community">社区身份</button>
+              <button id="agentsTab" type="button" role="tab" aria-selected="false" aria-controls="agentsProtocol" data-protocol="agents">多 Agent</button>
+            </div>
+          </header>
+
+          <section id="communityProtocol" class="protocol-view" role="tabpanel" aria-labelledby="communityTab">
+            <div class="protocol-copy">
+              <span class="protocol-kicker">COMMUNITY / DEFAULT IDENTITY</span>
+              <h4>用户还没上传照片，<br />身份已经可以被识别。</h4>
+              <p>注册完成即可生成稳定默认头像。评论区、成员列表和协作光标不再是一排相同灰色剪影，也不需要存储、裁切和审核真人图片。</p>
+              <dl>
+                <div><dt>输入</dt><dd>不透明 user ID</dd></div>
+                <div><dt>输出</dt><dd>稳定 SVG 默认头像</dd></div>
+                <div><dt>价值</dt><dd>即时辨识 · 零上传</dd></div>
+              </dl>
+            </div>
+            <div id="identityCommunityGrid" class="identity-community-grid" aria-label="社区身份示例"></div>
+          </section>
+
+          <section id="agentsProtocol" class="protocol-view" role="tabpanel" aria-labelledby="agentsTab" hidden>
+            <div class="agent-protocol-top">
+              <div class="protocol-copy">
+                <span class="protocol-kicker">MULTI-AGENT / ROLE + STATE</span>
+                <h4>外观固定角色，<br />状态跟随任务变化。</h4>
+                <p id="agentPhaseSummary">研究与搜索 Agent 正在分析，写作和审核 Agent 等待上游结果。</p>
+              </div>
+              <div class="agent-phase-control" role="group" aria-label="切换多 Agent 任务阶段">
+                <button type="button" data-agent-phase="standby">待命</button>
+                <button type="button" data-agent-phase="analyze" class="active">分析</button>
+                <button type="button" data-agent-phase="execute">执行</button>
+                <button type="button" data-agent-phase="review">复核</button>
+                <button type="button" data-agent-phase="complete">完成</button>
+              </div>
+            </div>
+            <div id="agentIdentityGrid" class="agent-identity-grid" aria-live="polite"></div>
+            <p class="semantic-note"><strong>可访问性原则：</strong>表情和颜色只提供快速感知；角色名、状态文字和任务说明才是准确语义。</p>
+          </section>
+        </div>
+
+        <div class="identity-boundary">
+          <strong>一句话汇总</strong>
+          <p>Blobatar = 给社区用户、多 Agent、Bot、团队和仓库使用的确定性头像组件；它解决视觉身份辨识，不负责真实长相还原，也不是安全认证凭证。</p>
+        </div>
+      </section>
+
+      <section id="lab" class="section lab-section" aria-labelledby="lab-title">
+        <div class="section-heading">
+          <p class="section-number">01 / Capability Lab</p>
+          <div>
+            <h2 id="lab-title">亲手验证它的能力</h2>
+            <p>改 seed、锁品牌、换表情，再生成一组 Agent。右侧始终来自固定上游代码。</p>
+          </div>
+        </div>
+
+        <div class="lab-grid">
+          <form id="controls" class="control-panel">
+            <fieldset>
+              <legend><span>01</span> 身份输入</legend>
+              <label for="seedInput">Seed / 名称</label>
+              <div class="input-action">
+                <input id="seedInput" name="seed" type="text" value="agent.researcher@lab" autocomplete="off" spellcheck="false" />
+                <button id="randomSeed" type="button" class="icon-button" title="换一个研究样例" aria-label="换一个研究样例">↻</button>
+              </div>
+              <label class="check-row">
+                <input id="normalizeInput" type="checkbox" checked />
+                <span>规范化大小写、空格与 Unicode</span>
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend><span>02</span> 视觉约束</legend>
+              <div class="field-row">
+                <label for="shapeInput">轮廓</label>
+                <select id="shapeInput">
+                  <option value="">由 seed 决定</option>
+                  <option value="0.11">Round</option>
+                  <option value="0.35">Organic</option>
+                  <option value="0.54">Boxy</option>
+                  <option value="0.65">Capsule</option>
+                  <option value="0.745">Nub</option>
+                  <option value="0.825">Cloud</option>
+                  <option value="0.887">Droplet</option>
+                  <option value="0.932">Hexagon</option>
+                  <option value="0.965">Sun</option>
+                  <option value="0.99">Triangle</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="backgroundInput">背景</label>
+                <select id="backgroundInput">
+                  <option value="false">透明</option>
+                  <option value="circle">Circle</option>
+                  <option value="squircle">Squircle</option>
+                  <option value="square">Square</option>
+                </select>
+              </div>
+              <label class="range-field" for="hueInput">
+                <span>品牌色相 <output id="hueOutput">Seed</output></span>
+                <input id="hueInput" type="range" min="0" max="360" value="210" disabled />
+              </label>
+              <label class="check-row compact">
+                <input id="lockHue" type="checkbox" />
+                <span>锁定品牌色相</span>
+              </label>
+              <label class="range-field" for="toneInput">
+                <span>明暗色调 <output id="toneOutput">Seed</output></span>
+                <input id="toneInput" type="range" min="0" max="100" value="52" disabled />
+              </label>
+              <label class="check-row compact">
+                <input id="lockTone" type="checkbox" />
+                <span>锁定色调</span>
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend><span>03</span> 表达与动态</legend>
+              <div id="expressionButtons" class="expression-grid" role="group" aria-label="选择表情"></div>
+              <label class="check-row motion-row">
+                <input id="animateInput" type="checkbox" checked />
+                <span>启动上游呼吸、漂浮、眨眼和扫视</span>
+              </label>
+            </fieldset>
+          </form>
+
+          <div class="result-panel">
+            <div class="result-toolbar">
+              <div>
+                <span class="status-pill">LIVE / LOCAL</span>
+                <p>上游固定提交 <code>9946e7c</code></p>
+              </div>
+              <button id="downloadAvatar" class="text-button" type="button">下载 SVG ↓</button>
+            </div>
+            <div id="mainAvatar" class="main-avatar" aria-live="polite"></div>
+            <div class="metrics" aria-label="当前头像数据">
+              <div><span>Shape</span><strong id="metricShape">—</strong></div>
+              <div><span>Body</span><strong id="metricBody">—</strong></div>
+              <div><span>Eyes</span><strong id="metricEyes">—</strong></div>
+              <div><span>Palette</span><strong id="metricPalette">—</strong></div>
+            </div>
+            <div class="determinism-test">
+              <div>
+                <span class="test-label">确定性检查</span>
+                <strong id="stableResult">运行中…</strong>
+              </div>
+              <p id="normalizationResult">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="crowd-panel">
+          <div class="crowd-heading">
+            <div>
+              <span class="test-label">群组实验</span>
+              <h3>一套视觉语言，多个稳定身份</h3>
+            </div>
+            <div class="scenario-switch" role="group" aria-label="选择身份群组">
+              <button type="button" data-crowd="agents" class="active">Agent 团队</button>
+              <button type="button" data-crowd="community">社区用户</button>
+              <button type="button" data-crowd="repos">代码仓库</button>
+            </div>
+          </div>
+          <div id="crowdGrid" class="crowd-grid"></div>
+        </div>
+      </section>
+
+      <section id="mechanism" class="section ink-section" aria-labelledby="mechanism-title">
+        <div class="section-heading inverse">
+          <p class="section-number">02 / Mechanism</p>
+          <div>
+            <h2 id="mechanism-title">确定性，不等于简单随机</h2>
+            <p>关键不是“随机画一个头像”，而是把每个视觉轴变成可寻址、可冻结、可约束的变量。</p>
+          </div>
+        </div>
+        <ol class="pipeline">
+          <li><span>01</span><strong>规范化</strong><p>NFC、trim、lowercase，让人类认为相同的名称保持一致。</p><code>" Alain " → "alain"</code></li>
+          <li><span>02</span><strong>32-bit 混合</strong><p>字符串只哈希一次，字符微小变化触发视觉雪崩。</p><code>seedState(name)</code></li>
+          <li><span>03</span><strong>命名 Trait</strong><p>形状、色相、眼距分别用自己的 key 派生，新增特征不扰动旧头像。</p><code>stream(state, "eye.gap")</code></li>
+          <li><span>04</span><strong>约束几何</strong><p>比例、间距和 face region 共同保证身体在画框内、眼睛尽量在脸内。</p><code>[0,1) → safe range</code></li>
+          <li><span>05</span><strong>可访问配色</strong><p>OKLCh 设计后落到 sRGB，并自动调整眼睛明暗以满足默认对比度。</p><code>contrast ≥ 4.5:1</code></li>
+          <li><span>06</span><strong>SVG 序列化</strong><p>没有模型推理、数据库或图片文件；URL 和 seed 就能重建身份。</p><code>pure function → SVG</code></li>
+        </ol>
+        <aside class="mechanism-note">
+          <strong>最值得复用的设计</strong>
+          <p><code>hash(seed, traitKey)</code> 让程序化系统可以增加新维度而不重排已有结果。这个模式能迁移到游戏角色、地图、声音、测试夹具和数据可视化。</p>
+        </aside>
+      </section>
+
+      <section id="scenarios" class="section" aria-labelledby="scenario-title">
+        <div class="section-heading">
+          <p class="section-number">03 / Product Scenarios</p>
+          <div>
+            <h2 id="scenario-title">它解决的是“先有身份”，不是“还原长相”</h2>
+            <p>在用户上传照片之前、Agent 还没有品牌资产时，用零存储成本提供可辨识的默认身份。</p>
+          </div>
+        </div>
+        <div class="scenario-grid">
+          <article><span>01</span><div class="mini-crowd" data-mini="community"></div><h3>社区与协作产品</h3><p>评论区、成员列表、协作光标和新用户默认头像。无需上传、裁切或内容审核。</p><ul><li>适合：高密度列表</li><li>价值：即时可辨识</li></ul></article>
+          <article><span>02</span><div class="mini-crowd" data-mini="agents"></div><h3>多 Agent 工作台</h3><p>用稳定外观区分研究、检索、写作和执行 Agent；表情可映射运行状态。</p><ul><li>适合：角色归因</li><li>价值：状态可视化</li></ul></article>
+          <article><span>03</span><div class="mini-crowd" data-mini="repos"></div><h3>仓库与团队标识</h3><p>为代码仓库、项目、频道或临时小组生成统一、可缓存的视觉占位符。</p><ul><li>适合：非人物实体</li><li>价值：无资产启动</li></ul></article>
+          <article><span>04</span><div class="fixture-strip" aria-hidden="true">A/B/C<br />A/B/C</div><h3>测试与演示数据</h3><p>固定 seed 天然适合截图测试、Storybook、Mock 数据和回归夹具。</p><ul><li>适合：可重复环境</li><li>价值：结果不漂移</li></ul></article>
+        </div>
+        <div class="boundary-callout">
+          <strong>不适用：</strong>
+          <span>真实肖像、人脸认证、安全指纹、需要绝对无碰撞的身份系统、语音口型数字人。</span>
+        </div>
+      </section>
+
+      <section id="extensions" class="section extension-section" aria-labelledby="extension-title">
+        <div class="section-heading">
+          <p class="section-number">04 / Extension Map</p>
+          <div>
+            <h2 id="extension-title">从头像组件，扩展为产品身份协议</h2>
+            <p>以下是本研究建议，不是上游已经实现的能力。优先级从产品验证到研究实验逐层推进。</p>
+          </div>
+        </div>
+        <div class="roadmap">
+          <article class="now"><span class="phase">P1 · 产品层</span><h3>Agent 状态适配器</h3><p>把 idle / thinking / working / success / error 映射到表情、动效和语义标签；保持状态信息不只依赖颜色。</p><strong>最先验证</strong></article>
+          <article><span class="phase">P2 · 品牌层</span><h3>可版本化主题令牌</h3><p>把 shape 白名单、色相区间、背景和动画规则封装成品牌 preset，并记录生成 generation。</p><strong>复用价值高</strong></article>
+          <article><span class="phase">P3 · 平台层</span><h3>多语言渲染与缓存</h3><p>增加服务端、WASM 或多语言实现的 parity fixture；用 HMAC 用户 ID 避免泄露邮箱和跨站追踪。</p><strong>生产化关键</strong></article>
+          <article><span class="phase">P4 · 研究层</span><h3>感知辨识评测</h3><p>测量 50 / 500 / 5000 头像下的辨识、记忆和误认率，并比较 Blobatar、Identicon、首字母和 DiceBear。</p><strong>论文方向</strong></article>
+          <article><span class="phase">P5 · 图形层</span><h3>可插拔形状语法</h3><p>探索保持 containment 和版本稳定性的 shape plugin 接口；新增形状必须显式进入新 generation。</p><strong>算法工程</strong></article>
+          <article><span class="phase">P6 · 无障碍</span><h3>非视觉身份通道</h3><p>为头像生成稳定的文本描述、触觉/声音提示和色觉缺陷友好模式，避免把身份只编码在色相中。</p><strong>HCI 课题</strong></article>
+        </div>
+      </section>
+
+      <section class="section audit-section" aria-labelledby="audit-title">
+        <div class="audit-main">
+          <p class="section-number">05 / Research Boundary</p>
+          <h2 id="audit-title">研究判断</h2>
+          <p>Blobatar 的算法新颖性有限，但它是研究“程序化身份如何进入真实产品”的优秀、可读、可运行基线。</p>
+        </div>
+        <div class="audit-score">
+          <div><span>产品 / HCI</span><strong>高</strong></div>
+          <div><span>工程架构</span><strong>高</strong></div>
+          <div><span>基础算法</span><strong>低</strong></div>
+          <div><span>实验基线</span><strong>中高</strong></div>
+        </div>
+        <div class="risk-list">
+          <p><span>01</span><strong>32-bit 状态不是安全哈希</strong>数万级身份后要认真评估严格碰撞和感知碰撞。</p>
+          <p><span>02</span><strong>不要把邮箱放进公共 URL</strong>优先使用不透明用户 ID；需要跨系统稳定时考虑服务端 HMAC。</p>
+          <p><span>03</span><strong>稳定性以主版本为边界</strong>生产系统应锁定包版本或 HTTP generation。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><span class="mark" aria-hidden="true"></span><strong>Blobatar Research Lab</strong></div>
+      <p>固定上游 v<span id="footerVersion">2.2.0</span> · MIT · 研究于 2026-08-20</p>
+      <div class="footer-links"><a href="https://github.com/yydshly/0819_githubcode_study/blob/main/studies/blobatar/README.md">研究记录</a><a href="./UPSTREAM-LICENSE.md">许可证</a><a href="../research-hub/">研究总入口</a></div>
+    </footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

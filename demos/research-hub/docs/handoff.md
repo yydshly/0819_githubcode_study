@@ -54,3 +54,11 @@
 - 研究总入口已增加第六张 SRT 卡片，并延续现有三列、两列、单列响应式体系。
 - GitHub Actions [32383473996](https://github.com/yydshly/0819_githubcode_study/actions/runs/32383473996) 成功；生产浏览器的入口、视频 Range、键盘、桌面与 390px 路径均通过。
 - 本次范围不改变其他研究项目实现，也不删除原有入口。
+
+## Revision 4：Blobatar
+
+- 新增 `/blobatar/` 程序化身份研究台和 `/studies/blobatar/` 研究记录副本。
+- 根 README、研究门户第八张卡片和 Pages 组装工作流已互相关联。
+- 页面明确描述确定性 SVG 头像、14 种表情、社区默认身份、多 Agent 角色与五阶段状态适配。
+- 研究记录链接指向 GitHub 可渲染 README，避免浏览器把 Pages 中的 Markdown 当作下载文件。
+- 本地发布候选已通过门户 → Blobatar、Agent 状态、桌面、390px、键盘与 reduced-motion 验收。

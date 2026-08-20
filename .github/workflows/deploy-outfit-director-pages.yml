@@ -13,6 +13,7 @@ on:
       - "demos/lineworld-night-hunt/**"
       - "demos/bigpeng-hot-gzh/**"
       - "demos/srt-whiteboard-animation/**"
+      - "demos/blobatar/**"
       - "studies/outfit-director/**"
       - "studies/punk-skill/**"
       - "studies/xianxia-visual-director/**"
@@ -20,6 +21,7 @@ on:
       - "studies/lineworld/**"
       - "studies/bigpeng-hot-gzh/**"
       - "studies/srt-whiteboard-animation/**"
+      - "studies/blobatar/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
   workflow_dispatch:
 
@@ -75,6 +77,7 @@ jobs:
           mkdir -p _site/lineworld-night-hunt
           mkdir -p _site/bigpeng-hot-gzh
           mkdir -p _site/srt-whiteboard-animation
+          mkdir -p _site/blobatar
           mkdir -p _site/studies/outfit-director
           mkdir -p _site/studies/punk-skill
           mkdir -p _site/studies/xianxia-visual-director
@@ -82,6 +85,7 @@ jobs:
           mkdir -p _site/studies/lineworld
           mkdir -p _site/studies/bigpeng-hot-gzh
           mkdir -p _site/studies/srt-whiteboard-animation
+          mkdir -p _site/studies/blobatar
           cp -a demos/research-hub/. _site/
           cp -a demos/outfit-director/. _site/outfit-director/
           cp -a demos/punk-skill/. _site/punk-skill/
@@ -90,6 +94,7 @@ jobs:
           cp -a demos/lineworld-night-hunt/dist/. _site/lineworld-night-hunt/
           cp -a demos/bigpeng-hot-gzh/. _site/bigpeng-hot-gzh/
           cp -a demos/srt-whiteboard-animation/. _site/srt-whiteboard-animation/
+          cp -a demos/blobatar/. _site/blobatar/
           cp -a studies/outfit-director/. _site/studies/outfit-director/
           cp -a studies/punk-skill/. _site/studies/punk-skill/
           cp -a studies/xianxia-visual-director/. _site/studies/xianxia-visual-director/
@@ -97,6 +102,7 @@ jobs:
           cp -a studies/lineworld/. _site/studies/lineworld/
           cp -a studies/bigpeng-hot-gzh/. _site/studies/bigpeng-hot-gzh/
           cp -a studies/srt-whiteboard-animation/. _site/studies/srt-whiteboard-animation/
+          cp -a studies/blobatar/. _site/studies/blobatar/
           sed -i 's#../../studies/outfit-director/#../studies/outfit-director/#g' _site/outfit-director/index.html
           sed -i 's#../../studies/punk-skill/#../studies/punk-skill/#g' _site/punk-skill/index.html
           sed -i 's#../../studies/xianxia-visual-director/#../studies/xianxia-visual-director/#g' _site/xianxia-visual-director/index.html
@@ -105,6 +111,7 @@ jobs:
           sed -i 's#../../studies/bigpeng-hot-gzh/#../studies/bigpeng-hot-gzh/#g' _site/bigpeng-hot-gzh/index.html
           sed -i 's#../research-hub/#../#g' _site/srt-whiteboard-animation/index.html
           sed -i 's#../../studies/srt-whiteboard-animation/#../studies/srt-whiteboard-animation/#g' _site/srt-whiteboard-animation/index.html
+          sed -i 's#../research-hub/#../#g' _site/blobatar/index.html
           touch _site/.nojekyll
 
       - name: Upload static research labs

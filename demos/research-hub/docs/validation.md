@@ -52,3 +52,20 @@ Outfit 页面中的一张长图采用懒加载，未滚动到对应位置时自�
 | 错误面 | `consoleErrors`、`pageErrors`、`requestFailures` 均为空 |
 
 本地发布候选使用与工作流一致的目录结构组装，并通过支持 Range 的静态服务器复验；生产环境随后使用 bundled Chromium 重复相同主旅程，观察结果一致。Revision 3 判定为 `pass`。
+
+## Revision 4：Blobatar Pages 接入
+
+2026-08-21 在 `http://127.0.0.1:4208/` 按 Pages 目录结构组装 Blobatar 发布候选，并使用 Playwright Chromium 完成真实导航与交互验收。
+
+| 检查 | 本地发布候选结果 |
+| --- | --- |
+| 总入口 | 8 张项目卡片，计数 `08`，Blobatar 预览 SVG 加载成功 |
+| Blobatar 路径 | `/blobatar/`，标题、主头像 SVG、14 种表情和身份模型正确 |
+| 社区场景 | 6 个稳定默认身份可见 |
+| 多 Agent 场景 | 4 个角色；执行阶段为 2 已完成、1 执行中、1 待命 |
+| 研究关联 | 页脚链接指向 GitHub 可渲染研究 README；Pages 研究副本 HTTP 200 且内容完整 |
+| 桌面 / 手机 | 1440px 与 390px 横向溢出均为 0；手机主头像宽 292px |
+| 键盘 / 动效 | Blobatar 门户链接焦点为 `solid`；reduced-motion 生效 |
+| 错误面 | error overlay、console error、page error 均为空 |
+
+Revision 4 本地发布候选判定为 `pass`；最终生产 URL 与 Actions 状态在发布后复验。

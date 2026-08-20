@@ -22,6 +22,7 @@
 | [Lineworld](studies/lineworld/README.md) | [muratkamci/Lineworld](https://github.com/muratkamci/Lineworld) | [在线体验](https://yydshly.github.io/0819_githubcode_study/lineworld-night-hunt/) · [说明](demos/lineworld-night-hunt/README.md) | 已完成 | Three.js程序化线稿角色、动物AI、数据关卡、中文任务图与跨局叙事 |
 | [BigPeng Hot GZH](studies/bigpeng-hot-gzh/README.md) | [BigPengSays/bigpeng-hot-gzh](https://github.com/BigPengSays/bigpeng-hot-gzh) | [在线演示](https://yydshly.github.io/0819_githubcode_study/bigpeng-hot-gzh/) · [说明](demos/bigpeng-hot-gzh/README.md) | 已复现 | 模糊想法明确化、规则驱动的选题与标题沉淀 |
 | [SRT Whiteboard Animation](studies/srt-whiteboard-animation/README.md) | [geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation) | [在线演示](https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/) · [复现说明](demos/srt-whiteboard-animation/README.md) | 已复现 | OpenCV 墨迹坐标、落笔排序、累计遮罩、黑白落墨与彩色刷回 |
+| [Blobatar](studies/blobatar/README.md) | [Alain00/blobatar](https://github.com/Alain00/blobatar) | [在线演示](https://yydshly.github.io/0819_githubcode_study/blobatar/) · [说明](demos/blobatar/README.md) | 已复现 | 确定性 SVG 头像、社区身份、多 Agent 角色与状态表达 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -259,6 +260,33 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 - [上游版本锁](studies/srt-whiteboard-animation/upstream-lock.json) · [MIT 许可证说明](demos/srt-whiteboard-animation/UPSTREAM-LICENSE.md)
 - 上游：[geeklee/srt-whiteboard-animation](https://github.com/geeklee/srt-whiteboard-animation)
 
+### Blobatar：程序化头像与视觉身份
+
+**作用**
+
+把用户 ID、Agent 名称、团队或仓库标识稳定映射成轻量 SVG 卡通头像。同一个 seed 在固定主版本中得到同一外观；头像回答“谁”，表情和动效提示“状态”，文字标签提供准确语义。它是视觉身份组件，不是账号系统、任务调度器或安全认证凭证。
+
+**核心能力**
+
+- 10 种几何轮廓、连续 traits、OKLCh 配色与确定性 SVG 输出。
+- 14 种表情、可选 idle motion、静态 SVG 下载和批量身份生成。
+- 社区默认头像，以及研究、检索、写作、审核等多 Agent 角色标识。
+- 待命、分析、执行、复核、完成五阶段状态适配概念验证。
+
+**使用场景**
+
+- 社区评论区、成员列表、协作光标和新用户默认头像。
+- 多 Agent 工作台中的角色归因、运行状态和任务负责人标识。
+- Bot、团队、仓库、频道等没有真人照片的实体占位符。
+- Storybook、Mock 数据、截图测试和可重复回归夹具。
+
+**网页与文档**
+
+- [在线程序化身份研究台](https://yydshly.github.io/0819_githubcode_study/blobatar/)
+- [完整研究记录](studies/blobatar/README.md) · [演示使用说明](demos/blobatar/README.md)
+- [上游版本锁](studies/blobatar/upstream-lock.json) · [MIT 许可证副本](demos/blobatar/UPSTREAM-LICENSE.md)
+- 上游：[Alain00/blobatar](https://github.com/Alain00/blobatar)
+
 ## 研究方式
 
 每个项目尽量保留完整研究链路：
@@ -285,6 +313,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 ├── lineworld-night-hunt/         # 程序化线稿动物叙事游戏原型
 ├── bigpeng-hot-gzh/              # 公众号选题与标题规则实验台
 ├── srt-whiteboard-animation/     # OpenCV 白板动画交互研究页
+├── blobatar/                     # 程序化头像与视觉身份研究台
 └── studies/                      # 对应研究记录
 ```
 
@@ -304,7 +333,8 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 │   ├── lineworld/                 # 上游本地运行证据与截图
 │   ├── lineworld-night-hunt/      # 白兔追踪、追逐、扑击与选择原型
 │   ├── srt-whiteboard-animation/
-│   └── bigpeng-hot-gzh/
+│   ├── bigpeng-hot-gzh/
+│   └── blobatar/
 └── studies/
     ├── outfit-director/
     ├── punk-skill/
@@ -312,7 +342,8 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
     ├── snakey-locomotion/
     ├── lineworld/
     ├── srt-whiteboard-animation/
-    └── bigpeng-hot-gzh/
+    ├── bigpeng-hot-gzh/
+    └── blobatar/
 ```
 
 ## 近期计划
@@ -327,6 +358,7 @@ OpenCV 先从彩色图片中识别墨迹像素，通过骨架化和连通路径�
 - [x] 归档 Snakey Locomotion，保留在线演示、复用地图与恢复条件
 - [x] 复现 BigPeng Hot GZH，明确“大模型理解 + Skill 规则选择 + 用户决策”的能力边界
 - [x] 复现 SRT Whiteboard Animation，验证墨迹坐标、累计遮罩和黑白/彩色两阶段渲染
+- [x] 复现 Blobatar，建立社区与多 Agent 程序化视觉身份研究台
 - [ ] 在出现真实需求时继续 CatVTON、严格视频对照或图片模型服从度实验
 
 ## 许可证说明
