@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Snakey Locomotion Three.js 程序化生物、曲面运动与环境交互研究展厅。" />
+    <meta name="theme-color" content="#0a100d" />
+    <meta name="color-scheme" content="dark" />
+    <title>Snakey Locomotion｜Three.js 程序化场景研究台</title>
+    <style>
+      #file-protocol-notice {
+        display: none;
+      }
+
+      html.is-file-protocol {
+        min-height: 100%;
+        color-scheme: dark;
+        background: #07100c;
+        color: #edf6ee;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      html.is-file-protocol body {
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 70% 20%, rgb(83 129 89 / 20%), transparent 34rem),
+          linear-gradient(145deg, #07100c, #0d1712 55%, #080d0a);
+      }
+
+      html.is-file-protocol body > :not(#file-protocol-notice):not(script) {
+        display: none !important;
+      }
+
+      html.is-file-protocol #file-protocol-notice {
+        box-sizing: border-box;
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        padding: 32px 20px;
+      }
+
+      .file-notice-card {
+        width: min(720px, 100%);
+        border: 1px solid rgb(157 199 158 / 28%);
+        border-radius: 22px;
+        padding: clamp(24px, 5vw, 48px);
+        background: rgb(9 19 14 / 88%);
+        box-shadow: 0 32px 90px rgb(0 0 0 / 45%);
+      }
+
+      .file-notice-card small {
+        color: #a8c7ad;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+
+      .file-notice-card h1 {
+        margin: 14px 0 12px;
+        font-size: clamp(28px, 6vw, 52px);
+        line-height: 1.05;
+      }
+
+      .file-notice-card p {
+        margin: 0 0 22px;
+        color: #bbcabd;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+
+      .file-notice-card pre {
+        overflow-x: auto;
+        margin: 0 0 22px;
+        border: 1px solid rgb(157 199 158 / 18%);
+        border-radius: 12px;
+        padding: 16px;
+        background: #030705;
+        color: #d8efd9;
+        font: 14px/1.8 "Cascadia Code", Consolas, monospace;
+        white-space: pre-wrap;
+      }
+
+      .file-notice-card a {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 12px 18px;
+        background: #b9e48f;
+        color: #0a130d;
+        font-weight: 800;
+        text-decoration: none;
+      }
+    </style>
+    <script>
+      if (window.location.protocol === "file:") {
+        document.documentElement.classList.add("is-file-protocol");
+      }
+    </script>
+  </head>
+  <body>
+    <section id="file-protocol-notice" aria-labelledby="file-notice-title">
+      <div class="file-notice-card">
+        <small>LOCAL SOURCE · HTTP REQUIRED</small>
+        <h1 id="file-notice-title">这个页面不能直接双击运行</h1>
+        <p>
+          这是 Vite + TypeScript + Three.js 应用。当前使用的是 <code>file://</code> 源码地址，浏览器不会完成模块编译与资源加载。请在 PowerShell 中启动本地服务：
+        </p>
+        <pre><code>cd E:\0819_codex_project\demos\snakey-locomotion
+npm run dev -- --host 127.0.0.1 --port 4198</code></pre>
+        <a href="http://127.0.0.1:4198/">服务启动后，打开正确演示地址 →</a>
+      </div>
+    </section>
+
+    <a class="skip-link" href="#experiment-controls">跳到实验控制</a>
+
+    <div id="scene-root" aria-label="程序化蛇实时三维场景"></div>
+    <div class="atmosphere" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="返回 0819 GitHub Code Study 总入口">
+        <span class="brand-mark">04</span>
+        <span><strong>SNAKEY LOCOMOTION</strong><small>THREE.JS RESEARCH STAGE</small></span>
+      </a>
+      <div class="runtime-status" aria-live="polite">
+        <span><i class="status-dot"></i><b id="runtime-label">初始化</b></span>
+        <span><b id="fps-value">--</b> FPS</span>
+        <span class="desktop-only"><b id="sample-value">--</b> PATH SAMPLES</span>
+      </div>
+      <div class="top-actions">
+        <button id="pause-button" class="icon-button" type="button" aria-pressed="false">
+          <span aria-hidden="true">Ⅱ</span><span class="button-label">暂停</span>
+        </button>
+        <button id="research-toggle" class="icon-button research-toggle" type="button" aria-expanded="false" aria-controls="research-panel">
+          <span aria-hidden="true">研</span><span class="button-label">研究笔记</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="control-panel glass-panel" id="experiment-controls" aria-labelledby="controls-title">
+        <header class="panel-heading">
+          <div><span>LIVE LAB / 01</span><h1 id="controls-title">能力实验</h1></div>
+          <span class="lab-badge">独立复现</span>
+        </header>
+
+        <div class="mode-list" role="group" aria-label="选择实验模式">
+          <button class="mode-button is-active" type="button" data-mode="ground" aria-pressed="true">
+            <span class="mode-index">01</span><span><strong>地面蜿蜒</strong><small>轨迹驱动动态网格</small></span><i>↗</i>
+          </button>
+          <button class="mode-button" type="button" data-mode="climb" aria-pressed="false">
+            <span class="mode-index">02</span><span><strong>曲面攀爬</strong><small>切平面与表面法线</small></span><i>↗</i>
+          </button>
+          <button class="mode-button" type="button" data-mode="field" aria-pressed="false">
+            <span class="mode-index">03</span><span><strong>交互场</strong><small>可衰减环境记忆</small></span><i>↗</i>
+          </button>
+          <button class="mode-button" type="button" data-mode="anatomy" aria-pressed="false">
+            <span class="mode-index">04</span><span><strong>结构解剖</strong><small>弧长采样与局部标架</small></span><i>↗</i>
+          </button>
+        </div>
+
+        <details class="parameter-block" open>
+          <summary>运动参数 <span>PARAMETERS</span></summary>
+          <label class="range-row">
+            <span>波幅 <output id="amplitude-output" for="amplitude-range">0.30</output></span>
+            <input id="amplitude-range" type="range" min="0.08" max="0.65" step="0.01" value="0.30" />
+          </label>
+          <label class="range-row">
+            <span>波长 <output id="wavelength-output" for="wavelength-range">2.60m</output></span>
+            <input id="wavelength-range" type="range" min="1.4" max="5" step="0.1" value="2.6" />
+          </label>
+          <label class="range-row">
+            <span>速度 <output id="speed-output" for="speed-range">2.2m/s</output></span>
+            <input id="speed-range" type="range" min="0.4" max="5" step="0.1" value="2.2" />
+          </label>
+          <label class="range-row">
+            <span>体型 <output id="radius-output" for="radius-range">1.00×</output></span>
+            <input id="radius-range" type="range" min="0.65" max="1.65" step="0.05" value="1" />
+          </label>
+        </details>
+
+        <div class="toggle-row">
+          <label><input id="path-toggle" type="checkbox" /><span></span>轨迹</label>
+          <label><input id="frames-toggle" type="checkbox" /><span></span>局部标架</label>
+          <label><input id="field-toggle" type="checkbox" /><span></span>交互纹理</label>
+        </div>
+      </section>
+
+      <section class="mode-readout glass-panel" aria-live="polite">
+        <span id="mode-number">MODE 01</span>
+        <div><strong id="mode-title">地面蜿蜒</strong><p id="mode-description">头部生成 S 曲线，身体按弧长查询历史轨迹。</p></div>
+      </section>
+
+      <aside class="research-panel glass-panel" id="research-panel" aria-labelledby="research-title" aria-hidden="false">
+        <header class="research-header">
+          <div><span>RESEARCH NOTES</span><h2 id="research-title">从效果到可复用能力</h2></div>
+          <button id="research-close" class="close-button" type="button" aria-label="关闭研究笔记">×</button>
+        </header>
+
+        <div class="research-tabs" role="tablist" aria-label="研究内容分类">
+          <button id="tab-ability" role="tab" type="button" aria-selected="true" aria-controls="panel-ability">上游能力</button>
+          <button id="tab-learning" role="tab" type="button" aria-selected="false" aria-controls="panel-learning" tabindex="-1">可学习</button>
+          <button id="tab-extension" role="tab" type="button" aria-selected="false" aria-controls="panel-extension" tabindex="-1">扩展方向</button>
+          <button id="tab-reuse" role="tab" type="button" aria-selected="false" aria-controls="panel-reuse" tabindex="-1">复用地图</button>
+        </div>
+
+        <div class="research-content">
+          <section id="panel-ability" role="tabpanel" aria-labelledby="tab-ability">
+            <p class="lead">原项目证明了：无需骨骼、烘焙动画和物理引擎，也能完成一套有环境反馈的长体生物场景。</p>
+            <ol class="evidence-list">
+              <li><span>01</span><div><strong>轨迹跟随身体</strong><p>每 6cm 记录一次头部位置、表面法线和接地因子，再按身体弧长采样。</p></div></li>
+              <li><span>02</span><div><strong>动态扫掠网格</strong><p>从切线和法线构造截面，每帧更新 BufferGeometry 顶点与法线。</p></div></li>
+              <li><span>03</span><div><strong>解析曲面运动</strong><p>高度函数负责贴地，胶囊体最近点与切平面负责树干和树枝攀爬。</p></div></li>
+              <li><span>04</span><div><strong>环境反馈</strong><p>RenderTarget 保存蛇身印记，实例化草叶读取强度与梯度后倒伏并恢复。</p></div></li>
+            </ol>
+            <div class="boundary-note"><strong>能力边界</strong><p>这是视觉运动学 Demo，不包含真实摩擦、肌肉、受力、自碰撞或机器人控制。</p></div>
+          </section>
+
+          <section id="panel-learning" role="tabpanel" aria-labelledby="tab-learning" hidden>
+            <p class="lead">真正值得带走的不是“复制一条蛇”，而是四个可以跨项目复用的表示方法。</p>
+            <div class="module-stack">
+              <article><span>PATH</span><h3>PathHistory</h3><p>把运动历史变成按弧长查询的数据结构，隔离头部控制与身体表现。</p><code>sampleByDistance(d)</code></article>
+              <article><span>MESH</span><h3>DynamicSweep</h3><p>沿三维路径建立稳定局部标架，实时生成管道、触手和长体角色。</p><code>P = C + aRcosθ + bUsinθ</code></article>
+              <article><span>SURFACE</span><h3>SurfaceAdapter</h3><p>统一地形高度、解析几何和未来 SDF/网格表面查询。</p><code>closestPoint(position)</code></article>
+              <article><span>FIELD</span><h3>InteractionField</h3><p>用会衰减的纹理保存环境记忆，驱动草地、雪地、泥地和危险场。</p><code>state = state × decay + stamps</code></article>
+            </div>
+          </section>
+
+          <section id="panel-extension" role="tabpanel" aria-labelledby="tab-extension" hidden>
+            <p class="lead">我们的研究版先把机制可视化，再沿工程、图形和运动三个层级扩展。</p>
+            <div class="roadmap">
+              <article><span>M1 · 已实现</span><h3>可解释基线</h3><p>四种实验模式、参数控制、轨迹/标架调试和响应式研究面板。</p></article>
+              <article><span>M2 · 下一步</span><h3>模块化与基准</h3><p>真正的 TypedArray 环形缓冲、独立包、单元测试、多蛇与移动端性能对照。</p></article>
+              <article><span>M3 · 深入</span><h3>任意曲面运动</h3><p>平行移动标架、SDF 或三角网格表面、曲率限制、长度约束与自碰撞。</p></article>
+              <article><span>M4 · 研究</span><h3>从动画到动力学</h3><p>加入摩擦各向异性、重量分配和接触力，对比运动学与物理模型。</p></article>
+            </div>
+          </section>
+
+          <section id="panel-reuse" role="tabpanel" aria-labelledby="tab-reuse" hidden>
+            <p class="lead">同一套底层能力可以更换外观和表面，不应绑定在 Snakey 这一种角色上。</p>
+            <div class="reuse-grid">
+              <article><b>长体角色</b><p>龙、沙虫、鳗鱼、触手、藤蔓</p><span>Path + Sweep</span></article>
+              <article><b>工程几何</b><p>动态管线、电缆、道路、隧道</p><span>Sweep + Frames</span></article>
+              <article><b>环境痕迹</b><p>草地倒伏、雪地脚印、泥地车辙</p><span>Interaction Field</span></article>
+              <article><b>表面生物</b><p>壁虎、蠕虫、管道机器人</p><span>Surface Adapter</span></article>
+            </div>
+            <a class="text-link" href="../../studies/snakey-locomotion/README.md">阅读完整研究记录 <span>↗</span></a>
+            <a class="text-link" href="https://github.com/muratkamci/snakey-locomotion">访问上游仓库 <span>↗</span></a>
+          </section>
+        </div>
+      </aside>
+
+      <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+
+      <section class="input-hint glass-panel" aria-label="操作提示">
+        <div class="keyset desktop-controls"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div>
+        <div><strong>驾驶蛇头</strong><span>拖动场景旋转视角 · 模式切换会重置实验轨迹</span></div>
+      </section>
+
+      <div class="touch-controls" aria-label="触屏移动控制">
+        <button type="button" data-key="KeyA" aria-label="向左转">←</button>
+        <button type="button" data-key="KeyW" aria-label="向前">↑</button>
+        <button type="button" data-key="KeyD" aria-label="向右转">→</button>
+      </div>
+    </main>
+
+    <section id="webgl-fallback" class="fallback" hidden>
+      <div>
+        <span>WEBGL FALLBACK</span>
+        <h2>三维增强层当前不可用，研究内容仍可阅读。</h2>
+        <p>本展厅研究轨迹驱动网格、表面运动、交互场与实例化植被。请使用支持 WebGL2 的现代浏览器体验实时场景。</p>
+        <button type="button" id="fallback-notes">打开研究笔记</button>
+        <a href="../">返回研究总入口</a>
+      </div>
+    </section>
+
+    <noscript>
+      <section class="noscript-message">
+        <h1>Snakey Locomotion 研究展厅</h1>
+        <p>需要 JavaScript 才能运行 Three.js 场景。核心研究包括轨迹驱动长体动画、曲面攀爬、动态扫掠网格和环境交互场。</p>
+        <a href="../../studies/snakey-locomotion/README.md">阅读研究记录</a>
+      </section>
+    </noscript>
+
+    <script type="module">
+      if (window.location.protocol !== "file:") {
+        import("/src/main.ts");
+      }
+    </script>
+  </body>
+</html>

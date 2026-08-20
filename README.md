@@ -18,6 +18,7 @@
 | [Outfit Director](studies/outfit-director/README.md) | [liyue-aigc/outfit-director](https://github.com/liyue-aigc/outfit-director) + [female 变体](https://github.com/liyue-aigc/female-outfit-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/outfit-director/) · [说明](demos/outfit-director/README.md) | 研究中 | M1–M13、换装视频基线、2D VTON 接入 |
 | [Punk Skill](studies/punk-skill/README.md) | [adrianpunk/Punk-Skill](https://github.com/adrianpunk/Punk-Skill) | [在线演示](https://yydshly.github.io/0819_githubcode_study/punk-skill/) · [说明](demos/punk-skill/README.md) | 已复现 | 视觉 Prompt 编译、完整发布包、可靠文字层与 ZIP 导出 |
 | [Xianxia Visual Director](studies/xianxia-visual-director/README.md) | [liyue-aigc/xianxia-visual-director](https://github.com/liyue-aigc/xianxia-visual-director) | [在线演示](https://yydshly.github.io/0819_githubcode_study/xianxia-visual-director/) · [说明](demos/xianxia-visual-director/README.md) | 研究中 | 仙侠场景路由、结构化提示词与目标效果 |
+| [Snakey Locomotion](studies/snakey-locomotion/README.md) | [muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion) | [在线演示](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/) · [说明](demos/snakey-locomotion/README.md) | 已归档 | Three.js 草地环境、长体运动与环境反馈参考 |
 
 状态建议统一使用：`规划中`、`研究中`、`已复现`、`持续维护`、`已归档`。
 
@@ -129,6 +130,44 @@
 
 > 上游当前未声明许可证。本子项目保持展示型研究范围，不在本库再分发其完整源码。
 
+### Snakey Locomotion：Three.js 程序化长体角色与交互场景
+
+> **归档状态（2026-08-20）**：当前结论已经足够支撑技术选型，暂不继续专项研究。WebGL 演示、源码、版本锁和扩展路线继续保留并随 Pages 部署；出现长体角色、交互植被或曲面运动需求时按需恢复。
+
+**作用**
+
+上游以一条可操控的程序化蛇为核心，演示无骨骼、无烘焙动画、无物理引擎的长体运动，并组合地形贴合、胶囊曲面攀爬、实例化草地和反馈纹理。本研究将这些机制改造成可操作、可拆解的 WebGL 研究台。
+
+**研究内容**
+
+- 距离驱动相位、固定距离路径历史和按弧长查询。
+- 从切线与表面法线建立局部标架，每帧重建扫掠网格。
+- 地面高度与圆柱曲面两种表面运动参考实现。
+- 可衰减交互纹理、草叶强度/梯度反馈和实例化植被。
+- `PathHistory`、`DynamicSweep`、`SurfaceAdapter`、`InteractionField` 四类复用方向。
+
+**使用场景**
+
+- Three.js / WebGL 程序化动画和动态 `BufferGeometry` 学习。
+- 蛇、龙、沙虫、触手、藤蔓、管线和电缆等长体对象。
+- 草地倒伏、雪地脚印、泥地车辙和局部危险场。
+- 受约束表面生物、管道机器人和曲面移动原型。
+
+**按需恢复与扩展**
+
+- 长体角色或动态电缆需求：从 `PathHistory` 和 `DynamicSweep` 开始抽离。
+- 草地、雪地、泥地等可变环境需求：复用 `InteractionField` 的衰减状态场。
+- 贴地、爬墙或管道运动需求：扩展 `SurfaceAdapter` 到 SDF 或三角网格。
+- 只有进入机器人或生物力学课题时，才补充摩擦、受力、自碰撞和动力学模型。
+
+**网页与文档**
+
+- [在线 WebGL 研究台](https://yydshly.github.io/0819_githubcode_study/snakey-locomotion/)
+- [完整研究记录](studies/snakey-locomotion/README.md) · [演示使用说明](demos/snakey-locomotion/README.md)
+- [归档与恢复说明](studies/snakey-locomotion/ARCHIVE.md)
+- [上游版本锁](studies/snakey-locomotion/upstream-lock.json) · [MIT 许可证说明](demos/snakey-locomotion/UPSTREAM-LICENSE.md)
+- 上游：[muratkamci/snakey-locomotion](https://github.com/muratkamci/snakey-locomotion)
+
 ## 研究方式
 
 每个项目尽量保留完整研究链路：
@@ -151,6 +190,7 @@
 ├── outfit-director/              # Outfit Director 演示
 ├── punk-skill/                   # Punk Skill 演示
 ├── xianxia-visual-director/      # 仙侠场景与目标效果
+├── snakey-locomotion/            # Three.js 程序化场景研究台
 └── studies/                      # 对应研究记录
 ```
 
@@ -165,11 +205,13 @@
 │   ├── research-hub/             # GitHub Pages 总入口
 │   ├── outfit-director/
 │   ├── punk-skill/
-│   └── xianxia-visual-director/
+│   ├── xianxia-visual-director/
+│   └── snakey-locomotion/
 └── studies/
     ├── outfit-director/
     ├── punk-skill/
-    └── xianxia-visual-director/
+    ├── xianxia-visual-director/
+    └── snakey-locomotion/
 ```
 
 ## 近期计划
@@ -179,7 +221,9 @@
 - [x] 落地虚拟试衣总体技术路线、真实视频基线与 TEST C 验证台
 - [x] 获取 Punk Skill 上游版本并建立场景化能力实验室
 - [x] 登记 Xianxia Visual Director，展示仙侠场景提示词与目标效果
-- [x] 建立总体入口，引导三个子项目演示
+- [x] 建立总体入口，引导四个子项目演示
+- [x] 建立 Snakey Locomotion WebGL 研究台，拆解轨迹、曲面与交互场
+- [x] 归档 Snakey Locomotion，保留在线演示、复用地图与恢复条件
 - [ ] 在出现真实需求时继续 CatVTON、严格视频对照或图片模型服从度实验
 
 ## 许可证说明

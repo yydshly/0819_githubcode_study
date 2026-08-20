@@ -9,9 +9,11 @@ on:
       - "demos/outfit-director/**"
       - "demos/punk-skill/**"
       - "demos/xianxia-visual-director/**"
+      - "demos/snakey-locomotion/**"
       - "studies/outfit-director/**"
       - "studies/punk-skill/**"
       - "studies/xianxia-visual-director/**"
+      - "studies/snakey-locomotion/**"
       - ".github/workflows/deploy-outfit-director-pages.yml"
   workflow_dispatch:
 
@@ -37,24 +39,41 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: demos/snakey-locomotion/package-lock.json
+
+      - name: Build Snakey Locomotion research lab
+        run: |
+          npm ci --prefix demos/snakey-locomotion
+          npm run build --prefix demos/snakey-locomotion
+
       - name: Assemble research labs site
         run: |
           mkdir -p _site/outfit-director
           mkdir -p _site/punk-skill
           mkdir -p _site/xianxia-visual-director
+          mkdir -p _site/snakey-locomotion
           mkdir -p _site/studies/outfit-director
           mkdir -p _site/studies/punk-skill
           mkdir -p _site/studies/xianxia-visual-director
+          mkdir -p _site/studies/snakey-locomotion
           cp -a demos/research-hub/. _site/
           cp -a demos/outfit-director/. _site/outfit-director/
           cp -a demos/punk-skill/. _site/punk-skill/
           cp -a demos/xianxia-visual-director/. _site/xianxia-visual-director/
+          cp -a demos/snakey-locomotion/dist/. _site/snakey-locomotion/
           cp -a studies/outfit-director/. _site/studies/outfit-director/
           cp -a studies/punk-skill/. _site/studies/punk-skill/
           cp -a studies/xianxia-visual-director/. _site/studies/xianxia-visual-director/
+          cp -a studies/snakey-locomotion/. _site/studies/snakey-locomotion/
           sed -i 's#../../studies/outfit-director/#../studies/outfit-director/#g' _site/outfit-director/index.html
           sed -i 's#../../studies/punk-skill/#../studies/punk-skill/#g' _site/punk-skill/index.html
           sed -i 's#../../studies/xianxia-visual-director/#../studies/xianxia-visual-director/#g' _site/xianxia-visual-director/index.html
+          sed -i 's#../../studies/snakey-locomotion/#../studies/snakey-locomotion/#g' _site/snakey-locomotion/index.html
           touch _site/.nojekyll
 
       - name: Upload static research labs

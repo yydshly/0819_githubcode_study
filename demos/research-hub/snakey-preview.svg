@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Snakey Locomotion 程序化蛇研究预览</title>
+  <desc id="desc">深绿色程序化地形上，一条由截面构成的蛇沿琥珀色轨迹蜿蜒。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16271b"/><stop offset="1" stop-color="#07100b"/></linearGradient>
+    <linearGradient id="snake" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d2d59e"/><stop offset=".5" stop-color="#77824f"/><stop offset="1" stop-color="#303b25"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="16" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#b7c8ad" stroke-opacity=".08"/></pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#grid)"/>
+  <g fill="#6c8d59" opacity=".42">
+    <path d="M80 800l24-280 18 280zm78 0l38-420 28 420zm820 0l28-360 26 360zm92 0l38-470 22 470z"/>
+    <path d="M380 800l18-210 17 210zm410 0l26-260 18 260z" opacity=".65"/>
+  </g>
+  <path d="M80 610C260 420 280 720 470 526S720 388 820 530s172 58 300-90" fill="none" stroke="#e5a956" stroke-opacity=".22" stroke-width="90" filter="url(#glow)"/>
+  <path d="M80 610C260 420 280 720 470 526S720 388 820 530s172 58 300-90" fill="none" stroke="#e5a956" stroke-width="4" stroke-dasharray="10 18"/>
+  <path d="M92 596C260 443 305 690 474 512S708 405 825 512s174 45 288-82" fill="none" stroke="#152015" stroke-width="70" stroke-linecap="round" opacity=".8"/>
+  <path d="M92 588C260 435 305 682 474 504S708 397 825 504s174 45 288-82" fill="none" stroke="url(#snake)" stroke-width="56" stroke-linecap="round"/>
+  <g fill="none" stroke="#f4e6ad" stroke-opacity=".55">
+    <ellipse cx="210" cy="535" rx="11" ry="34" transform="rotate(-66 210 535)"/>
+    <ellipse cx="380" cy="613" rx="12" ry="36" transform="rotate(58 380 613)"/>
+    <ellipse cx="548" cy="452" rx="12" ry="38" transform="rotate(56 548 452)"/>
+    <ellipse cx="745" cy="440" rx="12" ry="37" transform="rotate(-42 745 440)"/>
+    <ellipse cx="920" cy="531" rx="11" ry="34" transform="rotate(72 920 531)"/>
+  </g>
+  <circle cx="1112" cy="422" r="38" fill="#dcdba9"/><circle cx="1124" cy="409" r="5" fill="#171b11"/>
+  <g font-family="Arial, sans-serif" fill="#edf0e7"><text x="70" y="92" font-size="24" font-weight="700" letter-spacing="6">PROCEDURAL LOCOMOTION</text><text x="72" y="126" font-size="15" fill="#9eb294" letter-spacing="4">PATH · SURFACE · FIELD · SWEEP</text></g>
+</svg>

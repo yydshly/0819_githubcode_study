@@ -1,0 +1,10 @@
+{
+  "project": "snakey-locomotion",
+  "repository": "https://github.com/muratkamci/snakey-locomotion.git",
+  "commit": "81c0073fd2e03354440ffdb36fb1849804fd66c2",
+  "commitDate": "2026-08-09T15:46:05+03:00",
+  "license": "MIT",
+  "licenseHolder": "Copyright (c) 2026 Murat Kamci",
+  "reviewedAt": "2026-08-20",
+  "localImplementation": "../../demos/snakey-locomotion"
+}
