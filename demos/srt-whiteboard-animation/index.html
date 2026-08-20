@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SRT Whiteboard Animation 研究页：真实效果、驱动参数、数据协议、适用场景与能力边界。" />
+    <meta name="color-scheme" content="light" />
+    <title>SRT Whiteboard Animation｜驱动控制与场景研究</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#demo">跳到真实演示</a>
+
+    <header class="topbar">
+      <a class="brand" href="../research-hub/" aria-label="返回 0819 研究总入口">
+        <span class="brand-mark" aria-hidden="true">SRT</span>
+        <span><strong>WHITEBOARD RESEARCH</strong><small>CONTROL · RENDER · EVIDENCE</small></span>
+      </a>
+      <nav aria-label="研究页导航">
+        <a href="#demo">真实效果</a>
+        <a href="#cases">案例流程</a>
+        <a href="#driver">驱动控制</a>
+        <a href="#scenes">使用场景</a>
+        <a href="#boundary">能力边界</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero paper-section" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">LAB 05 · VERIFIED UPSTREAM CAPABILITY</p>
+          <h1 id="page-title">字幕负责时序，<br /><em>标注决定谁先出现。</em></h1>
+          <p class="hero-lede">
+            这是一个 <strong>Agent 编排 + OpenCV 确定性渲染</strong> 的白板动画 Skill。它不会仅凭 SRT 自动理解并画完视频；真正的控制来自三层输入：字幕时间、区域标注、渲染参数。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#demo">先看真实效果 <span>↓</span></a>
+            <a class="text-action" href="#driver">直接打开驱动台 →</a>
+          </div>
+        </div>
+
+        <aside class="research-stamp" aria-label="复现结果摘要">
+          <div class="stamp-ring"><span>PIXEL</span><strong>1:1</strong><small>REPRODUCED</small></div>
+          <dl>
+            <div><dt>8.6s</dt><dd>实际时长</dd></div>
+            <div><dt>516</dt><dd>完整帧数</dd></div>
+            <div><dt>60</dt><dd>每秒帧数</dd></div>
+          </dl>
+          <p>本机输出与上游参考视频逐帧 PSNR 为 <code>∞</code>。</p>
+        </aside>
+      </section>
+
+      <section class="demo-section" id="demo" aria-labelledby="demo-title">
+        <header class="section-heading section-heading--light">
+          <div><span>01 / ACTUAL OUTPUT</span><h2 id="demo-title">先看它实际画了什么</h2></div>
+          <p>点击四个阶段可直接跳转视频。观察重点不是猴子故事，而是区域按叙事顺序出现、手部跟随当前笔迹，以及未到时间的内容保持隐藏。</p>
+        </header>
+
+        <div class="demo-grid">
+          <div class="video-shell">
+            <div class="video-label"><span>LOCAL REPRODUCTION</span><span>H.264 · 1080×600 · 60 FPS</span></div>
+            <video id="demo-video" controls muted playsinline preload="auto" poster="./frame-04-final.jpg">
+              <source src="./monkey-banana-reproduced.mp4" type="video/mp4" />
+              当前浏览器无法播放 MP4，可查看 <a href="./monkey-banana-reproduced.gif">GIF 预览</a>。
+            </video>
+            <div class="video-fallback" id="video-fallback" hidden>
+              <span>VIDEO FALLBACK</span><strong>当前环境无法载入 MP4。</strong>
+              <p>研究内容仍可正常阅读；你也可以打开 <a href="./monkey-banana-reproduced.gif">GIF 完整预览</a>。</p>
+            </div>
+            <div class="video-progress" aria-hidden="true"><span id="video-playhead"></span></div>
+          </div>
+
+          <div class="stage-list" aria-label="演示阶段跳转">
+            <button class="stage-card is-active" type="button" data-seek="0.1">
+              <span class="stage-index">01</span><span><strong>空白画布</strong><small>0.1 秒 · 内容尚未出现</small></span><i>VIEW</i>
+            </button>
+            <button class="stage-card" type="button" data-seek="3.2">
+              <span class="stage-index">02</span><span><strong>左侧场景完成</strong><small>3.2 秒 · 中间主体开始落墨</small></span><i>VIEW</i>
+            </button>
+            <button class="stage-card" type="button" data-seek="6">
+              <span class="stage-index">03</span><span><strong>冲突主体完成</strong><small>6.0 秒 · 右侧反应开始出现</small></span><i>VIEW</i>
+            </button>
+            <button class="stage-card" type="button" data-seek="8.5">
+              <span class="stage-index">04</span><span><strong>完整画面停留</strong><small>8.5 秒 · 原图完全恢复</small></span><i>VIEW</i>
+            </button>
+            <a class="download-link" href="./monkey-banana-reproduced.mp4" download>下载复现 MP4 <span>↓</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section paper-section" id="cases" aria-labelledby="cases-title">
+        <header class="section-heading">
+          <div><span>02 / REAL CASE LAB</span><h2 id="cases-title">四个案例，完整走一遍生成链路</h2></div>
+          <p>不是概念卡片。每个案例都保留实际源图、SRT、区域标注、原始渲染命令与 H.264 成片；物理案例可直接观察静态插画如何变成 600 帧视频。</p>
+        </header>
+
+        <div class="case-selector" role="tablist" aria-label="选择真实演示案例">
+          <button class="case-choice is-active" type="button" role="tab" aria-selected="true" data-case="monkey">
+            <span>01 · STORY</span><strong>猴子抢香蕉</strong><small>叙事事件按顺序出现</small>
+          </button>
+          <button class="case-choice" type="button" role="tab" aria-selected="false" data-case="photosynthesis">
+            <span>02 · KNOWLEDGE</span><strong>光合作用</strong><small>因果概念逐步解释</small>
+          </button>
+          <button class="case-choice" type="button" role="tab" aria-selected="false" data-case="delivery">
+            <span>03 · PROCESS</span><strong>从想法到交付</strong><small>输入、处理、输出</small>
+          </button>
+          <button class="case-choice" type="button" role="tab" aria-selected="false" data-case="newton">
+            <span>04 · PHYSICS</span><strong>火箭为什么升空</strong><small>牛顿第三定律</small>
+          </button>
+        </div>
+
+        <div class="case-workbench">
+          <div class="case-media">
+            <div class="case-video-label"><span id="case-video-status">REAL RENDER · STORY</span><span id="case-video-spec">8.6s · 1080×600 · 60 FPS</span></div>
+            <video id="case-video" controls muted playsinline preload="metadata" poster="./cases/monkey-story/poster.jpg">
+              <source src="./cases/monkey-story/output.mp4" type="video/mp4" />
+              当前浏览器无法播放该 MP4。
+            </video>
+            <div class="case-media-fallback" id="case-media-fallback" hidden>
+              <strong>当前环境无法载入这条 MP4。</strong>
+              <a id="case-fallback-link" href="./cases/monkey-story/output.mp4">直接下载文件</a>
+            </div>
+          </div>
+          <article class="case-context">
+            <p class="case-kicker" id="case-kind">故事叙事 · 区域事件</p>
+            <h3 id="case-title">猴子抢香蕉</h3>
+            <p id="case-summary">三段字幕分别对应左侧场景、中间冲突主体和右侧观众反应，适合观察最典型的叙事顺序控制。</p>
+            <div class="case-tags" id="case-tags" aria-label="当前案例渲染配置"></div>
+            <dl class="case-facts">
+              <div><dt>输入</dt><dd id="case-input">3 条字幕 + 1 张图 + 3 个区域</dd></div>
+              <div><dt>策略</dt><dd id="case-strategy">Grid 路径 / Contour-wipe 上色 / 手部素材</dd></div>
+              <div><dt>适用</dt><dd id="case-fit">人物少、事件明确的故事口播</dd></div>
+            </dl>
+            <a class="case-download" id="case-download" href="./cases/monkey-story/output.mp4" download>下载当前真实 MP4 <span>↓</span></a>
+          </article>
+        </div>
+
+        <div class="generation-flow" aria-labelledby="flow-heading">
+          <div class="flow-heading">
+            <div><span>DRIVEN GENERATION</span><h3 id="flow-heading">如何从字幕驱动到最终效果</h3></div>
+            <p>按 1–5 点击。前四步形成可复现输入，第五步才是渲染结果。</p>
+          </div>
+          <div class="flow-steps" role="tablist" aria-label="生成流程步骤">
+            <button class="flow-step is-active" type="button" role="tab" aria-selected="true" data-step="srt"><i>1</i><span><strong>SRT</strong><small>定义讲什么、何时讲</small></span></button>
+            <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="source"><i>2</i><span><strong>源图</strong><small>准备可分区的视觉对象</small></span></button>
+            <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="annotation"><i>3</i><span><strong>标注</strong><small>把字幕映射到区域</small></span></button>
+            <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="command"><i>4</i><span><strong>渲染</strong><small>选择笔迹和上色方式</small></span></button>
+            <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="output"><i>5</i><span><strong>成片</strong><small>输出确定性 MP4</small></span></button>
+          </div>
+          <div class="flow-detail">
+            <div class="flow-copy">
+              <span id="flow-kicker">STEP 01 · CONTENT CLOCK</span>
+              <h3 id="flow-title">SRT 是内容时钟，不是画面理解器</h3>
+              <p id="flow-description">每条字幕给出文本和起止时间。它告诉编排者“此时在讲什么”，但还不知道源图中的对象在哪里。</p>
+              <a id="flow-artifact-link" href="./cases/monkey-story/narration.srt">打开真实工件 ↗</a>
+            </div>
+            <div class="flow-preview" id="flow-preview" aria-live="polite">
+              <pre id="flow-code"><code></code></pre>
+              <figure id="flow-image" hidden><img alt="当前案例的白板源图" /><figcaption>实际送入渲染器的 raster 源图</figcaption></figure>
+              <div class="flow-video" id="flow-video-wrap" hidden><video id="flow-video" controls muted playsinline preload="none"></video><p>同一条成片也显示在上方，便于边看边对照输入工件。</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="control-section paper-section" id="driver" aria-labelledby="driver-title">
+        <header class="section-heading">
+          <div><span>03 / DRIVER COCKPIT</span><h2 id="driver-title">什么在真正驱动生成</h2></div>
+          <p>下面的控件对应上游真实 CLI 参数与 <code>annotation.json</code> 字段。页面生成配置，不会在浏览器中伪装执行 OpenCV 渲染。</p>
+        </header>
+
+        <div class="control-workspace">
+          <form class="control-panel" id="driver-form">
+            <div class="control-group">
+              <div class="control-heading"><span>01</span><div><strong>笔迹路径</strong><small>决定笔尖如何寻找线稿轨迹</small></div></div>
+              <div class="segmented" role="group" aria-label="笔迹路径">
+                <label><input type="radio" name="inkPath" value="grid" checked /><span>Grid 稳定网格</span></label>
+                <label><input type="radio" name="inkPath" value="skeleton" /><span>Skeleton 骨架</span></label>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-heading"><span>02</span><div><strong>上色方式</strong><small>决定线稿完成后如何恢复原色</small></div></div>
+              <div class="segmented" role="group" aria-label="上色方式">
+                <label><input type="radio" name="colorFill" value="contour-wipe" checked /><span>轮廓扫描</span></label>
+                <label><input type="radio" name="colorFill" value="brush" /><span>沿轨迹刷色</span></label>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="range-label" for="total-duration"><span><strong>场景总时长</strong><small>同步缩放三个区域的开始与持续时间</small></span><output id="duration-output" for="total-duration">8.6 秒</output></label>
+              <input id="total-duration" name="duration" type="range" min="6000" max="18000" step="100" value="8600" />
+            </div>
+
+            <div class="control-group control-grid">
+              <label><span>帧率</span><select name="fps"><option>24</option><option>30</option><option selected>60</option></select></label>
+              <label><span>网格边长</span><select name="gridEdge"><option>6</option><option>8</option><option selected>10</option><option>12</option><option>16</option></select></label>
+              <label><span>上色笔刷</span><select name="brushRadius"><option>24</option><option selected>40</option><option>56</option><option>72</option></select></label>
+              <label><span>长边上限</span><select name="capLongEdge"><option>720</option><option selected>1080</option><option>1440</option></select></label>
+            </div>
+
+            <div class="control-group">
+              <label for="pause-mode" class="select-row"><span><strong>换笔节奏</strong><small>内容宽松时加入呼吸停顿</small></span><select id="pause-mode" name="pause"><option value="heavy">heavy</option><option value="auto">auto</option><option value="light">light</option><option value="off">off</option></select></label>
+              <label class="switch-row"><span><strong>叠加手部素材</strong><small>关闭后命令增加 <code>--bare-tip</code></small></span><input type="checkbox" name="showHand" checked /><i aria-hidden="true"></i></label>
+            </div>
+
+            <div class="control-group">
+              <div class="control-heading"><span>03</span><div><strong>叙事时序预设</strong><small>改变 annotation 中三个模块的时间分配</small></div></div>
+              <div class="segmented segmented--three" role="group" aria-label="叙事时序预设">
+                <label><input type="radio" name="schedule" value="narrative" checked /><span>原始叙事</span></label>
+                <label><input type="radio" name="schedule" value="subject" /><span>主体优先</span></label>
+                <label><input type="radio" name="schedule" value="equal" /><span>快速均分</span></label>
+              </div>
+            </div>
+          </form>
+
+          <div class="output-panel">
+            <div class="output-tabs" role="tablist" aria-label="生成配置视图">
+              <button class="output-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="command-panel" id="command-tab" data-output="command">渲染命令</button>
+              <button class="output-tab" type="button" role="tab" aria-selected="false" aria-controls="json-panel" id="json-tab" data-output="json">标注 JSON</button>
+            </div>
+            <div class="output-view is-active" id="command-panel" role="tabpanel" aria-labelledby="command-tab">
+              <div class="code-heading"><span>COMMAND PREVIEW</span><button id="copy-command" type="button">复制命令</button></div>
+              <pre><code id="command-output"></code></pre>
+              <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+              <div class="control-explanation">
+                <article><span>A</span><div><strong>SRT 只提供时间和文本</strong><p>它能切分字幕，但不知道图中哪个对象对应哪句话。</p></div></article>
+                <article><span>B</span><div><strong>Annotation 决定内容顺序</strong><p><code>region</code>、<code>startMs</code>、<code>durationMs</code> 和保护区负责叙事编排。</p></div></article>
+                <article><span>C</span><div><strong>CLI 决定绘制质感</strong><p>路径、上色、帧率、笔刷和手部素材决定最终运动观感。</p></div></article>
+              </div>
+            </div>
+            <div class="output-view" id="json-panel" role="tabpanel" aria-labelledby="json-tab" hidden>
+              <div class="code-heading"><span>ANNOTATION PREVIEW</span><span>实时同步</span></div>
+              <pre><code id="json-output"></code></pre>
+            </div>
+            <figure class="output-evidence">
+              <img src="./timeline-contact-sheet.jpg" alt="空白画布、左侧场景、中间主体和完整画面四阶段证据" />
+              <figcaption><span>REAL OUTPUT EVIDENCE</span><p>控制台负责形成真实参数；画面只展示已经由本机 OpenCV 渲染并验证的结果，不伪造即时预览。</p></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="timeline-card" aria-labelledby="timeline-title">
+          <div class="timeline-heading"><div><span>LIVE ANNOTATION TIMELINE</span><h3 id="timeline-title">三个区域如何占用当前时长</h3></div><p>矩形宽度代表 <code>durationMs</code>，位置代表 <code>startMs</code>。</p></div>
+          <div class="timeline-track" id="annotation-timeline" aria-label="动态标注时间线"></div>
+          <div class="timeline-scale"><span>0s</span><span id="timeline-mid">4.3s</span><span id="timeline-end">8.6s</span></div>
+        </div>
+      </section>
+
+      <section class="protocol-section" aria-labelledby="protocol-title">
+        <header class="section-heading section-heading--light">
+          <div><span>04 / CONTROL CONTRACT</span><h2 id="protocol-title">不是一个开关，而是三层控制协议</h2></div>
+          <p>要稳定生成，必须先把“讲什么”“何时出现”“怎么画”拆开。越早保留结构化信息，后面的控制成本越低。</p>
+        </header>
+        <div class="protocol-flow">
+          <article><span class="protocol-no">01</span><p class="protocol-type">CONTENT</p><h3>SRT 字幕</h3><p>提供文本、起止时间和建议场景长度。只解决“说了什么、说了多久”。</p><code>text · startMs · endMs</code></article>
+          <i aria-hidden="true">→</i>
+          <article><span class="protocol-no">02</span><p class="protocol-type">ORCHESTRATION</p><h3>区域标注</h3><p>将字幕事件对应到图像对象，并定义顺序、持续时间和防泄漏保护区。</p><code>region · sequence · protectedRegions</code></article>
+          <i aria-hidden="true">→</i>
+          <article><span class="protocol-no">03</span><p class="protocol-type">RENDERING</p><h3>渲染参数</h3><p>决定笔迹路径、上色方式、帧率、分辨率、笔刷与手部覆盖。</p><code>grid/skeleton · wipe/brush · fps</code></article>
+        </div>
+      </section>
+
+      <section class="scenes-section paper-section" id="scenes" aria-labelledby="scenes-title">
+        <header class="section-heading">
+          <div><span>05 / WHERE TO USE</span><h2 id="scenes-title">什么场景下值得使用</h2></div>
+          <p>判断标准不是“有没有字幕”，而是内容是否能拆成少量、清晰、按顺序出现的视觉对象。</p>
+        </header>
+        <div class="scene-matrix">
+          <article class="scene-column scene-column--yes">
+            <header><span>GOOD FIT</span><strong>适合直接使用</strong></header>
+            <ul>
+              <li><strong>知识讲解</strong><span>概念、因果、步骤和对象关系清楚</span></li>
+              <li><strong>课程与培训</strong><span>旁白稳定，可提前完成分镜和配图</span></li>
+              <li><strong>故事口播</strong><span>人物少、场景简洁、事件按顺序发生</span></li>
+              <li><strong>流程说明</strong><span>输入、处理、输出可视化为三个以上模块</span></li>
+            </ul>
+          </article>
+          <article class="scene-column scene-column--maybe">
+            <header><span>CONDITIONAL</span><strong>满足条件再用</strong></header>
+            <ul>
+              <li><strong>品牌短视频</strong><span>需要先替换固定米黄画风和手部素材</span></li>
+              <li><strong>复杂技术架构</strong><span>应先转换为分层 SVG，避免大矩形互相遮挡</span></li>
+              <li><strong>批量生产</strong><span>需要补充自动标注、失败恢复和质量测试</span></li>
+              <li><strong>照片输入</strong><span>只适合轮廓清楚、背景干净的图片</span></li>
+            </ul>
+          </article>
+          <article class="scene-column scene-column--no">
+            <header><span>POOR FIT</span><strong>不建议使用</strong></header>
+            <ul>
+              <li><strong>写实动作视频</strong><span>没有人物运动、镜头运动和物理动作生成</span></li>
+              <li><strong>复杂摄影画面</strong><span>阈值化会把纹理、阴影误识别为墨迹</span></li>
+              <li><strong>真实书法笔顺</strong><span>路径来自启发式追踪，不是原作者落笔数据</span></li>
+              <li><strong>无人值守生产</strong><span>源图和语义区域仍依赖 Agent 或人工确认</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="boundary-section" id="boundary" aria-labelledby="boundary-title">
+        <header class="section-heading section-heading--light">
+          <div><span>06 / RESEARCH VERDICT</span><h2 id="boundary-title">它能稳定执行，但不能独立理解</h2></div>
+          <p>这个边界决定了它是“渲染后端”还是“一键视频产品”。目前证据只支持前者。</p>
+        </header>
+        <div class="boundary-grid">
+          <article class="boundary-card boundary-card--solid">
+            <span>VERIFIED</span><h3>已经证实的能力</h3>
+            <ul><li>字幕时间解析与按时长分场景</li><li>三个语义区域按时间顺序揭示</li><li>后续区域遮罩保护，不提前露线</li><li>Grid / Skeleton 两类笔迹入口</li><li>轮廓扫描或轨迹笔刷上色</li><li>60 FPS H.264 MP4 稳定输出</li></ul>
+          </article>
+          <article class="boundary-card">
+            <span>EXTERNAL</span><h3>需要外部能力</h3>
+            <ul><li>根据字幕理解叙事事件</li><li>生成统一风格的源图</li><li>识别图中对象并创建区域标注</li><li>配音、字幕烧录和音视频混流</li><li>复杂对象的像素级分割</li><li>发布平台封面、文案和分发</li></ul>
+          </article>
+          <article class="boundary-card boundary-card--warning">
+            <span>CURRENT RISK</span><h3>当前工程风险</h3>
+            <ul><li>上游只有一个提交，没有正式 Release</li><li>没有测试、CI 和依赖版本锁</li><li>矩形区域对复杂重叠对象过于粗糙</li><li>元素按开始时间串行渲染，不支持真正并行</li><li>背景识别依赖四角采样，照片输入不稳定</li><li>输出没有旁白、字幕和 BGM</li></ul>
+          </article>
+        </div>
+        <div class="verdict">
+          <span class="verdict-score">6.5<small>/10</small></span>
+          <div><p>阶段结论</p><h3>值得研究其“语义编排 + 确定性渲染”的组合，不应把它误判为端到端文生视频系统。</h3></div>
+          <a href="../../studies/srt-whiteboard-animation/README.md">阅读完整研究记录 ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>SRT WHITEBOARD ANIMATION</strong><span>Upstream commit · 696a724 · MIT</span></div>
+      <nav aria-label="页脚导航"><a href="#demo">效果</a><a href="#cases">案例</a><a href="#driver">控制</a><a href="#scenes">场景</a><a href="https://github.com/geeklee/srt-whiteboard-animation">上游仓库 ↗</a></nav>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "cues": [
+    {
+      "index": 1,
+      "startMs": 300,
+      "endMs": 2900,
+      "durMs": 2600,
+      "text": "猴子山上，一只小猴子坐在假山顶端，手里拿着一根香蕉。"
+    },
+    {
+      "index": 2,
+      "startMs": 3000,
+      "endMs": 5600,
+      "durMs": 2600,
+      "text": "突然，一只大猴子冲了过来，一把抢走了香蕉。"
+    },
+    {
+      "index": 3,
+      "startMs": 5700,
+      "endMs": 8100,
+      "durMs": 2400,
+      "text": "旁边围观的小朋友们惊呆了，纷纷鼓掌大笑起来。"
+    }
+  ],
+  "scenes": [
+    {
+      "sceneIndex": 1,
+      "startMs": 300,
+      "endMs": 2900,
+      "sceneDurationMs": 2600,
+      "cueRange": [1, 1],
+      "text": "猴子山上，一只小猴子坐在假山顶端，手里拿着一根香蕉。"
+    },
+    {
+      "sceneIndex": 2,
+      "startMs": 3000,
+      "endMs": 5600,
+      "sceneDurationMs": 2600,
+      "cueRange": [2, 2],
+      "text": "突然，一只大猴子冲了过来，一把抢走了香蕉。"
+    },
+    {
+      "sceneIndex": 3,
+      "startMs": 5700,
+      "endMs": 8100,
+      "sceneDurationMs": 2400,
+      "cueRange": [3, 3],
+      "text": "旁边围观的小朋友们惊呆了，纷纷鼓掌大笑起来。"
+    }
+  ]
+}
