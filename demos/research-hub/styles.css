@@ -13,6 +13,7 @@
   --xianxia: #61a48e;
   --snakey: #8ab172;
   --bigpeng: #dc725d;
+  --srt: #e06a3d;
   font-family: Inter, "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 
@@ -74,6 +75,7 @@ h1 em { color: var(--gold); font-style: normal; }
 .project-card--xianxia .project-meta span:first-child { color: var(--xianxia); }
 .project-card--snakey .project-meta span:first-child { color: var(--snakey); }
 .project-card--bigpeng .project-meta span:first-child { color: var(--bigpeng); }
+.project-card--srt .project-meta span:first-child { color: var(--srt); }
 .project-content h3 { margin: 1.7rem 0 1rem; font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(1.8rem, 2.6vw, 2.8rem); font-weight: 500; line-height: 1.1; }
 .project-content > p { min-height: 5.8em; color: var(--muted); font-size: 0.88rem; line-height: 1.8; }
 .project-content ul { margin: 0 0 2rem; padding: 1.2rem 0 0; border-top: 1px solid var(--line); list-style: none; }

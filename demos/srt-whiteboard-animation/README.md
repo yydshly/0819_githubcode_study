@@ -34,6 +34,8 @@ annotation.json → 区域/开始时间/时长 → 逐帧累计遮罩
 
 研究页将真实视频、驱动参数、实时 CLI/annotation 预览、使用场景与能力边界放在同一页面：
 
+在线演示：<https://yydshly.github.io/0819_githubcode_study/srt-whiteboard-animation/>
+
 ```powershell
 node demos\srt-whiteboard-animation\serve.cjs 8879
 ```

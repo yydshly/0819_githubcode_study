@@ -4,7 +4,7 @@
 
 ```text
 Entry mode: Brief-led extension in an active static research site
-Request revision: 3
+Request revision: 4
 Target user and context: 正在判断该库是否可控、如何驱动、何时使用的研究者与内容生产者
 Desired first impression: 先看到真实成片，再立即理解它不是“一键 SRT 生视频”，而是可配置的编排与渲染链路
 Visual ambition: Editorial
@@ -51,6 +51,14 @@ Observable completion criteria: 页面可运行；四个真实案例均可播放
 | 案例扩展 | 保留共享五步工件台，增加第四个案例 | 不新建重复页面；四个案例使用同一交互模型 | 切换后标题、参数、工件和视频全部同步 |
 | 响应式 | 桌面四列、平板两列、手机单列 | 案例标签与焦点环不可裁切 | 1440、768、390px 无横向溢出 |
 
+## Revision 4 方向增量
+
+| 决策 | 选择 | 可观察约束 | 验收标准 |
+| --- | --- | --- | --- |
+| 远端演示 | GitHub Pages `/srt-whiteboard-animation/` | 复制完整静态目录并修正总入口与研究记录相对路径 | 生产 URL 200，MP4 Range 206，案例可切换 |
+| 根 README | 使用真实 Pages URL 作为“在线演示” | 仓库内源码路径只作为说明链接 | 点击在线演示进入生产页面而不是 GitHub 源码预览 |
+| 主入口 | 延续现有项目卡片系统增加第六张 SRT 卡片 | 复用时间线证据图、现有排版与断点，不重设计门户 | 桌面/手机可见、键盘可达、点击进入 SRT 演示 |
+
 ## Coverage Manifest
 
 | 用户阶段 | 要求或产物 | 表面 / 状态 | 证据 | 阶段 | 状态 | 下一动作 |
@@ -73,3 +81,5 @@ Observable completion criteria: 页面可运行；四个真实案例均可播放
 | 2 | 物理案例五步驱动链路 | SRT/源图/JSON/CLI/输出 | 文件与逐步点击观察 | 3–6 | pass | — |
 | 全部 | 四案例桌面、平板、390px 响应式 | 1440/768/390 | 浏览器截图、overflow | 7 | pass | — |
 | 全部 | Revision 3 文档与工程检查 | docs/JS/JSON/MP4 | 文件检查、node、ffprobe | 9 | pass | — |
+| 全部 | GitHub Pages 真实在线演示 | 生产 URL / 媒体 | HTTP、Range、浏览器交互 | 7–9 | continue | 更新工作流并发布验证 |
+| 全部 | 根 README 与研究主入口关联 | README / 总入口 | 链接、卡片、桌面与手机浏览器 | 3,7,9 | continue | 修正链接并增加入口卡片 |
