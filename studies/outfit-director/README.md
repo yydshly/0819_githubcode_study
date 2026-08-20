@@ -199,6 +199,7 @@
 
 ## 关联资源
 
+- [虚拟试衣总体技术路线](../../docs/virtual-tryon-technology-roadmap.md)
 - [原项目 README](https://github.com/liyue-aigc/outfit-director/blob/main/README.md)
 - [核心 Skill](https://github.com/liyue-aigc/outfit-director/blob/main/skill/SKILL.md)
 - [版本更新记录](https://github.com/liyue-aigc/outfit-director/blob/main/CHANGELOG.md)

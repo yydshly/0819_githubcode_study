@@ -94,6 +94,31 @@ Revision 2 截图同样只保存在浏览器工具临时证据目录，不进入
 
 Revision 3 截图只保存在浏览器工具临时证据目录，不进入产品提交。
 
+## Revision 4 · 技术路线与能力接入展示
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Repository | 总体规划 | pass | `docs/virtual-tryon-technology-roadmap.md` 包含五目标、M0–M7 阶段、能力矩阵、项目拆分、评估与决策门槛 |
+| Root index | 路线入口 | pass | 根 README 提供路线链接、五目标状态和近期 E001 动作 |
+| Desktop | 1440×1000 / dark / goal 01 | pass | 五目标导航、当前研究位置、目标一详情和 M0–M7 里程碑完整可见 |
+| Roadmap | goal 02 | pass | 详情同步为“基于全身照的 2D AI 虚拟试衣”，状态为“下一阶段”，输入 / 能力 / 输出 / 完成标准同步更新 |
+| Roadmap CTA | goal 01 → A | pass | CTA 后 `experiment=prompt`，A 显示、B 隐藏 |
+| Roadmap CTA | goal 02 → B | pass | CTA 后 `experiment=visual`，B 显示、A 隐藏，并滚动至视觉原型 |
+| Keyboard | goal 02 + ArrowRight | pass | 选中与焦点同步到 goal 03，详情标题为“3D 参数化虚拟试衣间” |
+| Tablet | 1024×900 / light / goal 03 | pass | 左侧目标、右侧详情保持可读；`scrollWidth 1009 < innerWidth 1024` |
+| Mobile | 390×844 / light / goal 02 | pass | 目标列表、详情、流程和三类能力按单列展开；`scrollWidth 375 < innerWidth 390` |
+| Runtime | Errors and syntax | pass | 浏览器错误与控制台为空；`node --check` 与 `git diff --check` 通过 |
+| Assets | Static runtime | pass | 路线展示仅新增 HTML / CSS / JS / Markdown，不新增图片、模型或运行时依赖 |
+
+### Revision 4 visual evidence
+
+- Desktop dark / goal 01：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787194809125.png`
+- Tablet light / goal 03：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787194956407.png`
+- Mobile light / goal list：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787194992138.png`
+- Mobile light / goal 02 detail：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787195010047.png`
+
+Revision 4 截图只保存在浏览器工具临时证据目录，不进入产品提交。
+
 ## Terminal audit
 
 - continue：无

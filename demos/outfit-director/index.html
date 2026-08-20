@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Outfit Director 能力实验室：交互演示主体路由、五/七造型首帧、换装状态机、时间轴与提示词输出。"
+      content="Outfit Director 能力实验室：提示词换装、2D 视觉原型与真实虚拟试衣五目标技术路线。"
     />
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=4" />
-    <script src="./app.js?v=4" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script src="./app.js?v=6" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -27,6 +27,7 @@
 
       <div class="topbar__actions">
         <span class="status-pill"><i aria-hidden="true"></i>规则模拟器</span>
+        <a class="text-link" href="#research-roadmap">技术路线</a>
         <a class="text-link" href="../../studies/outfit-director/README.md">研究档案</a>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题">
           <span aria-hidden="true" id="theme-icon">☼</span>
@@ -326,9 +327,54 @@
         </div>
       </section>
 
+      <section class="research-roadmap" id="research-roadmap" aria-labelledby="roadmap-title">
+        <div class="section-heading roadmap-heading">
+          <div><span class="section-index">04</span><h2 id="roadmap-title">从展示换装，到真实虚拟试衣</h2></div>
+          <p>五个目标按依赖递进。选中目标可查看输入、接入能力、输出与完成标准；页面只把已经存在的能力标为“当前实验”。</p>
+        </div>
+
+        <div class="roadmap-summary" role="note">
+          <span>CURRENT RESEARCH POSITION</span>
+          <strong>目标一正在验证 · 目标二等待模型选型</strong>
+          <p>Outfit Director 负责编排提示词和换装时间轴；真实视频、2D 试衣、3D 布料与 AR 都需要各自的模型或运行时。</p>
+        </div>
+
+        <div class="roadmap-layout">
+          <div class="roadmap-steps" role="tablist" aria-label="虚拟试衣五个研究目标">
+            <button class="roadmap-step is-active" id="roadmap-goal-1" role="tab" aria-selected="true" aria-controls="roadmap-detail" data-roadmap-goal="0" type="button">
+              <span class="roadmap-step__number">01</span><span><small>当前实验</small><strong>提示词换装视频</strong><em>编排 → 外部生成 → 回填 MP4</em></span>
+            </button>
+            <button class="roadmap-step" id="roadmap-goal-2" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="1" type="button" tabindex="-1">
+              <span class="roadmap-step__number">02</span><span><small>下一阶段</small><strong>2D AI 虚拟试衣</strong><em>人物照 + 服装图 → 新试衣图</em></span>
+            </button>
+            <button class="roadmap-step" id="roadmap-goal-3" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="2" type="button" tabindex="-1">
+              <span class="roadmap-step__number">03</span><span><small>规划中</small><strong>3D 参数化试衣间</strong><em>人体参数 + 3D 服装 + 动作</em></span>
+            </button>
+            <button class="roadmap-step" id="roadmap-goal-4" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="3" type="button" tabindex="-1">
+              <span class="roadmap-step__number">04</span><span><small>长期研究</small><strong>实时 AR 试衣镜</strong><em>摄像头跟踪 + 实时服装叠加</em></span>
+            </button>
+            <button class="roadmap-step" id="roadmap-goal-5" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="4" type="button" tabindex="-1">
+              <span class="roadmap-step__number">05</span><span><small>长期研究</small><strong>尺码与穿搭智能</strong><em>效果展示 → 可解释决策</em></span>
+            </button>
+          </div>
+
+          <article class="roadmap-detail" id="roadmap-detail" role="tabpanel" aria-labelledby="roadmap-goal-1" tabindex="0" aria-live="polite"></article>
+        </div>
+
+        <div class="roadmap-milestones" aria-label="研究阶段里程碑">
+          <span><small>M0–M2</small><strong>生成视频基线</strong></span>
+          <i aria-hidden="true">→</i>
+          <span><small>M3–M4</small><strong>2D 试衣闭环</strong></span>
+          <i aria-hidden="true">→</i>
+          <span><small>M5–M6</small><strong>3D 参数化原型</strong></span>
+          <i aria-hidden="true">→</i>
+          <span><small>M7+</small><strong>AR 与决策层</strong></span>
+        </div>
+      </section>
+
       <section class="capabilities" aria-labelledby="capabilities-title">
         <div class="section-heading">
-          <div><span class="section-index">04</span><h2 id="capabilities-title">它真正解决的四个问题</h2></div>
+          <div><span class="section-index">05</span><h2 id="capabilities-title">它真正解决的四个问题</h2></div>
           <p>不是替模型生成画面，而是给模型一个更清楚、更可检查的任务结构。</p>
         </div>
 
@@ -343,7 +389,7 @@
 
     <footer>
       <div><strong>OUTFIT DIRECTOR / CAPABILITY LAB</strong><span>研究型交互演示 · 不代表上游官方产品</span></div>
-      <a href="https://github.com/liyue-aigc/outfit-director">查看原项目 ↗</a>
+      <div class="footer-links"><a href="#research-roadmap">技术路线总览</a><a href="https://github.com/liyue-aigc/outfit-director">查看原项目 ↗</a></div>
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>

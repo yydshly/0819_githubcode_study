@@ -115,3 +115,34 @@
 | 跨设备 | 双实验保持桌面、平板、手机可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面/手机截图、平板无溢出与浅色主题通过 |
 | 工程 | 动画不增加高成本运行时资产 | Static runtime | Resource/performance observation | Stage 8 | pass | 纯 CSS 效果；无新增媒体；FCP 64ms，错误为空 |
 | 交付 | README、验收与交接同步 | Repository | File + terminal audit | Stage 9 | pass | 文档、语法、空白和状态审计完成 |
+
+## Revision 4 direction
+
+- Entry mode：Revision-led。
+- Request revision：4。
+- Target user：希望理解整个虚拟试衣研究版图、当前阶段和能力接入顺序的项目维护者与研究访客。
+- Desired first impression：先看到一条可执行的技术路线，再进入当前已经可操作的提示词与网页实验。
+- Visual ambition：Editorial。
+- Experience architecture：Hybrid Workspace；现有 A/B 实验仍是操作区，新增路线展示是项目级导航与能力说明区。
+- User phases：第一，规划文档正式落地；第二，Web 按目标、步骤和依赖展示能力接入路线。
+- Information constraints：区分“已经演示”“下一步接入”“长期研究”，不把概念规划伪装成现成功能；五条目标分别为提示词视频、2D AI 试衣、3D 参数化试衣、实时 AR、尺码与穿搭智能。
+- Operation constraints：路线卡片可选择并同步展示输入、核心能力、输出、接入步骤、完成标准和当前状态；不新增后端、模型接口或真实推理。
+- Environment constraints：保持纯静态 GitHub Pages、深浅主题、桌面/1024px/390px、鼠标/触摸/键盘和 reduced-motion。
+- Required artifacts：`docs/virtual-tryon-technology-roadmap.md`、根 README 路线入口、Web 技术路线区、更新后的演示 README、验收和交接记录。
+- Autonomy authorization：用户于 2026-08-20 明确要求规划文档落地并在 Web 中整理展示，授权直接实施和验证。
+- User-decision boundary：实际接入虚拟试衣模型、3D 资产、GPU 服务、摄像头权限、用户身体数据存储或外部付费服务时再确认。
+- Observable completion：规划文档包含目标、阶段、能力依赖、验收门槛、项目拆分和近期动作；Web 可在五个目标之间切换，状态与详情同步，当前目标一突出且能返回 A/B 实验；三个视口、主题和键盘可用；浏览器错误为空。
+
+## Revision 4 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| 第一：规划文档落地 | 总体技术路线文档 | Repository | File inspection | Stage 0 | pass | 五目标、M0–M7、依赖、验收、项目拆分与近期动作已落地 |
+| 第一：规划文档落地 | 主索引可发现路线文档 | Root README | Link inspection | Stage 3 | pass | 已增加总体路线入口、状态表与 E001 近期动作 |
+| 第二：Web 整理展示 | 五个目标与成熟度状态清楚 | Desktop / roadmap default | Screenshot + DOM | Stage 3 | pass | 五目标导航和当前研究位置清楚可见 |
+| 第二：Web 整理展示 | 选择目标后详情与步骤同步 | Roadmap / five states | Browser interaction | Stage 5 | pass | 输入、能力、输出、步骤、验收与依赖同步渲染 |
+| 第二：Web 整理展示 | 当前目标一与 A/B 实验有明确入口 | Roadmap / goal 01–02 | Browser interaction | Stage 4 | pass | 目标一进入 A；目标二进入 B 视觉原型 |
+| 跨设备 | 路线区在深浅主题和三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 三视口和深浅主题无横向溢出 |
+| 无障碍 | 目标选择可键盘操作且状态语义正确 | Keyboard | Focus + ARIA evidence | Stage 7 | pass | tablist、tabpanel、ARIA 状态与方向键焦点同步通过 |
+| 工程 | 静态运行无错误、无新增高成本资产 | Runtime | Syntax + browser + performance | Stage 8 | pass | 浏览器错误为空；语法与空白检查通过；无新增媒体 |
+| 交付 | README、验收与交接同步 | Repository | File + terminal audit | Stage 9 | pass | 主索引、演示说明、验证与交接已同步 |

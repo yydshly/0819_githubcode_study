@@ -174,6 +174,78 @@ const REAL_LOOKS = [
   { name: "黑色礼服 · 夜间造型", short: "晚宴终场", description: "作为高反差终场造型，验证色调与场景语义切换。", position: 100 },
 ];
 
+const ROADMAP_GOALS = [
+  {
+    phase: "M0–M2",
+    status: "当前实验",
+    tone: "current",
+    title: "提示词生成换装视频",
+    summary: "用 Outfit Director 把人物、服装、动作与卡点编成可执行提示词，再交给外部视频模型生成真实结果。",
+    inputs: ["人物与服装要求", "参考图（I2V 可选）", "时长、节奏与转场"],
+    capabilities: ["Skill 规则编排", "T2V / I2V 提示词", "换装时间轴与负面约束"],
+    outputs: ["可复制的视频提示词", "外部模型生成的 MP4", "模型、参数与评估记录"],
+    steps: ["生成并保存提示词", "在外部模型生成视频", "回填 MP4 与生成参数", "评估身份、服装、卡点和伪影"],
+    done: "至少完成 1 个可复现的真实视频样例；只有页面预演或提示词不算完成。",
+    dependency: "需要外部视频模型；当前网页不调用生成 API。",
+    action: "prompt",
+    actionLabel: "进入提示词实验",
+  },
+  {
+    phase: "M3–M4",
+    status: "下一阶段",
+    tone: "next",
+    title: "基于全身照的 2D AI 虚拟试衣",
+    summary: "输入真实人物全身照与单件服装商品图，由专用虚拟试衣模型生成穿着该服装的新图片。",
+    inputs: ["正面全身人物照", "平铺或模特服装图", "服装类别与遮挡信息"],
+    capabilities: ["人体解析与姿态估计", "服装分割 / 形变", "VTON 扩散模型推理"],
+    outputs: ["身份较稳定的试衣图", "服装保真对比", "失败案例与指标"],
+    steps: ["建立人物与服装样例集", "比较开源模型或托管 API", "接入预处理和推理", "建立身份与服装保真评估"],
+    done: "同一人物可切换多件真实服装，并以固定样例重复得到可评价结果。",
+    dependency: "需选择专用 VTON 模型、GPU 或托管 API，并处理真实图像隐私。",
+    action: "visual",
+    actionLabel: "查看当前 2D 视觉原型",
+  },
+  {
+    phase: "M5–M6",
+    status: "规划中",
+    tone: "planned",
+    title: "3D 参数化虚拟试衣间",
+    summary: "先用手动参数建立可控人体，再研究由照片估计参数；服装必须是可穿戴的 3D 资产而不是普通商品图。",
+    inputs: ["身高、围度等人体参数", "参数化人体或扫描结果", "3D 服装网格与材质"],
+    capabilities: ["人体捏形与骨骼绑定", "服装适配和碰撞", "布料模拟与动作驱动"],
+    outputs: ["可旋转的 3D 试衣场景", "动作中的衣物表现", "近似松量与贴合反馈"],
+    steps: ["先完成手动参数人体", "建立一套合规 3D 服装", "加入走路 / 转身动作", "再验证照片到参数估计"],
+    done: "人物参数可控、服装不明显穿模，并能在至少一组动作中稳定展示。",
+    dependency: "需要参数化人体许可、3D 服装资产、WebGL 引擎和布料技术选型。",
+  },
+  {
+    phase: "M7+",
+    status: "长期研究",
+    tone: "longterm",
+    title: "实时 AR 虚拟试衣镜",
+    summary: "让用户面对摄像头时实时叠加服装，重点从离线画质转向人体跟踪、遮挡、延迟和设备兼容。",
+    inputs: ["摄像头视频流", "实时人体关键点", "2D / 3D 服装资产"],
+    capabilities: ["实时姿态和人体分割", "遮挡与深度排序", "低延迟 Web 渲染"],
+    outputs: ["可交互 AR 镜面", "设备性能数据", "延迟与跟踪稳定性报告"],
+    steps: ["验证摄像头权限与姿态", "叠加单件上装", "处理手臂遮挡", "扩展移动端性能矩阵"],
+    done: "主流目标设备上可持续跟踪，交互延迟与遮挡错误达到预设阈值。",
+    dependency: "需要摄像头授权、目标设备范围和实时模型性能预算。",
+  },
+  {
+    phase: "M7+",
+    status: "长期研究",
+    tone: "longterm",
+    title: "尺码与穿搭智能",
+    summary: "在视觉效果之上增加尺码推荐、版型解释与造型建议，让系统从‘看起来如何’走向‘为什么适合’。",
+    inputs: ["人体参数与偏好", "品牌尺码表", "服装版型和弹性数据"],
+    capabilities: ["尺码规则与不确定性", "搭配检索与排序", "可解释推荐"],
+    outputs: ["尺码区间建议", "松紧与版型解释", "可替换的搭配方案"],
+    steps: ["统一服装和尺码数据", "建立规则基线", "收集试穿反馈", "再评估学习型推荐"],
+    done: "建议可追溯到数据与规则，并明确置信度；不能只凭生成图判断真实合身。",
+    dependency: "需要可信的商品结构化数据、真实反馈和隐私合规方案。",
+  },
+];
+
 const NEGATIVES = [
   "主体数量错误",
   "身份漂移",
@@ -226,6 +298,8 @@ const personFileName = document.querySelector("#person-file-name");
 const clothesCount = document.querySelector("#clothes-count");
 const clothesFileName = document.querySelector("#clothes-file-name");
 const experimentTabs = [...document.querySelectorAll(".experiment-tab")];
+const roadmapTabs = [...document.querySelectorAll(".roadmap-step")];
+const roadmapDetail = document.querySelector("#roadmap-detail");
 const promptWorkspace = document.querySelector("#workspace");
 const visualLab = document.querySelector("#visual-lab");
 const wardrobeList = document.querySelector("#wardrobe-list");
@@ -839,6 +913,44 @@ function switchExperiment(experiment) {
   }
 }
 
+function renderRoadmapGoal(index) {
+  const goal = ROADMAP_GOALS[index];
+  roadmapTabs.forEach((tab, tabIndex) => {
+    const selected = tabIndex === index;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+
+  const list = (items) => items.map((item) => `<li>${item}</li>`).join("");
+  const flow = goal.steps.map((step, stepIndex) => `<span><small>${String(stepIndex + 1).padStart(2, "0")}</small><strong>${step}</strong></span>`).join('<i aria-hidden="true">→</i>');
+  const action = goal.action
+    ? `<button class="roadmap-action" type="button" data-roadmap-action="${goal.action}">${goal.actionLabel}<span aria-hidden="true">↗</span></button>`
+    : "";
+
+  roadmapDetail.setAttribute("aria-labelledby", `roadmap-goal-${index + 1}`);
+  roadmapDetail.innerHTML = `
+    <header class="roadmap-detail__header">
+      <div><span class="roadmap-status roadmap-status--${goal.tone}">${goal.status}</span><small>${goal.phase}</small></div>
+      <h3>${goal.title}</h3>
+      <p>${goal.summary}</p>
+    </header>
+    <div class="roadmap-flow" aria-label="目标实施步骤">${flow}</div>
+    <div class="roadmap-capability-grid">
+      <section><span>INPUT</span><h4>需要提供</h4><ul>${list(goal.inputs)}</ul></section>
+      <section><span>CAPABILITY</span><h4>需要接入</h4><ul>${list(goal.capabilities)}</ul></section>
+      <section><span>OUTPUT</span><h4>阶段产出</h4><ul>${list(goal.outputs)}</ul></section>
+    </div>
+    <div class="roadmap-acceptance">
+      <div><span>完成标准</span><strong>${goal.done}</strong></div>
+      <div><span>依赖与边界</span><p>${goal.dependency}</p></div>
+    </div>
+    <div class="roadmap-actions">
+      ${action}
+      <a href="#research-roadmap">回到五目标索引 <span aria-hidden="true">↑</span></a>
+    </div>`;
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   activeTab = "video";
@@ -891,6 +1003,29 @@ experimentTabs.forEach((tab, index) => {
   });
 });
 
+roadmapTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => renderRoadmapGoal(index));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let nextIndex = index;
+    if (["ArrowUp", "ArrowLeft"].includes(event.key)) nextIndex = (index - 1 + roadmapTabs.length) % roadmapTabs.length;
+    if (["ArrowDown", "ArrowRight"].includes(event.key)) nextIndex = (index + 1) % roadmapTabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = roadmapTabs.length - 1;
+    renderRoadmapGoal(nextIndex);
+    roadmapTabs[nextIndex].focus();
+  });
+});
+
+roadmapDetail.addEventListener("click", (event) => {
+  const action = event.target.closest("[data-roadmap-action]");
+  if (!action) return;
+  switchExperiment(action.dataset.roadmapAction);
+  const destination = action.dataset.roadmapAction === "visual" ? visualLab : promptWorkspace;
+  destination.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+});
+
 tabs.forEach((tab, index) => {
   tab.addEventListener("click", () => {
     activeTab = tab.dataset.tab;
@@ -928,4 +1063,5 @@ updateAssetLabels();
 realModelStage.dataset.effect = realEffectSelect.value;
 renderRealWardrobe();
 updateRealLookText(0);
+renderRoadmapGoal(0);
 applyFormState();
