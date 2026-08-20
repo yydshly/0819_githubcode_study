@@ -1,0 +1,59 @@
+{
+  "sceneId": "idea-to-delivery",
+  "canvas": { "width": 1672, "height": 941 },
+  "storyBasis": "从构思、制作到检查交付的三阶段工作流程。",
+  "sceneDurationMs": 9600,
+  "elements": [
+    {
+      "id": "idea",
+      "label": "想法与草图",
+      "sequence": 1,
+      "narrativeRole": "流程输入",
+      "subtitle": "先把模糊的想法画成清晰草图。",
+      "type": "input",
+      "region": { "x": 44, "y": 105, "width": 490, "height": 730 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 300,
+        "durationMs": 2400,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [289, 120], "end": [289, 815], "easing": "easeInOut" }
+    },
+    {
+      "id": "production",
+      "label": "拆解与制作",
+      "sequence": 2,
+      "narrativeRole": "核心处理",
+      "subtitle": "再把任务拆解、制作并逐项推进。",
+      "type": "process",
+      "region": { "x": 610, "y": 115, "width": 440, "height": 680 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 2900,
+        "durationMs": 3200,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [830, 130], "end": [830, 780], "easing": "easeInOut" }
+    },
+    {
+      "id": "delivery",
+      "label": "检查与交付",
+      "sequence": 3,
+      "narrativeRole": "流程输出",
+      "subtitle": "完成检查后，交付最终成果。",
+      "type": "output",
+      "region": { "x": 1165, "y": 195, "width": 470, "height": 590 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 6300,
+        "durationMs": 2700,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [1400, 210], "end": [1400, 765], "easing": "easeInOut" }
+    }
+  ]
+}

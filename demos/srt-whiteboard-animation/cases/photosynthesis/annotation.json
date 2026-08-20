@@ -1,0 +1,59 @@
+{
+  "sceneId": "photosynthesis",
+  "canvas": { "width": 1672, "height": 941 },
+  "storyBasis": "阳光照射叶片，叶片吸收光和水，植物生长并释放氧气。",
+  "sceneDurationMs": 9000,
+  "elements": [
+    {
+      "id": "sunlight",
+      "label": "阳光",
+      "sequence": 1,
+      "narrativeRole": "能量来源",
+      "subtitle": "阳光为植物提供能量。",
+      "type": "cause",
+      "region": { "x": 36, "y": 72, "width": 500, "height": 720 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 300,
+        "durationMs": 2400,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [286, 90], "end": [286, 770], "easing": "easeInOut" }
+    },
+    {
+      "id": "leaf",
+      "label": "叶片与水",
+      "sequence": 2,
+      "narrativeRole": "能量转换",
+      "subtitle": "叶片吸收光和水，完成能量转换。",
+      "type": "process",
+      "region": { "x": 560, "y": 96, "width": 540, "height": 720 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 2900,
+        "durationMs": 3100,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [830, 110], "end": [830, 800], "easing": "easeInOut" }
+    },
+    {
+      "id": "plant",
+      "label": "植物与氧气",
+      "sequence": 3,
+      "narrativeRole": "反应结果",
+      "subtitle": "植物继续生长，并释放氧气。",
+      "type": "result",
+      "region": { "x": 1160, "y": 60, "width": 470, "height": 760 },
+      "reveal": {
+        "direction": "bottom_to_top",
+        "startMs": 6200,
+        "durationMs": 2400,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [1395, 800], "end": [1395, 80], "easing": "easeInOut" }
+    }
+  ]
+}

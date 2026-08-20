@@ -1,0 +1,59 @@
+{
+  "sceneId": "newton-third-law",
+  "canvas": { "width": 1672, "height": 941 },
+  "storyBasis": "火箭发动机产生气体并向下喷出，气体对火箭产生方向相反的作用力，使火箭向上运动。",
+  "sceneDurationMs": 10000,
+  "elements": [
+    {
+      "id": "combustion",
+      "label": "燃烧产生高压气体",
+      "sequence": 1,
+      "narrativeRole": "物理过程的能量来源",
+      "subtitle": "火箭发动机燃烧燃料，产生高温高压气体。",
+      "type": "cause",
+      "region": { "x": 75, "y": 80, "width": 460, "height": 735 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 300,
+        "durationMs": 2700,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [305, 95], "end": [305, 800], "easing": "easeInOut" }
+    },
+    {
+      "id": "action-force",
+      "label": "气体向下喷出",
+      "sequence": 2,
+      "narrativeRole": "向下的作用力",
+      "subtitle": "发动机把气体高速向下喷出，形成向下的作用力。",
+      "type": "action",
+      "region": { "x": 585, "y": 75, "width": 520, "height": 825 },
+      "reveal": {
+        "direction": "top_to_bottom",
+        "startMs": 3200,
+        "durationMs": 3100,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [845, 90], "end": [845, 885], "easing": "easeInOut" }
+    },
+    {
+      "id": "reaction-force",
+      "label": "火箭向上升空",
+      "sequence": 3,
+      "narrativeRole": "方向相反的反作用力",
+      "subtitle": "气体同时给火箭向上的反作用力，推动火箭升空。",
+      "type": "reaction",
+      "region": { "x": 1175, "y": 20, "width": 455, "height": 875 },
+      "reveal": {
+        "direction": "bottom_to_top",
+        "startMs": 6500,
+        "durationMs": 3000,
+        "maskPaddingPx": 22,
+        "protectedRegions": []
+      },
+      "handPath": { "start": [1402, 880], "end": [1402, 35], "easing": "easeInOut" }
+    }
+  ]
+}
