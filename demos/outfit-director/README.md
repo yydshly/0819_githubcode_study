@@ -2,7 +2,7 @@
 
 这是 `outfit-director` 研究子项目的纯前端双实验，用来分别验证“导演提示词”与“网页视觉换装”两层能力。女性专项规则适配自 [`female-outfit-director`](https://github.com/liyue-aigc/female-outfit-director)，在通用导演之上增加妆容、配饰、衣料约束与 M1–M12 转场机制。
 
-演示不会调用真实图像或视频模型。用户选择的本地文件不会上传，页面只读取文件名并把它们组织成提示词素材角色；E001 区域播放的是用户在外部 MiniMax H3 生成后主动回填的项目本地 MP4。
+演示不会调用真实图像或视频模型。用户选择的本地文件不会上传，页面只读取文件名并把它们组织成提示词素材角色；真实结果区播放的是用户通过 MiniMax H3 和 Seedance 2.0 VIP 外部生成后主动回填的 E001 / E002 项目本地 MP4。
 
 页面同时提供“从展示换装到真实虚拟试衣”的五目标路线面板。路线面板是研究索引，不会把尚未接入的模型、3D 或 AR 能力标成已实现；完整拆解见 [虚拟试衣技术研究路线](../../docs/virtual-tryon-technology-roadmap.md)。
 
@@ -46,7 +46,7 @@ python -m http.server 4173 --directory demos/outfit-director
 
 这里显示的是同一虚构成年人物的五张预生成完整造型，通过 CSS 裁切与 JavaScript 状态切换实现。四种效果用于解释转场机制，不是 3D、视频文件、浏览器实时生成或真实服装 SKU 迁移。M3–M7、M9、M11、M12 只进入 A 的外部模型提示词，不在 B 中伪装成已实现网页特效。
 
-## E001 · 第一条真实视频基线
+## E001 / E002 · 真实视频基线对照
 
 - 模型记录：MiniMax H3；纯文本 T2V；D 模式；15 秒；七套造型；M13。
 - 项目保存原始 MP4、32 KB 封面、完整提示词、SHA-256、媒体元数据和基线观察。
@@ -56,6 +56,10 @@ python -m http.server 4173 --directory demos/outfit-director
 - E001 暴露了“M13 侧边激活”与“禁止侧边人物”的冲突，新的纯 T2V 输出已改为“舞蹈峰值原地换装”。
 
 完整记录见 [E001 实验档案](../../studies/outfit-director/experiments/e001-minimax-h3-m13.md)。
+
+E002 使用 Seedance 2.0 VIP 首帧 I2V，实际媒体为 720×1280、15.104 秒。中央人物继承了首帧身份与布局，六个侧边造型按左上 → 右上 → 左中 → 右中 → 左下 → 右下依次激活并永久清空，M13 状态机在视觉采样中成立。六次换装均发生，粗粒度完成点平均绝对偏差约 0.25 秒；第五次约提前 0.8 秒。
+
+E002 同时改变模型、生成路线、画幅设置和提示词，因此只能证明这套整体方案优于 E001，不能单独证明首帧或 Seedance 的因果贡献。完整记录见 [E002 实验档案](../../studies/outfit-director/experiments/e002-seedance-2-vip-i2v-m13.md)。
 
 ## 技术路线面板
 
@@ -84,7 +88,9 @@ demos/outfit-director/
 ├── assets/
 │   ├── fictional-model-five-looks.png
 │   ├── e001-minimax-h3-m13.mp4
-│   └── e001-minimax-h3-m13-poster.jpg
+│   ├── e001-minimax-h3-m13-poster.jpg
+│   ├── e002-seedance-2-vip-i2v-m13.mp4
+│   └── e002-seedance-2-vip-i2v-m13-poster.jpg
 └── docs/
     ├── design-contract.md
     ├── validation.md
@@ -104,6 +110,6 @@ https://<owner>.github.io/<repository>/demos/outfit-director/
 
 ## 能力边界
 
-A 实验中的舞台人物和宠物仍是用于表达身份锁定与造型变化的 SVG 示意轮廓。B 实验素材由 OpenAI 内置图像生成工具创建，人物为虚构成年人，服装无品牌标识，仅用于研究演示。E001 是用户提供的外部模型实际输出，不代表上游仓库或本页面具有视频生成能力。所有提示词由浏览器中的确定性规则生成，单条成功结果不能证明下游模型一定可以稳定完成多主体、真实虚拟试衣、长时序或精确卡点任务。
+A 实验中的舞台人物和宠物仍是用于表达身份锁定与造型变化的 SVG 示意轮廓。B 实验素材由 OpenAI 内置图像生成工具创建，人物为虚构成年人，服装无品牌标识，仅用于研究演示。E001 / E002 是用户提供的外部模型实际输出，不代表上游仓库或本页面具有视频生成能力。所有提示词由浏览器中的确定性规则生成，两条成功结果也不能证明下游模型一定可以稳定完成多主体、真实虚拟试衣、长时序或精确卡点任务。
 
 上游版本、MIT 许可与衍生边界见 [来源与许可说明](docs/upstream-attribution.md)；女性专项差异分析与逐机制实验计划见 [变体研究](../../studies/outfit-director/variants/female-outfit-director.md) 和 [F001–F012 实验矩阵](../../studies/outfit-director/experiments/female-transition-matrix.md)。

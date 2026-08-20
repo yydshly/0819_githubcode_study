@@ -174,6 +174,37 @@ Revision 5 截图只保存在浏览器工具临时证据目录，不进入产品
 
 浏览器截图和关键帧接触表属于临时验证证据，不进入产品提交；可复现结论保存在 E001 实验档案中。
 
+## Revision 7 · E002 Seedance 2.0 VIP 首帧 I2V 回填
+
+| Surface | State | Result | Evidence |
+| --- | --- | --- | --- |
+| Asset | MP4 provenance | pass | 项目文件 11,550,887 bytes；SHA-256 `F011AB1FEAFC9D540FEF24EC7551538ADB47EBA1283AF8D1090BD7662985C261` 与用户源文件一致 |
+| Media | ffprobe | pass | 15.104s；720×1280 标准 9:16；H.264；24fps；AAC 32kHz 双声道；平均音量约 -21.3dB |
+| Initial state | first frame | pass with caveat | 中央学院风人物和六个侧边造型均可见；没有独立首帧文件，因此只验证视频开头可观察的布局继承 |
+| M13 | side activation state | pass | 左上 → 右上 → 左中 → 右中 → 左下 → 右下依次激活、汇入、永久清空，最终无侧边复现 |
+| Identity / looks | planned samples | pass with caveat | 中央人物脸型、长卷发和全身比例在采样帧中明显稳定；七套造型顺序完整，但未做生物特征测量 |
+| Timing | six change windows | partial | 粗粒度完成点约 1.6 / 4.1 / 6.6 / 8.5 / 10.0 / 13.0 秒；平均绝对偏差约 0.25 秒，第五次约提前 0.8 秒 |
+| Comparison | E001 / E002 | pass | 明确标注模型、T2V/I2V、画幅和提示词同时变化；仅比较整体方案，不进行单变量归因 |
+| Desktop | 1440×1000 / dark / E002 | pass | 双基线标签、比较限制、竖版原生播放器与证据面板层级清晰；截图 `screenshot-1787198803200.png` |
+| Interaction | tab / playback | pass | E001 播放后切到 E002，隐藏播放器自动暂停；tabpanel 同步，E002 metadata 报告 15.104 秒、720×1280 |
+| Keyboard | baseline tabs | pass | E002 获得焦点后按 ArrowLeft，焦点移动到 E001 且对应 panel 切换 |
+| Tablet | 1024×900 / light / E002 | pass | `scrollWidth 1009 < innerWidth 1024`；播放器 394.875×702，比较说明两行，竖版内容完整 |
+| Mobile | 390×844 / dark / E002 | pass | `scrollWidth 375 < innerWidth 390`；标签单列，播放器 345×613.33，9:16 内容不裁切 |
+| Reduced motion | 390×844 / dark | pass | `prefers-reduced-motion=true`；tab animation 为 none，E001/E002 仍可连续切换 |
+| Fallback | static media | pass | 两条视频均无 autoplay、使用 metadata preload、封面和直接 MP4 链接；播放器内含文字回退 |
+| Runtime | syntax / HTTP / Git | pass | 浏览器 errors / console 均为空；`node --check`、静态媒体 HTTP、`git diff --check` 和工作树终审通过 |
+
+### Revision 7 visual evidence
+
+- Desktop dark / E002：`C:\Users\yun68\.agent-browser\tmp\screenshots\screenshot-1787198803200.png`
+- Tablet light / E002：`C:\Users\yun68\.agent-browser\tmp\screenshots\e002-r7-tablet-light.png`
+- Mobile dark / E002：`C:\Users\yun68\.agent-browser\tmp\screenshots\e002-r7-mobile-dark.png`
+- Planned-point contact sheet：`E:\0819_codex_project\.tmp\e002-frames\contact-sheet.png`
+- Transition windows：`E:\0819_codex_project\.tmp\e002-transitions\contact-sheet.png`
+- Dense timing windows：`E:\0819_codex_project\.tmp\e002-timing-focus\contact-sheet.png`
+
+浏览器截图和关键帧接触表属于临时证据，不进入产品提交；可复现结论保存在 E002 实验档案中。
+
 ## Terminal audit
 
 - continue：无

@@ -216,3 +216,36 @@
 | 跨设备 | 播放器和记录在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 桌面深色、平板浅色、手机深色无横向溢出 |
 | 性能 | 1.8 MB 视频不阻塞首屏 | Static runtime | Resource/loading observation | Stage 8 | pass | 无自动播放；metadata preload 首次观察仅 300B 响应，封面 32KB |
 | 工程与交付 | 研究记录、README、验收、交接和提交同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 文档、浏览器、媒体、语法和 Git 空白终审完成 |
+
+## Revision 7 direction
+
+- Entry mode：Revision-led implementation。
+- Request revision：7。
+- Target user：希望把第二条首帧 I2V 视频纳入研究，并与 E001 比较画幅、身份、造型、M13 和换装点表现的维护者与研究访客。
+- Desired first impression：真实结果区从单条回放升级为 E001/E002 可切换的对照实验室；每条结果保持自身媒体事实与诚实结论。
+- Visual ambition：Editorial；比较控件优先于同时播放两个视频，避免横竖画幅互相挤压和双音轨冲突。
+- Experience architecture：Hybrid Workspace；A/B 操作区保持不变，结果区增加语义 tablist，单次只展示一条原生播放器和对应证据。
+- User phases：保存 E002 MP4 与提示词；提取媒体参数、关键帧和换装点；形成 E001/E002 比较；接入 Web 切换；同步路线与研究档案。
+- Experiment boundary：E002 同时改变模型（MiniMax H3 → Seedance 2.0 VIP）、路线（T2V → 首帧 I2V）、画幅和提示词，因此是多变量比较，不能把任何改善单独归因于首帧或模型。
+- Visual constraints：保持 E001 原貌；E002 竖版视频使用 contain 完整展示，不裁切；两个播放器不自动播放，切换时暂停隐藏视频；窄屏单列。
+- Information constraints：模型名称和“VIP”来自用户记录；没有独立首帧文件时，只评估最终视频中可观察的继承表现，不声称验证首帧图本身。
+- Operation constraints：E001/E002 可点击和键盘方向键切换；切换同步 tab、tabpanel、标题、证据和视频；隐藏视频必须暂停。
+- Environment constraints：纯静态 GitHub Pages；规范地址 `http://127.0.0.1:4173/`；桌面、1024px、390px、深浅主题、键盘和 reduced-motion。
+- Source boundary：E002 源文件按用户提供名称从 `C:\Users\yun68\Downloads\video_1787198181868.mp4` 读取；不得向第三方上传或公开发布。
+- Required artifacts：规范命名 MP4 与封面、E002 实验档案、E001/E002 对照结论、Web 结果 tabs、路线/README/验收/交接更新。
+- Autonomy authorization：用户于 2026-08-20 主动提供第二条文件名、模型、I2V 路线、9:16 设置和完整提示词，授权在当前研究项目内继续回填与比较。
+- User-decision boundary：独立评估首帧图像需要用户另行提供首帧文件；本轮不因缺少它阻塞视频结果评估。
+- Observable completion：E002 媒体和观察可追溯；比较结论明确多变量限制；Web 能切换两条视频且隐藏项暂停；三视口、主题、键盘、媒体和错误检查通过。
+
+## Revision 7 coverage manifest
+
+| User phase | Requirement or artifact | Surface / state | Evidence needed | Owning stage | Status | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| 视频回填 | 保存 E002 MP4、封面、hash 和媒体事实 | Repository | File + ffprobe + SHA-256 | Stage 1 | pass | MP4 11,550,887B 与源 hash 一致；封面和 ffprobe 事实已保存 |
+| E002 观察 | 七套造型、身份、画幅、M13 和换装点可检查 | Keyframes / scene windows | Contact sheets + observation | Stage 3 | pass | 三组接触表覆盖计划点、转场窗口和密集时序；结果写入 E002 档案 |
+| 对照结论 | E001/E002 比较且不混淆多变量归因 | Experiment record | Matrix + limitation | Stage 3 | pass | 对照矩阵明确模型、路线、画幅和提示词同时变化 |
+| Web 比较 | E001/E002 tabs 与对应播放器/证据同步 | Desktop / results lab | Screenshot + DOM | Stage 4 | pass | 1440×1000 截图及 DOM 检查通过 |
+| 交互状态 | 切换时隐藏视频暂停、ARIA 与焦点正确 | Tabs / playback | Browser interaction | Stage 5 | pass | 播放 E001 后切换 E002，E001 paused=true；ArrowLeft 焦点和面板同步 |
+| 跨设备 | 双结果在两主题三视口可用 | 1440/1024/390 | Screenshots + overflow | Stage 7 | pass | 三视口均实测；1024 宽无溢出，390 宽标签单列且 9:16 视频不裁切 |
+| 性能与回退 | 11.6 MB E002 不自动播放且媒体入口可用 | Static media | Resource + HTTP | Stage 8 | pass | metadata preload、poster、文字回退、直接链接和正确 MIME 均成立 |
+| 工程与交付 | 路线、README、验收、交接和本地提交同步 | Repository/runtime | Terminal + browser audit | Stage 9 | pass | 路线、README、验收、交接同步；语法、HTTP 与 Git 审计通过 |

@@ -2539,6 +2539,99 @@ footer a {
   margin-bottom: 24px;
 }
 
+.baseline-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.baseline-tab {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  align-items: center;
+  padding: 13px 15px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.baseline-tab:hover {
+  border-color: var(--line-strong);
+}
+
+.baseline-tab.is-active {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.baseline-tab > span {
+  grid-row: 1 / span 2;
+  padding: 7px 8px;
+  color: var(--accent);
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font: 850 .52rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.baseline-tab strong,
+.baseline-tab small {
+  display: block;
+}
+
+.baseline-tab strong {
+  align-self: end;
+  font-size: .75rem;
+}
+
+.baseline-tab small {
+  align-self: start;
+  color: var(--faint);
+  font-size: .54rem;
+}
+
+.baseline-comparison-note {
+  display: grid;
+  grid-template-columns: auto minmax(240px, .75fr) minmax(320px, 1.25fr);
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 12px 15px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.baseline-comparison-note span {
+  color: var(--gold);
+  font: 850 .48rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .08em;
+}
+
+.baseline-comparison-note strong {
+  color: var(--text);
+  font-size: .64rem;
+}
+
+.baseline-comparison-note p {
+  margin: 0;
+  color: var(--faint);
+  font-size: .57rem;
+}
+
+.baseline-pane[hidden] {
+  display: none;
+}
+
 .e001-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.38fr) minmax(320px, .62fr);
@@ -2567,6 +2660,17 @@ footer a {
   display: block;
   object-fit: contain;
   background: #090c0b;
+}
+
+.e001-video-frame--portrait {
+  min-height: 760px;
+}
+
+.e001-video-frame--portrait video {
+  width: auto;
+  max-width: 100%;
+  height: min(78vh, 760px);
+  aspect-ratio: 9 / 16;
 }
 
 .e001-video-badge {
@@ -2896,6 +3000,14 @@ footer a {
   .e001-caveat {
     grid-column: 1 / -1;
   }
+
+  .baseline-comparison-note {
+    grid-template-columns: auto 1fr;
+  }
+
+  .baseline-comparison-note p {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 840px) {
@@ -3207,8 +3319,31 @@ footer a {
     padding: 54px 0 60px;
   }
 
+  .baseline-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .baseline-tab {
+    min-height: 70px;
+  }
+
+  .baseline-comparison-note {
+    display: block;
+  }
+
+  .baseline-comparison-note strong,
+  .baseline-comparison-note p {
+    display: block;
+    margin-top: 7px;
+  }
+
   .e001-video-frame {
     min-height: 0;
+  }
+
+  .e001-video-frame--portrait video {
+    width: 100%;
+    height: auto;
   }
 
   .e001-video-badge {

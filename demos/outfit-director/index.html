@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Outfit Director 能力实验室：提示词换装、MiniMax H3 真实视频基线、2D 视觉原型与虚拟试衣技术路线。"
+      content="Outfit Director 能力实验室：提示词换装、MiniMax H3 与 Seedance 2.0 VIP 真实视频对照、2D 视觉原型与虚拟试衣技术路线。"
     />
     <meta name="color-scheme" content="dark light" />
     <title>Outfit Director｜能力实验室</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=8" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
     <script src="./data/director-profiles.js?v=1" defer></script>
     <script src="./data/transition-mechanisms.js?v=1" defer></script>
     <script src="./data/outfit-presets.js?v=1" defer></script>
-    <script src="./app.js?v=8" defer></script>
+    <script src="./app.js?v=9" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#workspace">跳到导演工作台</a>
@@ -29,7 +29,7 @@
       </a>
 
       <div class="topbar__actions">
-        <span class="status-pill"><i aria-hidden="true"></i>E001 已回填</span>
+        <span class="status-pill"><i aria-hidden="true"></i>02 个真实基线</span>
         <a class="text-link" href="#research-roadmap">技术路线</a>
         <a class="text-link" href="../../studies/outfit-director/README.md">研究档案</a>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题">
@@ -369,10 +369,26 @@
 
       <section class="e001-result" id="e001-result" aria-labelledby="e001-title">
         <div class="section-heading e001-heading">
-          <div><span class="section-index">04</span><h2 id="e001-title">第一条真实视频基线</h2></div>
-          <p>提示词已经交给外部模型执行。这里保留原始 MP4、模型记录、媒体事实和关键帧观察，让“生成成功”继续变成可比较的实验结果。</p>
+          <div><span class="section-index">04</span><h2 id="e001-title">真实视频基线对照</h2></div>
+          <p>两条提示词已经交给不同外部模型执行。切换 E001 / E002，可对照 T2V 与首帧 I2V 的真实 MP4、媒体事实、状态机表现和失败边界。</p>
         </div>
 
+        <div class="baseline-tabs" role="tablist" aria-label="选择真实视频基线">
+          <button class="baseline-tab is-active" id="baseline-tab-e001" role="tab" aria-selected="true" aria-controls="baseline-e001" data-baseline-target="baseline-e001" type="button">
+            <span>E001</span><strong>MiniMax H3</strong><small>T2V · 横版 · M13 未建立空间因果</small>
+          </button>
+          <button class="baseline-tab" id="baseline-tab-e002" role="tab" aria-selected="false" aria-controls="baseline-e002" data-baseline-target="baseline-e002" type="button" tabindex="-1">
+            <span>E002</span><strong>Seedance 2.0 VIP</strong><small>I2V · 9:16 · M13 状态机成立</small>
+          </button>
+        </div>
+
+        <div class="baseline-comparison-note" role="note">
+          <span>MULTI-VARIABLE COMPARISON</span>
+          <strong>E002 的整体控制表现更好，但不能单独归因于首帧。</strong>
+          <p>模型、T2V/I2V 路线、画幅设置和提示词同时变化；本轮比较整体方案，不宣称单变量因果。</p>
+        </div>
+
+        <div class="baseline-pane" id="baseline-e001" role="tabpanel" aria-labelledby="baseline-tab-e001">
         <div class="e001-grid">
           <article class="panel e001-video-card" aria-labelledby="e001-video-title">
             <header class="panel__header">
@@ -380,7 +396,7 @@
               <span class="panel__meta">REAL MP4</span>
             </header>
             <div class="e001-video-frame">
-              <video controls playsinline preload="metadata" poster="./assets/e001-minimax-h3-m13-poster.jpg" aria-label="E001 MiniMax H3 换装视频">
+              <video controls playsinline preload="metadata" poster="./assets/e001-minimax-h3-m13-poster.jpg" aria-label="E001 MiniMax H3 换装视频" data-baseline-video>
                 <source src="./assets/e001-minimax-h3-m13.mp4" type="video/mp4" />
                 当前浏览器无法播放 MP4；请使用下方直接链接打开。
               </video>
@@ -431,6 +447,59 @@
 【补充】固定正面机位，背景保持简洁，强调身份一致性。
 【硬性限制】只有一个主体；不要生成拼贴、分屏或侧边人物；不要身份漂移、服装叠穿、双影、肢体变形、镜头跳切、背景突变；最终保持“银白舞台装”完成收尾。</pre>
         </details>
+        </div>
+
+        <div class="baseline-pane" id="baseline-e002" role="tabpanel" aria-labelledby="baseline-tab-e002" hidden>
+          <div class="e001-grid">
+            <article class="panel e001-video-card" aria-labelledby="e002-video-title">
+              <header class="panel__header">
+                <div><span class="step">E002</span><h2 id="e002-video-title">Seedance 2.0 VIP · I2V · M13</h2></div>
+                <span class="panel__meta">REAL MP4</span>
+              </header>
+              <div class="e001-video-frame e001-video-frame--portrait">
+                <video controls playsinline preload="metadata" poster="./assets/e002-seedance-2-vip-i2v-m13-poster.jpg" aria-label="E002 Seedance 2.0 VIP 首帧换装视频" data-baseline-video>
+                  <source src="./assets/e002-seedance-2-vip-i2v-m13.mp4" type="video/mp4" />
+                  当前浏览器无法播放 MP4；请使用下方直接链接打开。
+                </video>
+                <span class="e001-video-badge">15.104 SEC · 9:16 · 7 LOOKS</span>
+              </div>
+              <div class="e001-video-actions">
+                <p><strong>用户提供的第二条外部生成结果</strong><span>H.264 视频 + AAC 双声道 · 24 fps · 11.55 MB</span></p>
+                <a href="./assets/e002-seedance-2-vip-i2v-m13.mp4" target="_blank" rel="noreferrer">打开原始 MP4 ↗</a>
+              </div>
+            </article>
+
+            <aside class="panel e001-evidence" aria-labelledby="e002-evidence-title">
+              <header class="panel__header">
+                <div><span class="step">02</span><h2 id="e002-evidence-title">I2V 基线观察</h2></div>
+                <span class="panel__meta">RECORDED</span>
+              </header>
+              <div class="e001-evidence__body">
+                <div class="e001-status"><span>BASELINE STATUS</span><strong>M13 状态机成立</strong><p>六个侧边造型依次激活、清空并进入中央人物。</p></div>
+                <dl class="e001-facts">
+                  <div><dt>模型</dt><dd>Seedance 2.0 VIP <small>用户记录</small></dd></div>
+                  <div><dt>路线</dt><dd>I2V · D 模式 · M13</dd></div>
+                  <div><dt>实际画幅</dt><dd>720 × 1280 <small>标准 9:16</small></dd></div>
+                  <div><dt>首帧状态</dt><dd>中央 + 六侧边 <small>布局被继承</small></dd></div>
+                </dl>
+                <ul class="e001-checks" aria-label="E002 基线检查结果">
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>画幅与时长</strong>实际 720×1280、15.104 秒；这次生成器中的 9:16 设置已生效。</p></li>
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>身份与七套造型</strong>中央人物的脸型、长卷发和比例在采样帧中稳定，七套造型顺序完整。</p></li>
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>M13 侧边消费</strong>左上 → 右上 → 左中 → 右中 → 左下 → 右下依次激活并清空，最终不复现。</p></li>
+                  <li class="e001-check--pass"><span>PASS</span><p><strong>动作与空间因果</strong>旋身和手臂轨迹基本连续；发光轮廓从目标侧边汇入中央。</p></li>
+                  <li class="e001-check--partial"><span>PARTIAL</span><p><strong>换装时间</strong>六次均发生；粗粒度完成点平均绝对偏差约 0.25 秒，第五次约提前 0.8 秒。</p></li>
+                  <li class="e001-check--partial"><span>LIMIT</span><p><strong>归因边界</strong>模型、路线、画幅和提示词同时变化，不能单独证明首帧或 Seedance 的贡献。</p></li>
+                </ul>
+                <p class="e001-caveat">未收到独立首帧文件，因此这里只验证视频开头可见的布局继承；音画是否严格卡强拍仍需完整人工观看。</p>
+              </div>
+            </aside>
+          </div>
+
+          <details class="e001-prompt">
+            <summary><span>查看 E002 完整生成提示词</span><small>Seedance 2.0 VIP · I2V · 15 秒</small></summary>
+            <pre>15 秒15 秒换装舞蹈，继承首帧中的女性身份、全部 7 套造型、侧边位置、画面布局和摄影质感。中央主体保持固定正面全身机位，允许轻微呼吸式推近，使用M13 · 侧边激活 + 舞蹈峰值。在 2.0 秒、4.1 秒、6.3 秒、8.5 秒、10.8 秒、13.0 秒依次完成换装；激活顺序为左上 → 右上 → 左中 → 右中 → 左下 → 右下。每个侧边贴图在激活同一帧从原位永久清空，不弹回、不复现；中央始终只有一个主体。换装前后保持重心、视线、手臂轨迹和旋转方向连续，衣摆、发丝或毛发保持重力与惯性。15 秒卡点舞曲，仅背景音乐。最终造型展示至 15.0 秒并完成收尾。固定正面机位，背景保持简洁，强调身份一致性。</pre>
+          </details>
+        </div>
       </section>
 
       <section class="research-roadmap" id="research-roadmap" aria-labelledby="roadmap-title">
@@ -441,14 +510,14 @@
 
         <div class="roadmap-summary" role="note">
           <span>CURRENT RESEARCH POSITION</span>
-          <strong>目标一已有 E001 基线 · 目标二等待模型选型</strong>
-          <p>Outfit Director 已完成一次“编排 → MiniMax H3 → MP4 回填”；画幅和 M13 因果仍需第二轮对照优化。</p>
+          <strong>目标一已有 E001 / E002 双基线 · 目标二等待模型选型</strong>
+          <p>E002 通过首帧 I2V 实现 9:16 与 M13 侧边消费；下一步需要同模型单变量实验隔离首帧贡献。</p>
         </div>
 
         <div class="roadmap-layout">
           <div class="roadmap-steps" role="tablist" aria-label="虚拟试衣五个研究目标">
             <button class="roadmap-step is-active" id="roadmap-goal-1" role="tab" aria-selected="true" aria-controls="roadmap-detail" data-roadmap-goal="0" type="button">
-              <span class="roadmap-step__number">01</span><span><small>E001 已回填</small><strong>提示词换装视频</strong><em>MiniMax H3 · 15 秒 · M13</em></span>
+              <span class="roadmap-step__number">01</span><span><small>E001 / E002 已回填</small><strong>提示词换装视频</strong><em>T2V 与首帧 I2V 双基线</em></span>
             </button>
             <button class="roadmap-step" id="roadmap-goal-2" role="tab" aria-selected="false" aria-controls="roadmap-detail" data-roadmap-goal="1" type="button" tabindex="-1">
               <span class="roadmap-step__number">02</span><span><small>下一阶段</small><strong>2D AI 虚拟试衣</strong><em>人物照 + 服装图 → 新试衣图</em></span>

@@ -209,18 +209,18 @@ const REAL_LOOKS = [
 const ROADMAP_GOALS = [
   {
     phase: "M0–M2",
-    status: "E001 已回填",
+    status: "E001 / E002",
     tone: "current",
     title: "提示词生成换装视频",
-    summary: "首条 MiniMax H3 T2V 结果已回填：15.083 秒、七套造型与单主体成立；实际为横版，M13 侧边激活和身份细节仍需第二轮优化。",
+    summary: "两条真实结果已回填：E001 验证纯 T2V 的七套造型，E002 通过 Seedance 2.0 VIP 首帧 I2V 实现标准 9:16 和完整 M13 侧边消费。",
     inputs: ["人物与服装要求", "参考图（I2V 可选）", "时长、节奏与转场"],
     capabilities: ["通用 + 女性专项规则编排", "T2V / I2V 提示词", "M1–M13 时间轴与负面约束"],
-    outputs: ["可复制的视频提示词", "外部模型生成的 MP4", "模型、参数与评估记录"],
-    steps: ["E001 提示词已保存", "MiniMax H3 已生成", "MP4 与参数已回填", "以 E002 做画幅和转场对照"],
-    done: "M1 阶段已达到：一个可追溯的真实 MP4、提示词、媒体元数据和基线观察均已保存。",
-    dependency: "第二轮仍需外部视频模型；当前网页不调用生成 API。",
+    outputs: ["可复制的视频提示词", "E001 / E002 真实 MP4", "模型、参数与对照评估记录"],
+    steps: ["E001 T2V 已归档", "E002 I2V 已归档", "整体方案完成比较", "E003 隔离首帧变量"],
+    done: "M1 已完成并进入 M2：两条真实 MP4、提示词、媒体元数据和观察均已保存；下一步需要同模型单变量实验。",
+    dependency: "E002 同时改变模型、路线、画幅和提示词，不能单独归因；当前网页不调用生成 API。",
     action: "prompt",
-    actionLabel: "生成第二条对照提示词",
+    actionLabel: "生成下一条对照提示词",
   },
   {
     phase: "M3–M4",
@@ -335,6 +335,8 @@ const personFileName = document.querySelector("#person-file-name");
 const clothesCount = document.querySelector("#clothes-count");
 const clothesFileName = document.querySelector("#clothes-file-name");
 const experimentTabs = [...document.querySelectorAll(".experiment-tab")];
+const baselineTabs = [...document.querySelectorAll(".baseline-tab")];
+const baselinePanes = [...document.querySelectorAll(".baseline-pane")];
 const roadmapTabs = [...document.querySelectorAll(".roadmap-step")];
 const roadmapDetail = document.querySelector("#roadmap-detail");
 const promptWorkspace = document.querySelector("#workspace");
@@ -1020,6 +1022,20 @@ function switchExperiment(experiment) {
   }
 }
 
+function switchBaseline(targetId) {
+  baselinePanes.forEach((pane) => {
+    const selected = pane.id === targetId;
+    if (!selected) pane.querySelectorAll("video").forEach((video) => video.pause());
+    pane.hidden = !selected;
+  });
+  baselineTabs.forEach((tab) => {
+    const selected = tab.dataset.baselineTarget === targetId;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+}
+
 function renderRoadmapGoal(index) {
   const goal = ROADMAP_GOALS[index];
   roadmapTabs.forEach((tab, tabIndex) => {
@@ -1121,6 +1137,21 @@ experimentTabs.forEach((tab, index) => {
     if (event.key === "End") nextIndex = experimentTabs.length - 1;
     experimentTabs[nextIndex].click();
     experimentTabs[nextIndex].focus();
+  });
+});
+
+baselineTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => switchBaseline(tab.dataset.baselineTarget));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let nextIndex = index;
+    if (event.key === "ArrowLeft") nextIndex = (index - 1 + baselineTabs.length) % baselineTabs.length;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % baselineTabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = baselineTabs.length - 1;
+    baselineTabs[nextIndex].click();
+    baselineTabs[nextIndex].focus();
   });
 });
 
