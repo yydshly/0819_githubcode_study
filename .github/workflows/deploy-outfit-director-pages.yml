@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - agent/add-outfit-director-study
     paths:
       - "demos/outfit-director/**"
       - "demos/punk-skill/**"

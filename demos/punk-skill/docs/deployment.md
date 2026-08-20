@@ -16,7 +16,7 @@ Pages /
 └── studies/                   # 两个实验室对应的研究文档
 ```
 
-工作流在 `main` 或当前研究分支 `agent/add-outfit-director-study` 的相关目录发生变化时自动执行，也支持 `workflow_dispatch` 手动部署。研究分支触发用于本次上线；合并回 `main` 后，主分支继续维护同一 Pages 地址。
+Pages 环境保护规则只允许 `main` 分支部署。工作流在 `main` 的相关目录发生变化时自动执行，也支持 `workflow_dispatch` 手动部署允许的分支。
 
 ## 本地验证
 
