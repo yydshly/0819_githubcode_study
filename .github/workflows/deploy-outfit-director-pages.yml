@@ -92,6 +92,8 @@ jobs:
           cp -a demos/xianxia-visual-director/. _site/xianxia-visual-director/
           cp -a demos/snakey-locomotion/dist/. _site/snakey-locomotion/
           cp -a demos/lineworld-night-hunt/dist/. _site/lineworld-night-hunt/
+          mkdir -p _site/lineworld-night-hunt/test-artifacts
+          cp demos/lineworld-night-hunt/test-artifacts/tutorial-desktop.png _site/lineworld-night-hunt/test-artifacts/tutorial-desktop.png
           cp -a demos/bigpeng-hot-gzh/. _site/bigpeng-hot-gzh/
           cp -a demos/srt-whiteboard-animation/. _site/srt-whiteboard-animation/
           cp -a demos/blobatar/. _site/blobatar/
